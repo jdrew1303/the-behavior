@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Behavior</title>
+    <meta charset="utf-8">
+    <script src="../bower_components/polymer/polymer.min.js"></script>
+    <link rel="import" href="the-behavior.html">
+    <style>
+      body {
+        min-height: 600px;
+        min-width: 800px;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+      .node {
+        width: 75px;
+        height: 75px;
+        background-color: #c0c0c0;
+        border-radius: 10px;
+        margin: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <the-behavior type="drag" direction="north south" action="move" accept="tagName=DIV" distance="20"></the-behavior>
+    <the-behavior type="drag" direction="north south east west" action="attributes" accept="tagName=BODY" distance="20"></the-behavior>
+    <div class="node">Hello</div>
+    <div class="node">World</div>
+  </body>
+</html>

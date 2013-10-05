@@ -1,0 +1,19 @@
+{
+  "name": "the-behavior",
+  "keywords": [
+  ],
+  "description": "Polymer elements for gestural behavior",
+  "dependencies": {
+    "polymer": ">=0.0.20131003"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+  "node_modules",
+  "bower_components",
+  "test",
+  "tests",
+  "docs",
+  "tools"
+  ]
+}
