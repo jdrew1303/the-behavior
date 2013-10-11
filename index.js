@@ -6,97 +6,165 @@ exports.runGraph = function (graph, callback) {
 };
 
 exports.prepareGraph = function (instance) {
+  var prevNode;
+
+  // Initialize graph
+  var graph = new noflo.Graph('Drag');
+  graph.addNode('Failed', 'core/Drop');
+  //graph.addNode('Failed', 'core/Output');
+  graph.addNode('Passed', 'core/Merge');
+  graph.addNode('Detect', 'flow/Gate');
+  graph.addNode('Target', 'core/Repeat');
+  graph.addNode('AllowDetect', 'core/Merge');
+  graph.addEdge('AllowDetect', 'out', 'Detect', 'open');
+  // Initially detection is enabled
+  graph.addInitial(true, 'AllowDetect', 'in');
+
+  // Go to action
+  graph.addNode('DoAction', 'core/Merge');
+
+  // Listen to gestures
+  prevNode = exports.prepareGesture(graph, instance);
+
+  // Handle pass-thru
+  prevNode = exports.preparePassThrough(graph, instance, prevNode);
+
+  // Validate target node
+  prevNode = exports.prepareAccept(graph, instance, prevNode);
+  // Check the gesture
   switch (instance.type) {
     case 'drag':
-      return exports.prepareDrag(instance);
+      prevNode = exports.prepareDrag(graph, instance, prevNode);
+      break;
   }
-}
+  // Check gesture direction
+  prevNode = exports.prepareDirection(graph, instance, prevNode);
 
-exports.prepareDrag = function (instance) {
-  var graph = new noflo.Graph('Drag');
-  graph.addNode('Listen', 'gestures/ListenPointer');
-  graph.addNode('Direction', 'gestures/RecognizeCardinalGesture');
-  graph.addInitial(instance.container, 'Listen', 'element');
-  graph.addInitial(parseInt(instance.distance), 'Direction', 'distance');
+  // Gesture has been accepted, pass data to action
+  graph.addEdge(prevNode[0], prevNode[1], 'Passed', 'in');
+  prevNode = ['DoAction', 'out'];
 
-  // Filtering by target
-  if (instance.accept) {
-    graph.addNode('EnsureTarget', 'gestures/FilterByTarget');
-    graph.addEdge('Listen', 'start', 'EnsureTarget', 'started');
-    graph.addEdge('Listen', 'move', 'EnsureTarget', 'move');
-    graph.addInitial(instance.accept, 'EnsureTarget', 'accept');
-    graph.addNode('LogTgt', 'core/Repeat');
-    //graph.addEdge('EnsureTarget', 'ontarget', 'Direction', 'recognize');
-    graph.addEdge('EnsureTarget', 'ontarget', 'LogTgt', 'in');
-    graph.addEdge('LogTgt', 'out', 'Direction', 'recognize');
-    graph.addEdge('EnsureTarget', 'startevent', 'Direction', 'started');
-    graph.addEdge('EnsureTarget', 'move', 'Direction', 'moved');
-  } else {
-    // TODO: Set up for filterless drag (i.e. no EnsureTarget)
-  }
-  var cardinals = ['east', 'south', 'north', 'west'];
-  var directions = instance.direction.split(' ');
-  if (directions.length < 4) {
-    graph.addNode('Ignored', 'core/Merge');
-    graph.addNode('DropIgnored', 'core/Drop');
-    graph.addEdge('Ignored', 'out', 'DropIgnored', 'in');
-  }
-  graph.addNode('Actionable', 'core/Merge');
-  cardinals.forEach(function (dir) {
-    if (directions.indexOf(dir) !== -1) {
-      return;
-    }
-    graph.addEdge('Direction', dir, 'Ignored', 'in');
-  });
-  directions.forEach(function (dir) {
-    graph.addEdge('Direction', dir, 'Actionable', 'in');
-  });
-
-  graph.addNode('AcceptMove', 'flow/Gate');
-  graph.addEdge('Actionable', 'out', 'AcceptMove', 'open');
-  graph.addEdge('Direction', 'moved', 'AcceptMove', 'in');
-  graph.addNode('SplitEnd', 'core/Split');
-  graph.addEdge('Listen', 'end', 'SplitEnd', 'in');
-  graph.addEdge('SplitEnd', 'out', 'AcceptMove', 'close');
-
+  // Handle action
   switch (instance.action) {
     case 'move':
-      graph.addNode('Move', 'css/MoveElement');
-      graph.addEdge('AcceptMove', 'out', 'Move', 'point');
-      if (instance.accept) {
-        graph.addEdge('EnsureTarget', 'target', 'Move', 'element');
-      } else {
-        graph.addInitial(instance.container, 'Move', 'element');
-      }
+      exports.prepareMove(graph, instance, prevNode);
       break;
-    case 'attributes':
-      graph.addNode('GetX', 'objects/GetObjectKey');
-      graph.addInitial('x', 'GetX', 'key');
-      graph.addNode('GetY', 'objects/GetObjectKey');
-      graph.addInitial('y', 'GetY', 'key');
-      graph.addEdge('AcceptMove', 'out', 'GetX', 'in');
-      graph.addEdge('GetX', 'object', 'GetY', 'in');
-      graph.addNode('SetX', 'dom/SetAttribute');
-      graph.addInitial('x', 'SetX', 'attribute');
-      graph.addEdge('GetX', 'out', 'SetX', 'value');
-      graph.addNode('SetY', 'dom/SetAttribute');
-      graph.addInitial('y', 'SetY', 'attribute');
-      graph.addEdge('GetY', 'out', 'SetY', 'value');
-      if (instance.accept) {
-        graph.addEdge('EnsureTarget', 'target', 'SetX', 'element');
-      } else {
-        graph.addInitial(instance.container, 'SetX', 'element');
-      }
-      graph.addEdge('SetX', 'element', 'SetY', 'element');
+    case 'attribute':
+      exports.prepareAttribute(graph, instance, prevNode);
       break;
-    default:
-      graph.addNode('Log', 'core/Output');
-      graph.addEdge('AcceptMove', 'out', 'Log', 'in');
-      if (instance.accept) {
-        graph.addNode('DropTarget', 'core/Drop');
-        graph.addEdge('EnsureTarget', 'target', 'DropTarget', 'in');
-      }
+  }
+  //console.log(graph.toDOT());
+  return graph;
+}
+
+exports.prepareGesture = function (graph, instance) {
+  graph.addNode('Listen', 'gestures/GestureToObject');
+  graph.addInitial(instance.container, 'Listen', 'element');
+  return ['Listen', 'out'];
+};
+
+exports.preparePassThrough = function (graph, instance, prevNode) {
+  graph.addNode('SplitGesture', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitGesture', 'in');
+
+  // We use a gate for stopping detection once the first one has happened
+  graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
+  // Close the gate after detection
+  graph.addNode('SplitPassed', 'core/Split');
+  graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
+  graph.addEdge('SplitPassed', 'out', 'Detect', 'close');
+  // Reopen it once the gesture has ended
+  graph.addNode('AfterGesture', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGesture', 'in');
+  graph.addEdge('AfterGesture', 'out', 'AllowDetect', 'in');
+
+  // We use a gate for passing things after recognition straight to action
+  graph.addNode('PassThru', 'flow/Gate');
+  graph.addEdge('SplitGesture', 'out', 'PassThru', 'in');
+  graph.addEdge('PassThru', 'out', 'DoAction', 'in');
+  // Open on detected gesture
+  graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
+
+  // Close passthrough after end of gesture
+  graph.addNode('AfterGestureClose', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureClose', 'in');
+  graph.addEdge('AfterGestureClose', 'out', 'PassThru', 'close');
+
+  return ['Detect', 'out'];
+};
+
+exports.prepareAccept = function (graph, instance, prevNode) {
+  if (!instance.accept) {
+    graph.addInitial(instance.container, 'Target', 'in');
+    return prevNode;
   }
 
-  return graph;
+  graph.addNode('DetectTarget', 'gestures/DetectTarget');
+  graph.addInitial('startelement', 'DetectTarget', 'key');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectTarget', 'in');
+  graph.addEdge('DetectTarget', 'target', 'Target', 'in');
+  graph.addInitial(instance.accept, 'DetectTarget', 'target');
+  graph.addEdge('DetectTarget', 'fail', 'Failed', 'in');
+  return ['DetectTarget', 'pass'];
+};
+
+exports.prepareDrag = function (graph, instance, prevNode) {
+  var distance = 20;
+  if (instance.distance) {
+    distance = parseInt(instance.distance);
+  }
+  graph.addNode('DetectDrag', 'gestures/DetectDrag');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
+  graph.addInitial(distance, 'DetectDrag', 'distance');
+  graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  return ['DetectDrag', 'pass'];
+};
+
+exports.prepareDirection = function (graph, instance, prevNode) {
+  if (!instance.direction) {
+    return prevNode;
+  }
+  var directions = instance.direction.split(' ');
+  if (directions.length === 4) {
+    return prevNode;
+  }
+  var cardinals = ['east', 'south', 'north', 'west'];
+  graph.addNode('DetectDirection', 'gestures/DetectCardinalDirection');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectDirection', 'in');
+  graph.addNode('DirectionPassed', 'core/Merge');
+  cardinals.forEach(function (dir) {
+    if (directions.indexOf(dir) !== -1) {
+      // Allowed direction
+      graph.addEdge('DetectDirection', dir, 'DirectionPassed', 'in');
+      return;
+    }
+    graph.addEdge('DetectDirection', dir, 'Failed', 'in');
+  });
+  graph.addEdge('DetectDirection', 'fail', 'Failed', 'in');
+  return ['DirectionPassed', 'out'];
+};
+
+exports.prepareMove = function (graph, instance, prevNode) {
+  graph.addNode('EachTouch', 'objects/SplitObject');
+  graph.addEdge('DoAction', 'out', 'EachTouch', 'in');
+  graph.addNode('GetPoint', 'objects/GetObjectKey');
+  graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
+  graph.addInitial('movepoint', 'GetPoint', 'key');
+  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addNode('Move', 'css/MoveElement');
+  graph.addEdge('Target', 'out', 'Move', 'element');
+  graph.addEdge('GetPoint', 'out', 'Move', 'point');
+};
+
+exports.prepareAttribute = function (graph, instance, prevNode) {
+  graph.addNode('EachTouch', 'objects/SplitObject');
+  graph.addEdge(prevNode[0], prevNode[1], 'EachTouch', 'in');
+  graph.addNode('GetPoint', 'objects/GetObjectKey');
+  graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
+  graph.addInitial('movepoint', 'GetPoint', 'key');
+  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addNode('Set', 'dom/SetAttribute');
+  graph.addEdge('Target', 'out', 'Set', 'element');
+  graph.addInitial(instance.type, 'Set', 'attribute');
+  graph.addEdge('GetPoint', 'out', 'Set', 'value');
 };

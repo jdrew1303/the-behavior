@@ -1,4 +1,4 @@
-<polymer-element name="the-behavior" attributes="type direction distance action accept arguments">
+<polymer-element name="the-behavior" attributes="type direction distance action accept arguments debug">
   <script src="../browser/the-behavior.js"></script>
   <script>
     var behavior = require('the-behavior');
@@ -7,7 +7,23 @@
       network: null,
       created: function () {
         this.container = this.parentElement.impl;
-        behavior.runGraph(behavior.prepareGraph(this), function () {});
+        var debug = this.debug;
+        behavior.runGraph(behavior.prepareGraph(this), function (network) {
+          if (debug) {
+            network.on('data', function (data) {
+              if (data.subgraph) {
+                return;
+              }
+              console.log('DATA', data.id);
+            });
+            network.on('disconnect', function (data) {
+              if (data.subgraph) {
+                return;
+              }
+              console.log('DISC', data.id);
+            });
+          }
+        });
       }
     });
   </script>

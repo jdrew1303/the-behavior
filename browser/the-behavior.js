@@ -1630,26 +1630,26 @@ module.exports = (function(){
             }
           }
           if (result1 !== null) {
-            if (/^[A-Z.]/.test(input.charAt(pos))) {
+            if (/^[A-Z.0-9_]/.test(input.charAt(pos))) {
               result3 = input.charAt(pos);
               pos++;
             } else {
               result3 = null;
               if (reportFailures === 0) {
-                matchFailed("[A-Z.]");
+                matchFailed("[A-Z.0-9_]");
               }
             }
             if (result3 !== null) {
               result2 = [];
               while (result3 !== null) {
                 result2.push(result3);
-                if (/^[A-Z.]/.test(input.charAt(pos))) {
+                if (/^[A-Z.0-9_]/.test(input.charAt(pos))) {
                   result3 = input.charAt(pos);
                   pos++;
                 } else {
                   result3 = null;
                   if (reportFailures === 0) {
-                    matchFailed("[A-Z.]");
+                    matchFailed("[A-Z.0-9_]");
                   }
                 }
               }
@@ -1667,26 +1667,26 @@ module.exports = (function(){
                 }
               }
               if (result3 !== null) {
-                if (/^[A-Z]/.test(input.charAt(pos))) {
+                if (/^[A-Z0-9_]/.test(input.charAt(pos))) {
                   result5 = input.charAt(pos);
                   pos++;
                 } else {
                   result5 = null;
                   if (reportFailures === 0) {
-                    matchFailed("[A-Z]");
+                    matchFailed("[A-Z0-9_]");
                   }
                 }
                 if (result5 !== null) {
                   result4 = [];
                   while (result5 !== null) {
                     result4.push(result5);
-                    if (/^[A-Z]/.test(input.charAt(pos))) {
+                    if (/^[A-Z0-9_]/.test(input.charAt(pos))) {
                       result5 = input.charAt(pos);
                       pos++;
                     } else {
                       result5 = null;
                       if (reportFailures === 0) {
-                        matchFailed("[A-Z]");
+                        matchFailed("[A-Z0-9_]");
                       }
                     }
                   }
@@ -2155,26 +2155,26 @@ module.exports = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (/^[a-zA-Z]/.test(input.charAt(pos))) {
+        if (/^[a-zA-Z0-9_]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
           pos++;
         } else {
           result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[a-zA-Z]");
+            matchFailed("[a-zA-Z0-9_]");
           }
         }
         if (result1 !== null) {
           result0 = [];
           while (result1 !== null) {
             result0.push(result1);
-            if (/^[a-zA-Z]/.test(input.charAt(pos))) {
+            if (/^[a-zA-Z0-9_]/.test(input.charAt(pos))) {
               result1 = input.charAt(pos);
               pos++;
             } else {
               result1 = null;
               if (reportFailures === 0) {
-                matchFailed("[a-zA-Z]");
+                matchFailed("[a-zA-Z0-9_]");
               }
             }
           }
@@ -2219,26 +2219,26 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          if (/^[a-zA-Z\/\-]/.test(input.charAt(pos))) {
+          if (/^[a-zA-Z\/\-0-9_]/.test(input.charAt(pos))) {
             result2 = input.charAt(pos);
             pos++;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[a-zA-Z\\/\\-]");
+              matchFailed("[a-zA-Z\\/\\-0-9_]");
             }
           }
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              if (/^[a-zA-Z\/\-]/.test(input.charAt(pos))) {
+              if (/^[a-zA-Z\/\-0-9_]/.test(input.charAt(pos))) {
                 result2 = input.charAt(pos);
                 pos++;
               } else {
                 result2 = null;
                 if (reportFailures === 0) {
-                  matchFailed("[a-zA-Z\\/\\-]");
+                  matchFailed("[a-zA-Z\\/\\-0-9_]");
                 }
               }
             }
@@ -2353,26 +2353,26 @@ module.exports = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (/^[A-Z.0-9]/.test(input.charAt(pos))) {
+        if (/^[A-Z.0-9_]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
           pos++;
         } else {
           result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[A-Z.0-9]");
+            matchFailed("[A-Z.0-9_]");
           }
         }
         if (result1 !== null) {
           result0 = [];
           while (result1 !== null) {
             result0.push(result1);
-            if (/^[A-Z.0-9]/.test(input.charAt(pos))) {
+            if (/^[A-Z.0-9_]/.test(input.charAt(pos))) {
               result1 = input.charAt(pos);
               pos++;
             } else {
               result1 = null;
               if (reportFailures === 0) {
-                matchFailed("[A-Z.0-9]");
+                matchFailed("[A-Z.0-9_]");
               }
             }
           }
@@ -3630,7 +3630,9 @@ Component = (function(_super) {
     return _ref;
   }
 
-  Component.prototype.description = "";
+  Component.prototype.description = '';
+
+  Component.prototype.icon = null;
 
   Component.prototype.getDescription = function() {
     return this.description;
@@ -3642,6 +3644,15 @@ Component = (function(_super) {
 
   Component.prototype.isSubgraph = function() {
     return false;
+  };
+
+  Component.prototype.setIcon = function(icon) {
+    this.icon = icon;
+    return this.emit('icon', this.icon);
+  };
+
+  Component.prototype.getIcon = function() {
+    return this.icon;
   };
 
   Component.prototype.shutdown = function() {};
@@ -3880,6 +3891,7 @@ ComponentLoader = (function() {
     this.components = null;
     this.checked = [];
     this.revalidate = false;
+    this.libraryIcons = {};
   }
 
   ComponentLoader.prototype.getModulePrefix = function(name) {
@@ -3914,6 +3926,9 @@ ComponentLoader = (function() {
       return;
     }
     prefix = this.getModulePrefix(definition.name);
+    if (definition.noflo.icon) {
+      this.libraryIcons[prefix] = definition.noflo.icon;
+    }
     if (moduleName[0] === '/') {
       moduleName = moduleName.substr(1);
     }
@@ -3972,11 +3987,11 @@ ComponentLoader = (function() {
     if (this.isGraph(component)) {
       if (typeof process !== 'undefined' && process.execPath && process.execPath.indexOf('node') !== -1) {
         process.nextTick(function() {
-          return _this.loadGraph(name, callback);
+          return _this.loadGraph(name, component, callback);
         });
       } else {
         setTimeout(function() {
-          return _this.loadGraph(name, callback);
+          return _this.loadGraph(name, component, callback);
         }, 0);
       }
       return;
@@ -3991,6 +4006,7 @@ ComponentLoader = (function() {
     if (name === 'Graph') {
       instance.baseDir = this.baseDir;
     }
+    this.setIcon(name, instance);
     return callback(instance);
   };
 
@@ -4001,18 +4017,43 @@ ComponentLoader = (function() {
     return cPath.indexOf('.fbp') !== -1 || cPath.indexOf('.json') !== -1;
   };
 
-  ComponentLoader.prototype.loadGraph = function(name, callback) {
+  ComponentLoader.prototype.loadGraph = function(name, component, callback) {
     var graph, graphImplementation, graphSocket;
     graphImplementation = require(this.components['Graph']);
     graphSocket = internalSocket.createSocket();
     graph = graphImplementation.getComponent();
     graph.baseDir = this.baseDir;
     graph.inPorts.graph.attach(graphSocket);
-    graphSocket.send(this.components[name]);
+    graphSocket.send(component);
     graphSocket.disconnect();
     delete graph.inPorts.graph;
     delete graph.inPorts.start;
+    this.setIcon(name, graph);
     return callback(graph);
+  };
+
+  ComponentLoader.prototype.setIcon = function(name, instance) {
+    var componentName, library, _ref;
+    if (instance.getIcon()) {
+      return;
+    }
+    _ref = name.split('/'), library = _ref[0], componentName = _ref[1];
+    if (componentName && this.getLibraryIcon(library)) {
+      instance.setIcon(this.getLibraryIcon(library));
+      return;
+    }
+    if (instance.isSubgraph()) {
+      instance.setIcon('sitemap');
+      return;
+    }
+    instance.setIcon('blank');
+  };
+
+  ComponentLoader.prototype.getLibraryIcon = function(prefix) {
+    if (this.libraryIcons[prefix]) {
+      return this.libraryIcons[prefix];
+    }
+    return null;
   };
 
   ComponentLoader.prototype.registerComponent = function(packageId, name, cPath, callback) {
@@ -4783,6 +4824,13 @@ Graph = (function(_super) {
     return true;
   };
 
+  Graph.prototype.shutdown = function() {
+    if (!this.network) {
+      return;
+    }
+    return this.network.stop();
+  };
+
   return Graph;
 
 })(noflo.Component);
@@ -4800,7 +4848,7 @@ require.register("noflo-noflo-interaction/index.js", function(exports, require, 
 
 });
 require.register("noflo-noflo-interaction/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-interaction","description":"User interaction components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-interaction","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/ListenDrag.coffee","components/ListenHash.coffee","components/ListenKeyboard.coffee","components/ListenMouse.coffee","components/ListenPointer.coffee","components/ListenScroll.coffee","components/ListenSpeech.coffee","components/ListenTouch.coffee","components/SetHash.coffee","components/ReadCoordinates.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"ListenDrag":"components/ListenDrag.coffee","ListenHash":"components/ListenHash.coffee","ListenKeyboard":"components/ListenKeyboard.coffee","ListenMouse":"components/ListenMouse.coffee","ListenPointer":"components/ListenPointer.coffee","ListenScroll":"components/ListenScroll.coffee","ListenSpeech":"components/ListenSpeech.coffee","ListenTouch":"components/ListenTouch.coffee","ReadCoordinates":"components/ReadCoordinates.coffee","SetHash":"components/SetHash.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-interaction","description":"User interaction components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-interaction","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/ListenDrag.coffee","components/ListenHash.coffee","components/ListenKeyboard.coffee","components/ListenMouse.coffee","components/ListenPointer.coffee","components/ListenScroll.coffee","components/ListenSpeech.coffee","components/ListenTouch.coffee","components/SetHash.coffee","components/ReadCoordinates.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"user","components":{"ListenDrag":"components/ListenDrag.coffee","ListenHash":"components/ListenHash.coffee","ListenKeyboard":"components/ListenKeyboard.coffee","ListenMouse":"components/ListenMouse.coffee","ListenPointer":"components/ListenPointer.coffee","ListenScroll":"components/ListenScroll.coffee","ListenSpeech":"components/ListenSpeech.coffee","ListenTouch":"components/ListenTouch.coffee","ReadCoordinates":"components/ReadCoordinates.coffee","SetHash":"components/SetHash.coffee"}}}');
 });
 require.register("noflo-noflo-interaction/components/ListenDrag.js", function(exports, require, module){
 var ListenDrag, noflo,
@@ -4964,6 +5012,8 @@ ListenKeyboard = (function(_super) {
   __extends(ListenKeyboard, _super);
 
   ListenKeyboard.prototype.description = 'Listen for key presses on a given DOM element';
+
+  ListenKeyboard.prototype.icon = 'keyboard';
 
   function ListenKeyboard() {
     this.keypress = __bind(this.keypress, this);
@@ -5154,11 +5204,12 @@ ListenPointer = (function(_super) {
     element.addEventListener('pointerover', this.pointerOver, this.capture);
     element.addEventListener('pointerout', this.pointerOut, this.capture);
     element.addEventListener('pointerenter', this.pointerEnter, this.capture);
-    element.addEventListener('pointerup', this.pointerUp, this.capture);
+    element.addEventListener('pointerleave', this.pointerLeave, this.capture);
     return this.elements.push(element);
   };
 
   ListenPointer.prototype.unsubscribe = function(element) {
+    var name, port, _ref, _results;
     element.removeAttribute('touch-action');
     element.removeEventListener('pointerdown', this.pointerDown, this.capture);
     element.removeEventListener('pointerup', this.pointerUp, this.capture);
@@ -5167,7 +5218,17 @@ ListenPointer = (function(_super) {
     element.removeEventListener('pointerover', this.pointerOver, this.capture);
     element.removeEventListener('pointerout', this.pointerOut, this.capture);
     element.removeEventListener('pointerenter', this.pointerEnter, this.capture);
-    return element.removeEventListener('pointerup', this.pointerUp, this.capture);
+    element.removeEventListener('pointerleave', this.pointerLeave, this.capture);
+    _ref = this.outPorts;
+    _results = [];
+    for (name in _ref) {
+      port = _ref[name];
+      if (!port.isAttached()) {
+        continue;
+      }
+      _results.push(port.disconnect());
+    }
+    return _results;
   };
 
   ListenPointer.prototype.shutdown = function() {
@@ -5224,7 +5285,7 @@ ListenPointer = (function(_super) {
     this.outPorts[type].beginGroup(event.pointerId);
     this.outPorts[type].send(event);
     this.outPorts[type].endGroup();
-    if (type === 'cancel' || type === 'leave' || type === 'out') {
+    if (type === 'up' || type === 'cancel' || type === 'leave') {
       _ref = this.outPorts;
       _results = [];
       for (name in _ref) {
@@ -5602,8 +5663,30 @@ ReadCoordinates = (function(_super) {
       client: new noflo.Port('object'),
       page: new noflo.Port('object')
     };
+    this.inPorts.event.on('begingroup', function(group) {
+      if (_this.outPorts.screen.isAttached()) {
+        _this.outPorts.screen.beginGroup(group);
+      }
+      if (_this.outPorts.client.isAttached()) {
+        _this.outPorts.client.beginGroup(group);
+      }
+      if (_this.outPorts.page.isAttached()) {
+        return _this.outPorts.page.beginGroup(group);
+      }
+    });
     this.inPorts.event.on('data', function(data) {
       return _this.read(data);
+    });
+    this.inPorts.event.on('endgroup', function() {
+      if (_this.outPorts.screen.isAttached()) {
+        _this.outPorts.screen.endGroup();
+      }
+      if (_this.outPorts.client.isAttached()) {
+        _this.outPorts.client.endGroup();
+      }
+      if (_this.outPorts.page.isAttached()) {
+        return _this.outPorts.page.endGroup();
+      }
     });
     this.inPorts.event.on('disconnect', function() {
       if (_this.outPorts.screen.isAttached()) {
@@ -5648,6 +5731,1194 @@ ReadCoordinates = (function(_super) {
 
 exports.getComponent = function() {
   return new ReadCoordinates;
+};
+
+});
+require.register("noflo-noflo-groups/index.js", function(exports, require, module){
+/*
+ * This file can be used for general library features of groups.
+ *
+ * The library features can be made available as CommonJS modules that the
+ * components in this project utilize.
+ */
+
+});
+require.register("noflo-noflo-groups/component.json", function(exports, require, module){
+module.exports = JSON.parse('{"name":"noflo-groups","description":"Group Utilities for NoFlo","keywords":["noflo","groups","utilities"],"author":"Kenneth Kan <kenhkan@gmail.com>","version":"0.1.0","repo":"kenhkan/groups","dependencies":{"component/underscore":"*","noflo/noflo":"*"},"scripts":["components/ReadGroups.coffee","components/RemoveGroups.coffee","components/Regroup.coffee","components/Group.coffee","components/GroupZip.coffee","components/FilterByGroup.coffee","components/Objectify.coffee","components/ReadGroup.coffee","components/SendByGroup.coffee","components/CollectGroups.coffee","components/CollectObject.coffee","components/FirstGroup.coffee","components/MapGroup.coffee","components/MergeGroups.coffee","components/GroupByObjectKey.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"tags","components":{"ReadGroups":"components/ReadGroups.coffee","RemoveGroups":"components/RemoveGroups.coffee","Regroup":"components/Regroup.coffee","Group":"components/Group.coffee","GroupZip":"components/GroupZip.coffee","FilterByGroup":"components/FilterByGroup.coffee","Objectify":"components/Objectify.coffee","ReadGroup":"components/ReadGroup.coffee","SendByGroup":"components/SendByGroup.coffee","CollectGroups":"components/CollectGroups.coffee","CollectObject":"components/CollectObject.coffee","FirstGroup":"components/FirstGroup.coffee","MapGroup":"components/MapGroup.coffee","MergeGroups":"components/MergeGroups.coffee","GroupByObjectKey":"components/GroupByObjectKey.coffee"}}}');
+});
+require.register("noflo-noflo-groups/components/ReadGroups.js", function(exports, require, module){
+var ReadGroups, noflo, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+_ = require('underscore');
+
+ReadGroups = (function(_super) {
+  __extends(ReadGroups, _super);
+
+  function ReadGroups() {
+    var _this = this;
+    this.strip = false;
+    this.threshold = Infinity;
+    this.inPorts = {
+      "in": new noflo.ArrayPort,
+      strip: new noflo.Port,
+      threshold: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port,
+      group: new noflo.Port
+    };
+    this.inPorts.threshold.on('data', function(threshold) {
+      return _this.threshold = parseInt(threshold);
+    });
+    this.inPorts.strip.on('data', function(strip) {
+      return _this.strip = strip === 'true';
+    });
+    this.inPorts["in"].on('connect', function() {
+      _this.count = 0;
+      return _this.groups = [];
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      var beginGroup;
+      beginGroup = function() {
+        _this.groups.push(group);
+        if (_this.outPorts.out.isAttached()) {
+          return _this.outPorts.out.beginGroup(group);
+        }
+      };
+      if (_this.count >= _this.threshold) {
+        return beginGroup(group);
+      } else {
+        _this.outPorts.group.send(group);
+        if (!_this.strip) {
+          beginGroup(group);
+        }
+        return _this.count++;
+      }
+    });
+    this.inPorts["in"].on('endgroup', function(group) {
+      if (group === _.last(_this.groups)) {
+        _this.groups.pop();
+        if (_this.outPorts.out.isAttached()) {
+          return _this.outPorts.out.endGroup();
+        }
+      }
+    });
+    this.inPorts["in"].on('data', function(data) {
+      if (_this.outPorts.out.isAttached()) {
+        return _this.outPorts.out.send(data);
+      }
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      if (_this.outPorts.out.isAttached()) {
+        _this.outPorts.out.disconnect();
+      }
+      return _this.outPorts.group.disconnect();
+    });
+  }
+
+  return ReadGroups;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new ReadGroups;
+};
+
+});
+require.register("noflo-noflo-groups/components/RemoveGroups.js", function(exports, require, module){
+var RemoveGroups, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+RemoveGroups = (function(_super) {
+  __extends(RemoveGroups, _super);
+
+  RemoveGroups.prototype.description = "Remove a group given a string or a regex string";
+
+  function RemoveGroups() {
+    var _this = this;
+    this.regexp = null;
+    this.inPorts = {
+      "in": new noflo.Port,
+      regexp: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts.regexp.on("data", function(regexp) {
+      return _this.regexp = new RegExp(regexp);
+    });
+    this.inPorts["in"].on("begingroup", function(group) {
+      if ((_this.regexp != null) && (group.match(_this.regexp) == null)) {
+        return _this.outPorts.out.beginGroup(group);
+      }
+    });
+    this.inPorts["in"].on("data", function(data) {
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on("endgroup", function(group) {
+      if ((_this.regexp != null) && (group.match(_this.regexp) == null)) {
+        return _this.outPorts.out.endGroup();
+      }
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return RemoveGroups;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new RemoveGroups;
+};
+
+});
+require.register("noflo-noflo-groups/components/Regroup.js", function(exports, require, module){
+var Regroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+Regroup = (function(_super) {
+  __extends(Regroup, _super);
+
+  Regroup.prototype.description = "Forward all the data IPs, strip all groups, and replace  them with groups from another connection";
+
+  function Regroup() {
+    var _this = this;
+    this.groups = [];
+    this.inPorts = {
+      "in": new noflo.Port,
+      group: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts.group.on("connect", function() {
+      return _this.groups = [];
+    });
+    this.inPorts.group.on("data", function(group) {
+      return _this.groups.push(group);
+    });
+    this.inPorts["in"].on("connect", function() {
+      var group, _i, _len, _ref, _results;
+      _ref = _this.groups;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _results.push(_this.outPorts.out.beginGroup(group));
+      }
+      return _results;
+    });
+    this.inPorts["in"].on("data", function(data) {
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      var group, _i, _len, _ref;
+      _ref = _this.groups;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _this.outPorts.out.endGroup();
+      }
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return Regroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new Regroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/Group.js", function(exports, require, module){
+var Group, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+Group = (function(_super) {
+  __extends(Group, _super);
+
+  function Group() {
+    var _this = this;
+    this.newGroups = [];
+    this.inPorts = {
+      "in": new noflo.Port,
+      group: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts["in"].on("connect", function() {
+      var group, _i, _len, _ref, _results;
+      _ref = _this.newGroups;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _results.push(_this.outPorts.out.beginGroup(group));
+      }
+      return _results;
+    });
+    this.inPorts["in"].on("begingroup", function(group) {
+      return _this.outPorts.out.beginGroup(group);
+    });
+    this.inPorts["in"].on("data", function(data) {
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on("endgroup", function(group) {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      var group, _i, _len, _ref;
+      _ref = _this.newGroups;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _this.outPorts.out.endGroup();
+      }
+      return _this.outPorts.out.disconnect();
+    });
+    this.inPorts.group.on("connect", function() {
+      return _this.newGroups = [];
+    });
+    this.inPorts.group.on("data", function(group) {
+      return _this.newGroups.push(group);
+    });
+  }
+
+  return Group;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new Group;
+};
+
+});
+require.register("noflo-noflo-groups/components/GroupZip.js", function(exports, require, module){
+var GroupZip, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+GroupZip = (function(_super) {
+  __extends(GroupZip, _super);
+
+  function GroupZip() {
+    var _this = this;
+    this.newGroups = [];
+    this.inPorts = {
+      "in": new noflo.Port,
+      group: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts["in"].on("connect", function() {
+      return _this.count = 0;
+    });
+    this.inPorts["in"].on("data", function(data) {
+      _this.outPorts.out.beginGroup(_this.newGroups[_this.count++]);
+      _this.outPorts.out.send(data);
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      return _this.outPorts.out.disconnect();
+    });
+    this.inPorts.group.on("connect", function() {
+      return _this.newGroups = [];
+    });
+    this.inPorts.group.on("data", function(group) {
+      return _this.newGroups.push(group);
+    });
+  }
+
+  return GroupZip;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new GroupZip;
+};
+
+});
+require.register("noflo-noflo-groups/components/FilterByGroup.js", function(exports, require, module){
+var FilterByGroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+FilterByGroup = (function(_super) {
+  __extends(FilterByGroup, _super);
+
+  FilterByGroup.prototype.description = "Given a RegExp string, filter out groups that do not  match and their children data packets/groups. Forward only the content  of the matching group.";
+
+  function FilterByGroup() {
+    var _this = this;
+    this.regexp = null;
+    this.matchedLevel = null;
+    this.inPorts = {
+      "in": new noflo.Port,
+      regexp: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port,
+      group: new noflo.Port,
+      empty: new noflo.Port
+    };
+    this.inPorts.regexp.on("data", function(regexp) {
+      return _this.regexp = new RegExp(regexp);
+    });
+    this.inPorts["in"].on("connect", function() {
+      _this.level = 0;
+      return _this.hasContent = false;
+    });
+    this.inPorts["in"].on("begingroup", function(group) {
+      if (_this.matchedLevel != null) {
+        _this.outPorts.out.beginGroup(group);
+      }
+      _this.level++;
+      if ((_this.matchedLevel == null) && (_this.regexp != null) && (group.match(_this.regexp) != null)) {
+        _this.matchedLevel = _this.level;
+        if (_this.outPorts.group.isAttached()) {
+          return _this.outPorts.group.send(group);
+        }
+      }
+    });
+    this.inPorts["in"].on("data", function(data) {
+      if (_this.matchedLevel != null) {
+        _this.hasContent = true;
+        return _this.outPorts.out.send(data);
+      }
+    });
+    this.inPorts["in"].on("endgroup", function(group) {
+      if (_this.matchedLevel === _this.level) {
+        _this.matchedLevel = null;
+      }
+      if (_this.matchedLevel != null) {
+        _this.outPorts.out.endGroup();
+      }
+      return _this.level--;
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      if (!_this.hasContent && _this.outPorts.empty.isAttached()) {
+        _this.outPorts.empty.send(null);
+        _this.outPorts.empty.disconnect();
+      }
+      if (_this.outPorts.group.isAttached()) {
+        _this.outPorts.group.disconnect();
+      }
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return FilterByGroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new FilterByGroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/Objectify.js", function(exports, require, module){
+var Objectify, noflo, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+_ = require("underscore");
+
+Objectify = (function(_super) {
+  __extends(Objectify, _super);
+
+  Objectify.prototype.description = "specify a regexp string, use the first match as the key  of an object containing the data";
+
+  function Objectify() {
+    var _this = this;
+    this.regexp = null;
+    this.match = null;
+    this.inPorts = {
+      "in": new noflo.Port,
+      regexp: new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts.regexp.on("data", function(regexp) {
+      return _this.regexp = new RegExp(regexp);
+    });
+    this.inPorts["in"].on("begingroup", function(group) {
+      if ((_this.regexp != null) && (group.match(_this.regexp) != null)) {
+        _this.match = _.first(group.match(_this.regexp));
+      }
+      return _this.outPorts.out.beginGroup(group);
+    });
+    this.inPorts["in"].on("data", function(data) {
+      var d;
+      if (_this.match != null) {
+        d = data;
+        data = {};
+        data[_this.match] = d;
+      }
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on("endgroup", function(group) {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return Objectify;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new Objectify;
+};
+
+});
+require.register("noflo-noflo-groups/components/ReadGroup.js", function(exports, require, module){
+var ReadGroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+ReadGroup = (function(_super) {
+  __extends(ReadGroup, _super);
+
+  function ReadGroup() {
+    var _this = this;
+    this.groups = [];
+    this.inPorts = {
+      "in": new noflo.ArrayPort
+    };
+    this.outPorts = {
+      out: new noflo.Port,
+      group: new noflo.Port
+    };
+    this.inPorts["in"].on('begingroup', function(group) {
+      _this.groups.push(group);
+      _this.outPorts.group.beginGroup(group);
+      if (_this.outPorts.out.isAttached()) {
+        return _this.outPorts.out.beginGroup(group);
+      }
+    });
+    this.inPorts["in"].on('data', function(data) {
+      if (_this.outPorts.out.isAttached()) {
+        _this.outPorts.out.send(data);
+      }
+      if (!_this.groups.length) {
+        return;
+      }
+      return _this.outPorts.group.send(_this.groups.join(':'));
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      _this.groups.pop();
+      _this.outPorts.group.endGroup();
+      if (_this.outPorts.out.isAttached()) {
+        return _this.outPorts.out.endGroup();
+      }
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      _this.outPorts.out.disconnect();
+      return _this.outPorts.group.disconnect();
+    });
+  }
+
+  return ReadGroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new ReadGroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/SendByGroup.js", function(exports, require, module){
+var SendByGroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+SendByGroup = (function(_super) {
+  __extends(SendByGroup, _super);
+
+  SendByGroup.prototype.description = 'Send packet held in "data" when receiving\
+  matching set of groups in "in"';
+
+  SendByGroup.prototype.icon = 'share-sign';
+
+  function SendByGroup() {
+    var _this = this;
+    this.data = {};
+    this.ungrouped = null;
+    this.dataGroups = [];
+    this.inGroups = [];
+    this.inPorts = {
+      "in": new noflo.Port('bang'),
+      data: new noflo.Port('all')
+    };
+    this.outPorts = {
+      out: new noflo.ArrayPort('all')
+    };
+    this.inPorts.data.on('begingroup', function(group) {
+      return _this.dataGroups.push(group);
+    });
+    this.inPorts.data.on('data', function(data) {
+      if (!_this.dataGroups.length) {
+        _this.ungrouped = data;
+        return;
+      }
+      return _this.data[_this.groupId(_this.dataGroups)] = data;
+    });
+    this.inPorts.data.on('endgroup', function() {
+      return _this.dataGroups.pop();
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.inGroups.push(group);
+    });
+    this.inPorts["in"].on('data', function(data) {
+      var id;
+      if (!_this.inGroups.length) {
+        if (_this.ungrouped !== null) {
+          _this.send(_this.ungrouped);
+        }
+        return;
+      }
+      id = _this.groupId(_this.inGroups);
+      if (!_this.data[id]) {
+        return;
+      }
+      return _this.send(_this.data[id]);
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.inGroups.pop();
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  SendByGroup.prototype.groupId = function(groups) {
+    return groups.join(':');
+  };
+
+  SendByGroup.prototype.send = function(data) {
+    var group, _i, _j, _len, _len1, _ref, _ref1, _results;
+    _ref = this.inGroups;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      group = _ref[_i];
+      this.outPorts.out.beginGroup(group);
+    }
+    this.outPorts.out.send(data);
+    _ref1 = this.inGroups;
+    _results = [];
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      group = _ref1[_j];
+      _results.push(this.outPorts.out.endGroup());
+    }
+    return _results;
+  };
+
+  return SendByGroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new SendByGroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/CollectGroups.js", function(exports, require, module){
+var CollectGroups, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+CollectGroups = (function(_super) {
+  __extends(CollectGroups, _super);
+
+  CollectGroups.prototype.description = 'Collect packets into object keyed by its groups';
+
+  function CollectGroups() {
+    var _this = this;
+    this.data = {};
+    this.groups = [];
+    this.parents = [];
+    this.inPorts = {
+      "in": new noflo.Port('all')
+    };
+    this.outPorts = {
+      out: new noflo.Port('object'),
+      error: new noflo.Port('object')
+    };
+    this.inPorts["in"].on('connect', function() {
+      return _this.data = {};
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      if (group === '$data') {
+        _this.error('groups cannot be named \'$data\'');
+        return;
+      }
+      _this.parents.push(_this.data);
+      _this.groups.push(group);
+      return _this.data = {};
+    });
+    this.inPorts["in"].on('data', function(data) {
+      return _this.setData(data);
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      var data;
+      data = _this.data;
+      _this.data = _this.parents.pop();
+      return _this.addChild(_this.data, _this.groups.pop(), data);
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      _this.outPorts.out.send(_this.data);
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  CollectGroups.prototype.addChild = function(parent, child, data) {
+    if (!(child in parent)) {
+      return parent[child] = data;
+    }
+    if (Array.isArray(parent[child])) {
+      return parent[child].push(data);
+    }
+    return parent[child] = [parent[child], data];
+  };
+
+  CollectGroups.prototype.setData = function(data) {
+    var _base;
+    if ((_base = this.data).$data == null) {
+      _base.$data = [];
+    }
+    return this.data.$data.push(data);
+  };
+
+  CollectGroups.prototype.error = function(msg) {
+    if (this.outPorts.error.isAttached()) {
+      this.outPorts.error.send(new Error(msg));
+      this.outPorts.error.disconnect();
+      return;
+    }
+    throw new Error(msg);
+  };
+
+  return CollectGroups;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new CollectGroups;
+};
+
+});
+require.register("noflo-noflo-groups/components/CollectObject.js", function(exports, require, module){
+var CollectObject, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+CollectObject = (function(_super) {
+  __extends(CollectObject, _super);
+
+  CollectObject.prototype.description = 'Collect packets to an object identified by keys organized\
+  by connection';
+
+  function CollectObject() {
+    var _this = this;
+    this.keys = [];
+    this.allpackets = [];
+    this.data = {};
+    this.groups = {};
+    this.inPorts = {
+      keys: new noflo.ArrayPort('string'),
+      allpackets: new noflo.ArrayPort('string'),
+      collect: new noflo.ArrayPort('all'),
+      release: new noflo.Port('bang'),
+      clear: new noflo.Port('bang')
+    };
+    this.outPorts = {
+      out: new noflo.Port('object')
+    };
+    this.inPorts.keys.on('data', function(key) {
+      var keys, _i, _len, _results;
+      keys = key.split(',');
+      if (keys.length > 1) {
+        _this.keys = [];
+      }
+      _results = [];
+      for (_i = 0, _len = keys.length; _i < _len; _i++) {
+        key = keys[_i];
+        _results.push(_this.keys.push(key));
+      }
+      return _results;
+    });
+    this.inPorts.allpackets.on('data', function(key) {
+      var allpackets, _i, _len, _results;
+      allpackets = key.split(',');
+      if (allpackets.length > 1) {
+        _this.keys = [];
+      }
+      _results = [];
+      for (_i = 0, _len = allpackets.length; _i < _len; _i++) {
+        key = allpackets[_i];
+        _results.push(_this.allpackets.push(key));
+      }
+      return _results;
+    });
+    this.inPorts.collect.once('connect', function() {
+      return _this.subscribeSockets();
+    });
+    this.inPorts.release.on('data', function() {
+      return _this.release();
+    });
+    this.inPorts.clear.on('data', function() {
+      return _this.clear();
+    });
+  }
+
+  CollectObject.prototype.release = function() {
+    this.outPorts.out.send(this.data);
+    this.outPorts.out.disconnect();
+    return this.data = this.clone(this.data);
+  };
+
+  CollectObject.prototype.subscribeSockets = function() {
+    var _this = this;
+    return this.inPorts.collect.sockets.forEach(function(socket, idx) {
+      return _this.subscribeSocket(socket, idx);
+    });
+  };
+
+  CollectObject.prototype.subscribeSocket = function(socket, id) {
+    var _this = this;
+    socket.on('begingroup', function(group) {
+      if (!_this.groups[id]) {
+        _this.groups[id] = [];
+      }
+      return _this.groups[id].push(group);
+    });
+    socket.on('data', function(data) {
+      var groupId;
+      if (!_this.keys[id]) {
+        return;
+      }
+      groupId = _this.groupId(_this.groups[id]);
+      if (!_this.data[groupId]) {
+        _this.data[groupId] = {};
+      }
+      if (_this.allpackets.indexOf(_this.keys[id]) !== -1) {
+        if (!_this.data[groupId][_this.keys[id]]) {
+          _this.data[groupId][_this.keys[id]] = [];
+        }
+        _this.data[groupId][_this.keys[id]].push(data);
+        return;
+      }
+      return _this.data[groupId][_this.keys[id]] = data;
+    });
+    return socket.on('endgroup', function() {
+      if (!_this.groups[id]) {
+        return;
+      }
+      return _this.groups[id].pop();
+    });
+  };
+
+  CollectObject.prototype.groupId = function(groups) {
+    if (!groups.length) {
+      return 'ungrouped';
+    }
+    return groups[0];
+  };
+
+  CollectObject.prototype.clone = function(data) {
+    var groupName, groupedData, name, newData, value;
+    newData = {};
+    for (groupName in data) {
+      groupedData = data[groupName];
+      newData[groupName] = {};
+      for (name in groupedData) {
+        value = groupedData[name];
+        if (!groupedData.hasOwnProperty(name)) {
+          continue;
+        }
+        newData[groupName][name] = value;
+      }
+    }
+    return newData;
+  };
+
+  CollectObject.prototype.clear = function() {
+    this.data = {};
+    return this.groups = {};
+  };
+
+  return CollectObject;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new CollectObject;
+};
+
+});
+require.register("noflo-noflo-groups/components/FirstGroup.js", function(exports, require, module){
+var FirstGroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+FirstGroup = (function(_super) {
+  __extends(FirstGroup, _super);
+
+  function FirstGroup() {
+    var _this = this;
+    this.depth = 0;
+    this.inPorts = {
+      "in": new noflo.Port
+    };
+    this.outPorts = {
+      out: new noflo.Port
+    };
+    this.inPorts["in"].on('begingroup', function(group) {
+      if (_this.depth === 0) {
+        _this.outPorts.out.beginGroup(group);
+      }
+      return _this.depth++;
+    });
+    this.inPorts["in"].on('data', function(data) {
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on('endgroup', function(group) {
+      _this.depth--;
+      if (_this.depth === 0) {
+        return _this.outPorts.out.endGroup();
+      }
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      _this.depth = 0;
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return FirstGroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new FirstGroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/MapGroup.js", function(exports, require, module){
+var MapGroup, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+MapGroup = (function(_super) {
+  __extends(MapGroup, _super);
+
+  function MapGroup() {
+    var _this = this;
+    this.map = {};
+    this.regexps = {};
+    this.inPorts = {
+      map: new noflo.ArrayPort(),
+      regexp: new noflo.ArrayPort(),
+      "in": new noflo.Port()
+    };
+    this.outPorts = {
+      out: new noflo.Port()
+    };
+    this.inPorts.map.on('data', function(data) {
+      return _this.prepareMap(data);
+    });
+    this.inPorts.regexp.on('data', function(data) {
+      return _this.prepareRegExp(data);
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.mapGroup(group);
+    });
+    this.inPorts["in"].on('data', function(data) {
+      return _this.outPorts.out.send(data);
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  MapGroup.prototype.prepareMap = function(map) {
+    var mapParts;
+    if (typeof map === 'object') {
+      this.map = map;
+      return;
+    }
+    mapParts = map.split('=');
+    return this.map[mapParts[0]] = mapParts[1];
+  };
+
+  MapGroup.prototype.prepareRegExp = function(map) {
+    var mapParts;
+    mapParts = map.split('=');
+    return this.regexps[mapParts[0]] = mapParts[1];
+  };
+
+  MapGroup.prototype.mapGroup = function(group) {
+    var expression, matched, regexp, replacement, _ref;
+    if (this.map[group]) {
+      this.outPorts.out.beginGroup(this.map[group]);
+      return;
+    }
+    _ref = this.regexps;
+    for (expression in _ref) {
+      replacement = _ref[expression];
+      regexp = new RegExp(expression);
+      matched = regexp.exec(group);
+      if (!matched) {
+        continue;
+      }
+      group = group.replace(regexp, replacement);
+    }
+    return this.outPorts.out.beginGroup(group);
+  };
+
+  return MapGroup;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new MapGroup;
+};
+
+});
+require.register("noflo-noflo-groups/components/MergeGroups.js", function(exports, require, module){
+var MergeGroups, noflo, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+_ = require('underscore')._;
+
+MergeGroups = (function(_super) {
+  __extends(MergeGroups, _super);
+
+  function MergeGroups() {
+    var _this = this;
+    this.groups = {};
+    this.data = {};
+    this.inPorts = {
+      "in": new noflo.ArrayPort
+    };
+    this.outPorts = {
+      out: new noflo.ArrayPort
+    };
+    this.inPorts["in"].on('begingroup', function(group, socket) {
+      return _this.addGroup(socket, group);
+    });
+    this.inPorts["in"].on('data', function(data, socket) {
+      _this.registerData(socket, data);
+      return _this.checkBuffer(socket);
+    });
+    this.inPorts["in"].on('endgroup', function(group, socket) {
+      _this.checkBuffer(socket);
+      return _this.removeGroup(socket);
+    });
+    this.inPorts["in"].on('disconnect', function(socket, socketId) {
+      return _this.checkBuffer(socketId);
+    });
+  }
+
+  MergeGroups.prototype.addGroup = function(socket, group) {
+    if (!this.groups[socket]) {
+      this.groups[socket] = [];
+    }
+    return this.groups[socket].push(group);
+  };
+
+  MergeGroups.prototype.removeGroup = function(socket) {
+    return this.groups[socket].pop();
+  };
+
+  MergeGroups.prototype.groupId = function(socket) {
+    if (!this.groups[socket]) {
+      return null;
+    }
+    return this.groups[socket].join(':');
+  };
+
+  MergeGroups.prototype.registerData = function(socket, data) {
+    var id;
+    id = this.groupId(socket);
+    if (!id) {
+      return;
+    }
+    if (!this.data[id]) {
+      this.data[id] = {};
+    }
+    return this.data[id][socket] = data;
+  };
+
+  MergeGroups.prototype.checkBuffer = function(socket) {
+    var id, socketId, _i, _len, _ref;
+    id = this.groupId(socket);
+    if (!id) {
+      return;
+    }
+    if (!this.data[id]) {
+      return;
+    }
+    _ref = this.inPorts["in"].sockets;
+    for (socketId = _i = 0, _len = _ref.length; _i < _len; socketId = ++_i) {
+      socket = _ref[socketId];
+      if (!this.data[id][socketId]) {
+        return;
+      }
+    }
+    this.outPorts.out.beginGroup(id);
+    this.outPorts.out.send(this.data[id]);
+    this.outPorts.out.endGroup();
+    this.outPorts.out.disconnect();
+    return delete this.data[id];
+  };
+
+  return MergeGroups;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new MergeGroups;
+};
+
+});
+require.register("noflo-noflo-groups/components/GroupByObjectKey.js", function(exports, require, module){
+var GroupByObjectKey, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+GroupByObjectKey = (function(_super) {
+  __extends(GroupByObjectKey, _super);
+
+  function GroupByObjectKey() {
+    var _this = this;
+    this.data = [];
+    this.key = null;
+    this.inPorts = {
+      "in": new noflo.Port(),
+      key: new noflo.Port()
+    };
+    this.outPorts = {
+      out: new noflo.Port()
+    };
+    this.inPorts["in"].on('connect', function() {
+      return _this.data = [];
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.outPorts.out.beginGroup(group);
+    });
+    this.inPorts["in"].on('data', function(data) {
+      if (_this.key) {
+        return _this.getKey(data);
+      }
+      return _this.data.push(data);
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      var data, _i, _len, _ref;
+      if (!_this.data.length) {
+        _this.outPorts.out.disconnect();
+        return;
+      }
+      if (!_this.key) {
+        return;
+      }
+      _ref = _this.data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        _this.getKey(data);
+      }
+      return _this.outPorts.out.disconnect();
+    });
+    this.inPorts.key.on('data', function(data) {
+      return _this.key = data;
+    });
+    this.inPorts.key.on('disconnect', function() {
+      var data, _i, _len, _ref;
+      if (!_this.data.length) {
+        return;
+      }
+      _ref = _this.data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        _this.getKey(data);
+      }
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  GroupByObjectKey.prototype.getKey = function(data) {
+    var group;
+    if (!this.key) {
+      throw new Error('Key not defined');
+    }
+    if (typeof data !== 'object') {
+      throw new Error('Data is not an object');
+    }
+    group = data[this.key];
+    if (typeof data[this.key] !== 'string') {
+      group = 'undefined';
+    }
+    if (typeof data[this.key] === 'boolean') {
+      if (data[this.key]) {
+        group = this.key;
+      }
+    }
+    this.outPorts.out.beginGroup(group);
+    this.outPorts.out.send(data);
+    return this.outPorts.out.endGroup();
+  };
+
+  return GroupByObjectKey;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new GroupByObjectKey;
 };
 
 });
@@ -6522,6 +7793,7 @@ UniquePacket = (function(_super) {
   function UniquePacket() {
     var _this = this;
     this.seen = [];
+    this.groups = [];
     this.inPorts = {
       "in": new noflo.Port('all'),
       clear: new noflo.Port('bang')
@@ -6530,7 +7802,11 @@ UniquePacket = (function(_super) {
       out: new noflo.Port('all'),
       duplicate: new noflo.Port('all')
     };
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.groups.push(group);
+    });
     this.inPorts["in"].on('data', function(data) {
+      var group, _i, _j, _len, _len1, _ref, _ref1, _results;
       if (!_this.unique(data)) {
         if (!_this.outPorts.duplicate.isAttached()) {
           return;
@@ -6538,13 +7814,33 @@ UniquePacket = (function(_super) {
         _this.outPorts.duplicate.send(data);
         return;
       }
-      return _this.outPorts.out.send(data);
+      _ref = _this.groups;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _this.outPorts.out.beginGroup(group);
+      }
+      _this.outPorts.out.send(data);
+      _ref1 = _this.groups;
+      _results = [];
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        group = _ref1[_j];
+        _results.push(_this.outPorts.out.endGroup());
+      }
+      return _results;
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.groups.pop();
     });
     this.inPorts["in"].on('disconnect', function() {
-      return _this.outPorts.out.disconnect();
+      _this.outPorts.out.disconnect();
+      if (!_this.outPorts.duplicate.isAttached()) {
+        return;
+      }
+      return _this.outPorts.duplicate.disconnect();
     });
     this.inPorts.clear.on('data', function() {
-      return _this.seen = [];
+      _this.seen = [];
+      return _this.groups = [];
     });
   }
 
@@ -6714,7 +8010,7 @@ require.register("noflo-noflo-strings/index.js", function(exports, require, modu
 
 });
 require.register("noflo-noflo-strings/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-strings","description":"String Utilities for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-strings","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/CompileString.coffee","components/Filter.coffee","components/SendString.coffee","components/SplitStr.coffee","components/StringTemplate.coffee","components/Replace.coffee","components/Jsonify.coffee","components/ParseJson.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"CompileString":"components/CompileString.coffee","Filter":"components/Filter.coffee","SendString":"components/SendString.coffee","SplitStr":"components/SplitStr.coffee","StringTemplate":"components/StringTemplate.coffee","Replace":"components/Replace.coffee","Jsonify":"components/Jsonify.coffee","ParseJson":"components/ParseJson.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-strings","description":"String Utilities for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-strings","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/CompileString.coffee","components/Filter.coffee","components/SendString.coffee","components/SplitStr.coffee","components/StringTemplate.coffee","components/Replace.coffee","components/Jsonify.coffee","components/ParseJson.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"font","components":{"CompileString":"components/CompileString.coffee","Filter":"components/Filter.coffee","SendString":"components/SendString.coffee","SplitStr":"components/SplitStr.coffee","StringTemplate":"components/StringTemplate.coffee","Replace":"components/Replace.coffee","Jsonify":"components/Jsonify.coffee","ParseJson":"components/ParseJson.coffee"}}}');
 });
 require.register("noflo-noflo-strings/components/CompileString.js", function(exports, require, module){
 var CompileString, noflo,
@@ -6857,7 +8153,11 @@ SendString = (function(_super) {
 
   function SendString() {
     var _this = this;
-    this.string = '';
+    this.data = {
+      string: null,
+      group: []
+    };
+    this.groups = [];
     this.inPorts = {
       string: new noflo.Port('string'),
       "in": new noflo.Port('bang')
@@ -6866,15 +8166,39 @@ SendString = (function(_super) {
       out: new noflo.Port('string')
     };
     this.inPorts.string.on('data', function(data) {
-      return _this.string = data;
+      return _this.data.string = data;
+    });
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.groups.push(group);
     });
     this.inPorts["in"].on('data', function(data) {
-      return _this.outPorts.out.send(_this.string);
+      _this.data.group = _this.groups.slice(0);
+      return _this.sendString(_this.data);
+    });
+    this.inPorts["in"].on('endgroup', function(group) {
+      return _this.groups.pop();
     });
     this.inPorts["in"].on('disconnect', function() {
       return _this.outPorts.out.disconnect();
     });
   }
+
+  SendString.prototype.sendString = function(data) {
+    var group, _i, _j, _len, _len1, _ref, _ref1, _results;
+    _ref = data.group;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      group = _ref[_i];
+      this.outPorts.out.beginGroup(group);
+    }
+    this.outPorts.out.send(data.string);
+    _ref1 = data.group;
+    _results = [];
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      group = _ref1[_j];
+      _results.push(this.outPorts.out.endGroup());
+    }
+    return _results;
+  };
 
   return SendString;
 
@@ -7171,20 +8495,29 @@ exports.getComponent = function() {
 };
 
 });
+require.register("noflo-noflo-gestures/graphs/DetectDrag.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectDrag"},"exports":[{"private":"receivegesture_3bwyo.in","public":"in"},{"private":"checkdistance_uzpv9.comparison","public":"distance"},{"private":"sendpass_lskxq.out","public":"pass"},{"private":"sendfail_64mm2.out","public":"fail"}],"processes":{"ReceiveGesture_3bwyo":{"component":"core/Repeat","metadata":{"x":314,"y":83,"label":"ReceiveGesture"}},"core/Split_qfhom":{"component":"core/Split","metadata":{"x":314,"y":160,"label":"core/Split"}},"SendPass_lskxq":{"component":"strings/SendString","metadata":{"x":1143,"y":28,"label":"SendPass"}},"SendFail_64mm2":{"component":"strings/SendString","metadata":{"x":1145,"y":305,"label":"SendFail"}},"Failures_13q8s":{"component":"core/Merge","metadata":{"x":941,"y":311,"label":"Failures"}},"GetDistance_bjx0s":{"component":"objects/GetObjectKey","metadata":{"x":697,"y":159,"label":"GetDistance"}},"CheckDistance_uzpv9":{"component":"math/Compare","metadata":{"x":884,"y":159,"label":"CheckDistance"}},"GetIndividualPointer_hv93t":{"component":"objects/SplitObject","metadata":{"x":509,"y":162,"label":"GetIndividualPointer"}}},"connections":[{"src":{"process":"ReceiveGesture_3bwyo","port":"out"},"tgt":{"process":"core/Split_qfhom","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"SendFail_64mm2","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"SendPass_lskxq","port":"string"},"metadata":{"route":9}},{"src":{"process":"Failures_13q8s","port":"out"},"tgt":{"process":"SendFail_64mm2","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetDistance_bjx0s","port":"missed"},"tgt":{"process":"Failures_13q8s","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_uzpv9","port":"fail"},"tgt":{"process":"Failures_13q8s","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_uzpv9","port":"pass"},"tgt":{"process":"SendPass_lskxq","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetDistance_bjx0s","port":"out"},"tgt":{"process":"CheckDistance_uzpv9","port":"value"},"metadata":{"route":1}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"GetIndividualPointer_hv93t","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetIndividualPointer_hv93t","port":"out"},"tgt":{"process":"GetDistance_bjx0s","port":"in"},"metadata":{"route":9}},{"data":"distance","tgt":{"process":"GetDistance_bjx0s","port":"key"}},{"data":">=","tgt":{"process":"CheckDistance_uzpv9","port":"operator"}}]}');
+});
+require.register("noflo-noflo-gestures/graphs/DetectSwipe.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectSwipe"},"exports":[{"private":"receivegesture_7fxc3.in","public":"in"},{"private":"sendpass_iuc21.out","public":"pass"},{"private":"sendfail_n9iay.out","public":"fail"},{"private":"checkspeed_cru21.comparison","public":"speed"},{"private":"checkdistance_786cc.comparison","public":"distance"}],"processes":{"ReceiveGesture_7fxc3":{"component":"core/Repeat","metadata":{"x":277,"y":124,"label":"ReceiveGesture"}},"GetIndividualPointer_9o878":{"component":"objects/SplitObject","metadata":{"x":473,"y":217,"label":"GetIndividualPointer"}},"SendPass_iuc21":{"component":"strings/SendString","metadata":{"x":2060,"y":113,"label":"SendPass"}},"GetSpeed_26n6h":{"component":"objects/GetObjectKey","metadata":{"x":863,"y":216,"label":"GetSpeed"}},"DetectionFailed_uj7oh":{"component":"core/Merge","metadata":{"x":1850,"y":337,"label":"DetectionFailed"}},"core/Split_cbjyy":{"component":"core/Split","metadata":{"x":273,"y":216,"label":"core/Split"}},"SendFail_n9iay":{"component":"strings/SendString","metadata":{"x":2062,"y":337.16666666666663,"label":"SendFail"}},"CheckSpeed_cru21":{"component":"math/Compare","metadata":{"x":1055.6666666666665,"y":215.66666666666666,"label":"CheckSpeed"}},"strings/SendString_75se6":{"component":"strings/SendString","metadata":{"x":1250.6666666666665,"y":216.66666666666666,"label":"strings/SendString"}},"GetDistance_zdjyf":{"component":"objects/GetObjectKey","metadata":{"x":1445.6666666666665,"y":215.66666666666666,"label":"GetDistance"}},"CheckDistance_786cc":{"component":"math/Compare","metadata":{"x":1648,"y":216,"label":"CheckDistance"}},"core/Split_x6p93":{"component":"core/Split","metadata":{"x":667.9999999999986,"y":215.66666666666663,"label":"core/Split"}}},"connections":[{"src":{"process":"GetSpeed_26n6h","port":"missed"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckSpeed_cru21","port":"pass"},"tgt":{"process":"strings/SendString_75se6","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetSpeed_26n6h","port":"out"},"tgt":{"process":"CheckSpeed_cru21","port":"value"},"metadata":{"route":1}},{"src":{"process":"CheckSpeed_cru21","port":"fail"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"strings/SendString_75se6","port":"out"},"tgt":{"process":"GetDistance_zdjyf","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetDistance_zdjyf","port":"missed"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_786cc","port":"fail"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetDistance_zdjyf","port":"out"},"tgt":{"process":"CheckDistance_786cc","port":"value"},"metadata":{"route":5}},{"src":{"process":"CheckDistance_786cc","port":"pass"},"tgt":{"process":"SendPass_iuc21","port":"in"},"metadata":{"route":5}},{"src":{"process":"DetectionFailed_uj7oh","port":"out"},"tgt":{"process":"SendFail_n9iay","port":"in"},"metadata":{"route":1}},{"src":{"process":"ReceiveGesture_7fxc3","port":"out"},"tgt":{"process":"core/Split_cbjyy","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"SendPass_iuc21","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"SendFail_n9iay","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"GetIndividualPointer_9o878","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetIndividualPointer_9o878","port":"out"},"tgt":{"process":"core/Split_x6p93","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x6p93","port":"out"},"tgt":{"process":"strings/SendString_75se6","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_x6p93","port":"out"},"tgt":{"process":"GetSpeed_26n6h","port":"in"},"metadata":{"route":9}},{"data":"speed","tgt":{"process":"GetSpeed_26n6h","port":"key"}},{"data":"distance","tgt":{"process":"GetDistance_zdjyf","port":"key"}},{"data":">=","tgt":{"process":"CheckSpeed_cru21","port":"operator"}},{"data":">=","tgt":{"process":"CheckDistance_786cc","port":"operator"}}]}');
+});
+require.register("noflo-noflo-gestures/graphs/DetectPinch.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectPinch"},"exports":[{"private":"core/split_ewbre.in","public":"in"},{"private":"sendpass_cf0pu.out","public":"pass"},{"private":"sendfail_vmi5n.out","public":"fail"}],"processes":{"core/Split_ewbre":{"component":"core/Split","metadata":{"x":740,"y":151,"label":"core/Split"}},"SendFail_vmi5n":{"component":"strings/SendString","metadata":{"x":1423,"y":259,"label":"SendFail"}},"SendPass_cf0pu":{"component":"strings/SendString","metadata":{"x":1421,"y":65,"label":"SendPass"}},"objects/Size_jjmmg":{"component":"objects/Size","metadata":{"x":939,"y":150,"label":"objects/Size"}},"math/Compare_hk3su":{"component":"math/Compare","metadata":{"x":1146,"y":147,"label":"math/Compare"}}},"connections":[{"src":{"process":"objects/Size_jjmmg","port":"out"},"tgt":{"process":"math/Compare_hk3su","port":"value"},"metadata":{"route":9}},{"src":{"process":"math/Compare_hk3su","port":"pass"},"tgt":{"process":"SendPass_cf0pu","port":"in"},"metadata":{"route":5}},{"src":{"process":"math/Compare_hk3su","port":"fail"},"tgt":{"process":"SendFail_vmi5n","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"SendFail_vmi5n","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"SendPass_cf0pu","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"objects/Size_jjmmg","port":"in"},"metadata":{"route":9}},{"data":1,"tgt":{"process":"math/Compare_hk3su","port":"comparison"}},{"data":">","tgt":{"process":"math/Compare_hk3su","port":"operator"}}]}');
+});
 require.register("noflo-noflo-gestures/graphs/FilterByTarget.json", function(exports, require, module){
 module.exports = JSON.parse('{"properties":{"name":"FilterByTarget"},"exports":[{"private":"StartEvent_rjg24.in","public":"started"},{"private":"GetTarget_7cfim.object","public":"startevent"},{"private":"MoveEvent_reuhl.in","public":"move"},{"private":"VerifyTarget_ty3p5.accept","public":"accept"},{"private":"TargetElement_9tv87.out","public":"target"},{"private":"OnTarget_l85x9.out","public":"ontarget"},{"private":"AllowedMoves_y6ulv.out","public":"move"}],"processes":{"GetTarget_7cfim":{"component":"objects/GetObjectKey","metadata":{"x":634,"y":210,"label":"GetTarget"}},"MoveEvent_reuhl":{"component":"core/Repeat","metadata":{"x":425,"y":362,"label":"MoveEvent"}},"SplitTarget_sqlg0":{"component":"core/Split","metadata":{"x":836,"y":212,"label":"SplitTarget"}},"StartEvent_rjg24":{"component":"core/Repeat","metadata":{"x":426.00000000000006,"y":213,"label":"StartEvent"}},"VerifyTarget_ty3p5":{"component":"objects/FilterPropertyValue","metadata":{"x":1051.3333333333335,"y":211.33333333333331,"label":"VerifyTarget"}},"AllowedMoves_y6ulv":{"component":"flow/Gate","metadata":{"x":1508.6666666666665,"y":212.5,"label":"AllowedMoves"}},"SplitOnTarget_xmi67":{"component":"core/Split","metadata":{"x":1275.833333333334,"y":209.66666666666669,"label":"SplitOnTarget"}},"OnTarget_l85x9":{"component":"core/Repeat","metadata":{"x":1509.833333333334,"y":118.66666666666669,"label":"OnTarget"}},"TargetElement_9tv87":{"component":"core/Repeat","metadata":{"x":1507.833333333334,"y":26.666666666666686,"label":"TargetElement"}}},"connections":[{"src":{"process":"GetTarget_7cfim","port":"out"},"tgt":{"process":"SplitTarget_sqlg0","port":"in"},"metadata":{"route":5}},{"src":{"process":"StartEvent_rjg24","port":"out"},"tgt":{"process":"GetTarget_7cfim","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitTarget_sqlg0","port":"out"},"tgt":{"process":"VerifyTarget_ty3p5","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveEvent_reuhl","port":"out"},"tgt":{"process":"AllowedMoves_y6ulv","port":"in"},"metadata":{"route":2}},{"src":{"process":"VerifyTarget_ty3p5","port":"missed"},"tgt":{"process":"AllowedMoves_y6ulv","port":"close"},"metadata":{"route":1}},{"src":{"process":"VerifyTarget_ty3p5","port":"out"},"tgt":{"process":"SplitOnTarget_xmi67","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitOnTarget_xmi67","port":"out"},"tgt":{"process":"AllowedMoves_y6ulv","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitOnTarget_xmi67","port":"out"},"tgt":{"process":"OnTarget_l85x9","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitTarget_sqlg0","port":"out"},"tgt":{"process":"TargetElement_9tv87","port":"in"},"metadata":{"route":5}},{"data":"target","tgt":{"process":"GetTarget_7cfim","port":"key"}}]}');
 });
+require.register("noflo-noflo-gestures/graphs/GestureToObject.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"Behavior"},"exports":[{"private":"listengestures_ns8li.element","public":"element"},{"private":"gesturedatatoobject_yh3yq.out","public":"out"}],"processes":{"ListenGestures_ns8li":{"component":"gestures/ListenGestures","metadata":{"x":609,"y":139,"label":"ListenGestures"}},"GestureDataToObject_yh3yq":{"component":"groups/CollectObject","metadata":{"x":1252,"y":159,"label":"GestureDataToObject"}},"SplitEnd_akdq1":{"component":"core/Split","metadata":{"x":847.1666666666667,"y":85.66666666666666,"label":"SplitEnd"}},"ClearOnEnd_9w9o":{"component":"core/RepeatAsync","metadata":{"x":1051.1666666666667,"y":88.66666666666666,"label":"ClearOnEnd"}},"SplitSpeed_2jnkm":{"component":"core/Split","metadata":{"x":849.5,"y":147.5,"label":"SplitSpeed"}},"SplitStart_hr2rx":{"component":"core/Split","metadata":{"x":845.833333333333,"y":23.50000000000003,"label":"SplitStart"}},"ReleaseMoveOrEnd_ahcs5":{"component":"core/Merge","metadata":{"x":1050.3333333333326,"y":157.83333333333331,"label":"ReleaseMoveOrEnd"}}},"connections":[{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"ClearOnEnd_9w9o","port":"in"},"metadata":{"route":1}},{"src":{"process":"ClearOnEnd_9w9o","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"clear"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"end"},"tgt":{"process":"SplitEnd_akdq1","port":"in"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"start"},"tgt":{"process":"SplitStart_hr2rx","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitStart_hr2rx","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":5}},{"src":{"process":"ListenGestures_ns8li","port":"startpoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":5}},{"src":{"process":"ListenGestures_ns8li","port":"elements"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":7}},{"src":{"process":"ListenGestures_ns8li","port":"angle"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"ListenGestures_ns8li","port":"distance"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"SplitSpeed_2jnkm","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"ListenGestures_ns8li","port":"movepoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":3}},{"src":{"process":"ListenGestures_ns8li","port":"current"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":3}},{"src":{"process":"ListenGestures_ns8li","port":"duration"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"endpoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"speed"},"tgt":{"process":"SplitSpeed_2jnkm","port":"in"},"metadata":{"route":8}},{"src":{"process":"SplitSpeed_2jnkm","port":"out"},"tgt":{"process":"ReleaseMoveOrEnd_ahcs5","port":"in"},"metadata":{"route":8}},{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"ReleaseMoveOrEnd_ahcs5","port":"in"},"metadata":{"route":1}},{"src":{"process":"ReleaseMoveOrEnd_ahcs5","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"release"},"metadata":{"route":8}},{"data":"elements","tgt":{"process":"GestureDataToObject_yh3yq","port":"allpackets"}},{"data":"startelement,startpoint,elements,angle,distance,speed,movepoint,current,duration,endelement,endpoint","tgt":{"process":"GestureDataToObject_yh3yq","port":"keys"}}]}');
+});
 require.register("noflo-noflo-gestures/graphs/ListenGestures.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenGestures"},"exports":[{"private":"getgesturearea_h4opr.selector","public":"selector"},{"private":"distance_kwk39.out","public":"distance"},{"private":"gestureelements_yvm9m.out","public":"elements"},{"private":"angle_43qpo.out","public":"angle"},{"private":"speed_e99jq.out","public":"speed"},{"private":"getstartelement_w7m64.out","public":"start"},{"private":"startpoint_u8int.out","public":"startpoint"},{"private":"endpoint_m93v2.out","public":"endpoint"}],"processes":{"GestureStart_r8vr5":{"component":"core/Split","metadata":{"x":466,"y":-31,"label":"GestureStart"}},"GetStartingPoint_pidfs":{"component":"interaction/ReadCoordinates","metadata":{"x":765,"y":-191,"label":"GetStartingPoint"}},"GetEndingPoint_4sogu":{"component":"interaction/ReadCoordinates","metadata":{"x":1368,"y":136,"label":"GetEndingPoint"}},"core/Split_baeeb":{"component":"core/Split","metadata":{"x":1563,"y":137,"label":"core/Split"}},"core/Split_4ds1h":{"component":"core/Split","metadata":{"x":973,"y":-191,"label":"core/Split"}},"GestureAngle_dwjj":{"component":"math/CalculateAngle","metadata":{"x":1939,"y":-127,"label":"GestureAngle"}},"GestureDistance_esqkc":{"component":"math/CalculateDistance","metadata":{"x":1934,"y":20,"label":"GestureDistance"}},"LastMove_p5yj7":{"component":"core/Kick","metadata":{"x":1062,"y":176,"label":"LastMove"}},"GestureEnd_qqx8o":{"component":"core/Split","metadata":{"x":473,"y":180,"label":"GestureEnd"}},"GestureMove_hy46s":{"component":"core/Split","metadata":{"x":463,"y":65,"label":"GestureMove"}},"AllTouchedElements_i3x74":{"component":"packets/UniquePacket","metadata":{"x":1364,"y":1,"label":"AllTouchedElements"}},"objects/GetObjectKey_k1ap5":{"component":"objects/GetObjectKey","metadata":{"x":1059,"y":6,"label":"objects/GetObjectKey"}},"GetStartElement_w7m64":{"component":"objects/GetObjectKey","metadata":{"x":769,"y":-44.66666666666666,"label":"GetStartElement"}},"GetGestureArea_h4opr":{"component":"dom/GetElement","metadata":{"x":-32,"y":7,"label":"GetGestureArea"}},"EndDate_hx6m9":{"component":"objects/CreateDate","metadata":{"x":2154,"y":164,"label":"EndDate"}},"StartDate_swbwu":{"component":"objects/CreateDate","metadata":{"x":1936,"y":-271,"label":"StartDate"}},"math/Subtract_j5v20":{"component":"math/Subtract","metadata":{"x":2516,"y":-193,"label":"math/Subtract"}},"core/Kick_trnc6":{"component":"core/Kick","metadata":{"x":1937,"y":163,"label":"core/Kick"}},"SetStart_ql51c":{"component":"strings/SendString","metadata":{"x":768,"y":-310,"label":"SetStart"}},"math/Divide_x4gc8":{"component":"math/Divide","metadata":{"x":2737,"y":-194,"label":"math/Divide"}},"core/Split_ium1q":{"component":"core/Split","metadata":{"x":2954,"y":-196,"label":"core/Split"}},"core/Split_x0a12":{"component":"core/Split","metadata":{"x":2145,"y":20,"label":"core/Split"}},"objects/CallMethod_iu7k2":{"component":"objects/CallMethod","metadata":{"x":2348,"y":167,"label":"objects/CallMethod"}},"objects/CallMethod_rtfd2":{"component":"objects/CallMethod","metadata":{"x":2139,"y":-274,"label":"objects/CallMethod"}},"Distance_kwk39":{"component":"core/Repeat","metadata":{"x":2580,"y":20,"label":"Distance"}},"GestureElements_yvm9m":{"component":"core/Repeat","metadata":{"x":1558,"y":0,"label":"GestureElements"}},"Angle_43qpo":{"component":"core/Repeat","metadata":{"x":2141,"y":-126,"label":"Angle"}},"Speed_e99jq":{"component":"core/Repeat","metadata":{"x":3183,"y":-200,"label":"Speed"}},"EndPoint_m93v2":{"component":"core/Repeat","metadata":{"x":1939,"y":262,"label":"EndPoint"}},"StartPoint_u8int":{"component":"core/Repeat","metadata":{"x":1242,"y":-192,"label":"StartPoint"}},"gestures/ListenPointer_8ftd1":{"component":"gestures/ListenPointer","metadata":{"x":214,"y":-1,"label":"gestures/ListenPointer"}}},"connections":[{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"destination"},"metadata":{"route":1}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"destination"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetEndingPoint_4sogu","port":"client"},"tgt":{"process":"core/Split_baeeb","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"data"},"metadata":{"route":3}},{"src":{"process":"LastMove_p5yj7","port":"out"},"tgt":{"process":"GetEndingPoint_4sogu","port":"event"},"metadata":{"route":1}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"objects/GetObjectKey_k1ap5","port":"in"},"metadata":{"route":3}},{"src":{"process":"objects/GetObjectKey_k1ap5","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"clear"},"metadata":{"route":1}},{"src":{"process":"GetStartingPoint_pidfs","port":"client"},"tgt":{"process":"core/Split_4ds1h","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"GetStartElement_w7m64","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"core/Kick_trnc6","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Kick_trnc6","port":"out"},"tgt":{"process":"EndDate_hx6m9","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"SetStart_ql51c","port":"in"},"metadata":{"route":5}},{"src":{"process":"SetStart_ql51c","port":"out"},"tgt":{"process":"StartDate_swbwu","port":"in"},"metadata":{"route":5}},{"src":{"process":"math/Divide_x4gc8","port":"quotient"},"tgt":{"process":"core/Split_ium1q","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"clear"},"metadata":{"route":0}},{"src":{"process":"GestureDistance_esqkc","port":"distance"},"tgt":{"process":"core/Split_x0a12","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"dividend"},"metadata":{"route":9}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"GetStartingPoint_pidfs","port":"event"},"metadata":{"route":5}},{"src":{"process":"math/Subtract_j5v20","port":"difference"},"tgt":{"process":"math/Divide_x4gc8","port":"divisor"},"metadata":{"route":9}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"clear"},"metadata":{"route":0}},{"src":{"process":"objects/CallMethod_iu7k2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"minuend"},"metadata":{"route":1}},{"src":{"process":"EndDate_hx6m9","port":"out"},"tgt":{"process":"objects/CallMethod_iu7k2","port":"in"},"metadata":{"route":1}},{"src":{"process":"objects/CallMethod_rtfd2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"subtrahend"},"metadata":{"route":5}},{"src":{"process":"StartDate_swbwu","port":"out"},"tgt":{"process":"objects/CallMethod_rtfd2","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"Distance_kwk39","port":"in"},"metadata":{"route":9}},{"src":{"process":"AllTouchedElements_i3x74","port":"out"},"tgt":{"process":"GestureElements_yvm9m","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureAngle_dwjj","port":"angle"},"tgt":{"process":"Angle_43qpo","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"Speed_e99jq","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"EndPoint_m93v2","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"StartPoint_u8int","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetGestureArea_h4opr","port":"element"},"tgt":{"process":"gestures/ListenPointer_8ftd1","port":"element"},"metadata":{"route":7}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"end"},"tgt":{"process":"GestureEnd_qqx8o","port":"in"},"metadata":{"route":1}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"move"},"tgt":{"process":"GestureMove_hy46s","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"start"},"tgt":{"process":"GestureStart_r8vr5","port":"in"},"metadata":{"route":5}},{"data":"target","tgt":{"process":"objects/GetObjectKey_k1ap5","port":"key"}},{"data":"target","tgt":{"process":"GetStartElement_w7m64","port":"key"}},{"data":"now","tgt":{"process":"core/Kick_trnc6","port":"data"}},{"data":"now","tgt":{"process":"SetStart_ql51c","port":"string"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_iu7k2","port":"method"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_rtfd2","port":"method"}}]}');
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"ListenGestures"},"exports":[{"private":"gestures/listenpointer_8ftd1.element","public":"element"},{"private":"movepoint_fjlur.out","public":"movepoint"},{"private":"distance_kwk39.out","public":"distance"},{"private":"gestureelements_yvm9m.out","public":"elements"},{"private":"angle_43qpo.out","public":"angle"},{"private":"speed_e99jq.out","public":"speed"},{"private":"getstartelement_w7m64.out","public":"start"},{"private":"startpoint_u8int.out","public":"startpoint"},{"private":"getendelement_slbp9.out","public":"end"},{"private":"getendingpoint_dettb.client","public":"endpoint"},{"private":"currentelement_cu0q5.out","public":"current"},{"private":"duration_qyevv.out","public":"duration"}],"processes":{"GestureStart_r8vr5":{"component":"core/Split","metadata":{"x":466,"y":-31,"label":"GestureStart"}},"GetStartingPoint_pidfs":{"component":"interaction/ReadCoordinates","metadata":{"x":765,"y":-191,"label":"GetStartingPoint"}},"GetMovePoint_9dia9":{"component":"interaction/ReadCoordinates","metadata":{"x":1368,"y":136,"label":"GetMovePoint"}},"core/Split_baeeb":{"component":"core/Split","metadata":{"x":1563,"y":137,"label":"core/Split"}},"core/Split_4ds1h":{"component":"core/Split","metadata":{"x":973,"y":-191,"label":"core/Split"}},"GestureAngle_dwjj":{"component":"math/CalculateAngle","metadata":{"x":1939,"y":-127,"label":"GestureAngle"}},"GestureDistance_esqkc":{"component":"math/CalculateDistance","metadata":{"x":1934,"y":20,"label":"GestureDistance"}},"LastMove_p5yj7":{"component":"core/Kick","metadata":{"x":1062,"y":176,"label":"LastMove"}},"GestureEnd_qqx8o":{"component":"core/Split","metadata":{"x":460,"y":162,"label":"GestureEnd"}},"GestureMove_hy46s":{"component":"core/Split","metadata":{"x":463,"y":65,"label":"GestureMove"}},"AllTouchedElements_i3x74":{"component":"packets/UniquePacket","metadata":{"x":1445,"y":6,"label":"AllTouchedElements"}},"GetMoveElement_iaexm":{"component":"objects/GetObjectKey","metadata":{"x":1059,"y":6,"label":"GetMoveElement"}},"GetStartElement_w7m64":{"component":"objects/GetObjectKey","metadata":{"x":968,"y":-404.66666666666663,"label":"GetStartElement"}},"MoveDate_6bjnl":{"component":"objects/CreateDate","metadata":{"x":2145,"y":164,"label":"MoveDate"}},"StartDate_swbwu":{"component":"objects/CreateDate","metadata":{"x":968,"y":-281,"label":"StartDate"}},"math/Subtract_j5v20":{"component":"math/Subtract","metadata":{"x":2516,"y":-193,"label":"math/Subtract"}},"SetStart_ql51c":{"component":"strings/SendString","metadata":{"x":765,"y":-284,"label":"SetStart"}},"math/Divide_x4gc8":{"component":"math/Divide","metadata":{"x":2939,"y":-199,"label":"math/Divide"}},"core/Split_x0a12":{"component":"core/Split","metadata":{"x":2151,"y":23,"label":"core/Split"}},"objects/CallMethod_iu7k2":{"component":"objects/CallMethod","metadata":{"x":2348,"y":167,"label":"objects/CallMethod"}},"objects/CallMethod_rtfd2":{"component":"objects/CallMethod","metadata":{"x":2139,"y":-274,"label":"objects/CallMethod"}},"Distance_kwk39":{"component":"core/Repeat","metadata":{"x":2580,"y":20,"label":"Distance"}},"GestureElements_yvm9m":{"component":"core/Repeat","metadata":{"x":1639,"y":4,"label":"GestureElements"}},"Angle_43qpo":{"component":"core/Repeat","metadata":{"x":2312,"y":-121,"label":"Angle"}},"Speed_e99jq":{"component":"core/Repeat","metadata":{"x":3362,"y":-171,"label":"Speed"}},"MovePoint_fjlur":{"component":"core/Repeat","metadata":{"x":1939,"y":262,"label":"MovePoint"}},"StartPoint_u8int":{"component":"core/Repeat","metadata":{"x":1382,"y":-189,"label":"StartPoint"}},"gestures/ListenPointer_8ftd1":{"component":"gestures/ListenPointer","metadata":{"x":213,"y":-1,"label":"gestures/ListenPointer"}},"GetEndElement_slbp9":{"component":"objects/GetObjectKey","metadata":{"x":1367.3333333333335,"y":283.3333333333335,"label":"GetEndElement"}},"core/RepeatAsync_c56tj":{"component":"core/RepeatAsync","metadata":{"x":1058.666666666667,"y":312.33333333333326,"label":"core/RepeatAsync"}},"strings/SendString_t6gby":{"component":"strings/SendString","metadata":{"x":1935,"y":166.33333333333337,"label":"strings/SendString"}},"groups/SendByGroup_z06kk":{"component":"groups/SendByGroup","metadata":{"x":556,"y":-151.66666666666669,"label":"groups/SendByGroup"}},"core/Split_ekxij":{"component":"core/Split","metadata":{"x":3158.5,"y":-166.33333333333343,"label":"core/Split"}},"core/Split_eph3d":{"component":"core/Split","metadata":{"x":2123.333333333334,"y":-122.66666666666669,"label":"core/Split"}},"core/Split_3elep":{"component":"core/Split","metadata":{"x":2731.1666666666697,"y":-171.83333333333258,"label":"core/Split"}},"core/Split_8l3yu":{"component":"core/Split","metadata":{"x":1251.3333333333333,"y":7.166666666666629,"label":"core/Split"}},"CurrentElement_cu0q5":{"component":"core/Repeat","metadata":{"x":1599.833333333333,"y":-192.00000000000006,"label":"CurrentElement"}},"Duration_qyevv":{"component":"core/Repeat","metadata":{"x":2937.833333333333,"y":-295.83333333333326,"label":"Duration"}},"GetEndingPoint_dettb":{"component":"interaction/ReadCoordinates","metadata":{"x":727.8333333333331,"y":335.3333333333333,"label":"GetEndingPoint"}},"core/Merge_6so":{"component":"core/Merge","metadata":{"x":1196.666666666667,"y":-188.99999999999983,"label":"core/Merge"}},"interaction/ReadCoordinates_82cb1":{"component":"interaction/ReadCoordinates","metadata":{"x":767.3333333333339,"y":-85.83333333333314,"label":"interaction/ReadCoordinates"}},"core/Drop_sa8z5":{"component":"core/Drop","metadata":{"x":1596.833333333333,"y":326.0000000000001,"label":"core/Drop"}},"core/Merge_lqxll":{"component":"core/Merge","metadata":{"x":768.9999999999995,"y":-403.66666666666663,"label":"core/Merge"}},"groups/SendByGroup_8yaj":{"component":"groups/SendByGroup","metadata":{"x":1166.999999999999,"y":-286.83333333333326,"label":"groups/SendByGroup"}}},"connections":[{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"destination"},"metadata":{"route":3}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"destination"},"metadata":{"route":3}},{"src":{"process":"GetMovePoint_9dia9","port":"client"},"tgt":{"process":"core/Split_baeeb","port":"in"},"metadata":{"route":3}},{"src":{"process":"GetStartingPoint_pidfs","port":"client"},"tgt":{"process":"core/Split_4ds1h","port":"in"},"metadata":{"route":5}},{"src":{"process":"SetStart_ql51c","port":"out"},"tgt":{"process":"StartDate_swbwu","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureDistance_esqkc","port":"distance"},"tgt":{"process":"core/Split_x0a12","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"dividend"},"metadata":{"route":9}},{"src":{"process":"objects/CallMethod_iu7k2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"minuend"},"metadata":{"route":3}},{"src":{"process":"MoveDate_6bjnl","port":"out"},"tgt":{"process":"objects/CallMethod_iu7k2","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"Distance_kwk39","port":"in"},"metadata":{"route":9}},{"src":{"process":"AllTouchedElements_i3x74","port":"out"},"tgt":{"process":"GestureElements_yvm9m","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"MovePoint_fjlur","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"end"},"tgt":{"process":"GestureEnd_qqx8o","port":"in"},"metadata":{"route":1}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"move"},"tgt":{"process":"GestureMove_hy46s","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"start"},"tgt":{"process":"GestureStart_r8vr5","port":"in"},"metadata":{"route":5}},{"src":{"process":"LastMove_p5yj7","port":"out"},"tgt":{"process":"GetEndElement_slbp9","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"core/RepeatAsync_c56tj","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"strings/SendString_t6gby","port":"in"},"metadata":{"route":3}},{"src":{"process":"strings/SendString_t6gby","port":"out"},"tgt":{"process":"MoveDate_6bjnl","port":"in"},"metadata":{"route":4}},{"src":{"process":"groups/SendByGroup_z06kk","port":"out"},"tgt":{"process":"GetStartingPoint_pidfs","port":"event"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"groups/SendByGroup_z06kk","port":"data"},"metadata":{"route":5}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"groups/SendByGroup_z06kk","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"data"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"GetMoveElement_iaexm","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"GetMovePoint_9dia9","port":"event"},"metadata":{"route":3}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"clear"},"metadata":{"route":0}},{"src":{"process":"core/Split_ekxij","port":"out"},"tgt":{"process":"Speed_e99jq","port":"in"},"metadata":{"route":8}},{"src":{"process":"math/Divide_x4gc8","port":"quotient"},"tgt":{"process":"core/Split_ekxij","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_ekxij","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"clear"},"metadata":{"route":0}},{"src":{"process":"core/RepeatAsync_c56tj","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"clear"},"metadata":{"route":1}},{"src":{"process":"GestureAngle_dwjj","port":"angle"},"tgt":{"process":"core/Split_eph3d","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_eph3d","port":"out"},"tgt":{"process":"Angle_43qpo","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_eph3d","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"clear"},"metadata":{"route":0}},{"src":{"process":"math/Subtract_j5v20","port":"difference"},"tgt":{"process":"core/Split_3elep","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"divisor"},"metadata":{"route":9}},{"src":{"process":"GetMoveElement_iaexm","port":"out"},"tgt":{"process":"core/Split_8l3yu","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_8l3yu","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_8l3yu","port":"out"},"tgt":{"process":"CurrentElement_cu0q5","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"Duration_qyevv","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"clear"},"metadata":{"route":0}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"GetEndingPoint_dettb","port":"event"},"metadata":{"route":1}},{"src":{"process":"objects/CallMethod_rtfd2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"subtrahend"},"metadata":{"route":5}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"core/Merge_6so","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Merge_6so","port":"out"},"tgt":{"process":"StartPoint_u8int","port":"in"},"metadata":{"route":5}},{"src":{"process":"interaction/ReadCoordinates_82cb1","port":"client"},"tgt":{"process":"core/Merge_6so","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"interaction/ReadCoordinates_82cb1","port":"event"},"metadata":{"route":5}},{"src":{"process":"GetEndElement_slbp9","port":"missed"},"tgt":{"process":"core/Drop_sa8z5","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"core/Merge_lqxll","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Merge_lqxll","port":"out"},"tgt":{"process":"GetStartElement_w7m64","port":"in"},"metadata":{"route":5}},{"src":{"process":"groups/SendByGroup_z06kk","port":"out"},"tgt":{"process":"core/Merge_lqxll","port":"in"},"metadata":{"route":5}},{"src":{"process":"groups/SendByGroup_8yaj","port":"out"},"tgt":{"process":"objects/CallMethod_rtfd2","port":"in"},"metadata":{"route":5}},{"src":{"process":"StartDate_swbwu","port":"out"},"tgt":{"process":"groups/SendByGroup_8yaj","port":"data"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"SetStart_ql51c","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"groups/SendByGroup_8yaj","port":"in"},"metadata":{"route":3}},{"data":"target","tgt":{"process":"GetMoveElement_iaexm","port":"key"}},{"data":"target","tgt":{"process":"GetStartElement_w7m64","port":"key"}},{"data":"now","tgt":{"process":"SetStart_ql51c","port":"string"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_iu7k2","port":"method"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_rtfd2","port":"method"}},{"data":"target","tgt":{"process":"GetEndElement_slbp9","port":"key"}},{"data":"now","tgt":{"process":"strings/SendString_t6gby","port":"string"}}]}');
 });
 require.register("noflo-noflo-gestures/graphs/ListenPointer.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
+module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"Asynchronize_x0hqm":{"component":"core/RepeatAsync","metadata":{"x":1404,"y":171.33333333333331,"label":"Asynchronize"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"Asynchronize_x0hqm","port":"in"},"metadata":{"route":1}},{"src":{"process":"Asynchronize_x0hqm","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
 });
-require.register("noflo-noflo-gestures/graphs/ListenSwipe.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenSwipe"},"exports":[{"private":"Listen_w7p7a.selector","public":"selector"},{"private":"TouchedElements_5mv0.out","public":"elements"},{"private":"StartElement_v6fcf.out","public":"start"},{"private":"Angle_xtmlw.out","public":"angle"}],"processes":{"Listen_w7p7a":{"component":"gestures/ListenGestures","metadata":{"x":407,"y":83,"label":"Listen"}},"StartElement_v6fcf":{"component":"core/Kick","metadata":{"x":1852,"y":-38,"label":"StartElement"}},"Angle_xtmlw":{"component":"core/Kick","metadata":{"x":1851,"y":-136,"label":"Angle"}},"math/Compare_q293g":{"component":"math/Compare","metadata":{"x":1170,"y":208,"label":"math/Compare"}},"math/Compare_lmqjs":{"component":"math/Compare","metadata":{"x":714,"y":263,"label":"math/Compare"}},"TouchedElements_5mv0":{"component":"core/Kick","metadata":{"x":1852,"y":56,"label":"TouchedElements"}},"packets/LastPacket_6zpy3":{"component":"packets/LastPacket","metadata":{"x":1375.6666666666665,"y":206,"label":"packets/LastPacket"}},"core/Split_b39r4":{"component":"core/Split","metadata":{"x":1585.6666666666665,"y":203,"label":"core/Split"}},"core/Kick_6g0q":{"component":"core/Kick","metadata":{"x":951,"y":206,"label":"core/Kick"}}},"connections":[{"src":{"process":"Listen_w7p7a","port":"start"},"tgt":{"process":"StartElement_v6fcf","port":"data"},"metadata":{"route":0}},{"src":{"process":"Listen_w7p7a","port":"angle"},"tgt":{"process":"Angle_xtmlw","port":"data"},"metadata":{"route":0}},{"src":{"process":"Listen_w7p7a","port":"speed"},"tgt":{"process":"math/Compare_lmqjs","port":"value"},"metadata":{"route":1}},{"src":{"process":"Listen_w7p7a","port":"elements"},"tgt":{"process":"TouchedElements_5mv0","port":"data"},"metadata":{"route":0}},{"src":{"process":"packets/LastPacket_6zpy3","port":"out"},"tgt":{"process":"core/Split_b39r4","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"TouchedElements_5mv0","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"Angle_xtmlw","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"StartElement_v6fcf","port":"in"},"metadata":{"route":0}},{"src":{"process":"math/Compare_lmqjs","port":"pass"},"tgt":{"process":"core/Kick_6g0q","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_w7p7a","port":"distance"},"tgt":{"process":"core/Kick_6g0q","port":"data"},"metadata":{"route":0}},{"src":{"process":"core/Kick_6g0q","port":"out"},"tgt":{"process":"math/Compare_q293g","port":"value"},"metadata":{"route":1}},{"src":{"process":"math/Compare_q293g","port":"pass"},"tgt":{"process":"packets/LastPacket_6zpy3","port":"in"},"metadata":{"route":1}},{"data":">=","tgt":{"process":"math/Compare_q293g","port":"operator"}},{"data":50,"tgt":{"process":"math/Compare_q293g","port":"comparison"}},{"data":0.5,"tgt":{"process":"math/Compare_lmqjs","port":"comparison"}},{"data":">=","tgt":{"process":"math/Compare_lmqjs","port":"operator"}}]}');
-});
-require.register("noflo-noflo-gestures/graphs/RecognizeCardinalGesture.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"RecognizeCardinalGesture"},"exports":[{"private":"StartEventCoordinates_rc5pw.event","public":"started"},{"private":"MoveEventCoordinates_iknb5.event","public":"moved"},{"private":"AllowRecognize_9toik.open","public":"recognize"},{"private":"SendEast_q82ex.out","public":"east"},{"private":"SendSouth_9bok0.out","public":"south"},{"private":"SendWest_2y30t.out","public":"west"},{"private":"SendNorth_71bps.out","public":"north"},{"private":"SendMoveCoordinates_gpv52.out","public":"moved"},{"private":"CheckDistance_w7bjx.comparison","public":"distance"}],"processes":{"StartEventCoordinates_rc5pw":{"component":"interaction/ReadCoordinates","metadata":{"x":-348,"y":431,"label":"StartEventCoordinates"}},"MoveEventCoordinates_iknb5":{"component":"interaction/ReadCoordinates","metadata":{"x":-348,"y":582,"label":"MoveEventCoordinates"}},"MoveCoordinates_6p0q":{"component":"core/Split","metadata":{"x":-142,"y":582,"label":"MoveCoordinates"}},"SendStartCoordinates_d2gh7":{"component":"core/DisconnectAfterPacket","metadata":{"x":64,"y":580,"label":"SendStartCoordinates"}},"HoldStartCoordinates_yplcj":{"component":"core/Kick","metadata":{"x":264,"y":430,"label":"HoldStartCoordinates"}},"AllowRecognize_9toik":{"component":"flow/Gate","metadata":{"x":262.1666666666665,"y":746.8333333333334,"label":"AllowRecognize"}},"SplitStartCoordinates_yf4hh":{"component":"core/Split","metadata":{"x":447.1666666666665,"y":426.5,"label":"SplitStartCoordinates"}},"CalculateDistance_g0t6q":{"component":"math/CalculateDistance","metadata":{"x":657.3333333333333,"y":563.8333333333334,"label":"CalculateDistance"}},"CheckDistance_w7bjx":{"component":"math/Compare","metadata":{"x":849.6666666666665,"y":565.6666666666666,"label":"CheckDistance"}},"HoldCoordinates_7cosq":{"component":"core/Kick","metadata":{"x":1264.4999999999995,"y":647.5,"label":"HoldCoordinates"}},"DistancePassed_ftnjf":{"component":"core/DisconnectAfterPacket","metadata":{"x":1044.833333333333,"y":564.5,"label":"DistancePassed"}},"SplitForRecognition_rgwux":{"component":"core/Split","metadata":{"x":450.5,"y":746.6666666666666,"label":"SplitForRecognition"}},"GetGestureAngle_zsc1o":{"component":"math/CalculateAngle","metadata":{"x":1493.166666666667,"y":529.5,"label":"GetGestureAngle"}},"GestureDirection_wonuj":{"component":"gestures/CardinalRouter","metadata":{"x":1725.3333333333326,"y":530,"label":"GestureDirection"}},"SplitEast_hlpzd":{"component":"core/Split","metadata":{"x":2004.9999999999993,"y":456.1666666666667,"label":"SplitEast"}},"SplitSouth_3z668":{"component":"core/Split","metadata":{"x":2004.9999999999993,"y":540.1666666666667,"label":"SplitSouth"}},"SplitWest_penr4":{"component":"core/Split","metadata":{"x":2008.9999999999993,"y":627.1666666666667,"label":"SplitWest"}},"SplitNorth_7c1aj":{"component":"core/Split","metadata":{"x":2009.9999999999993,"y":721.1666666666667,"label":"SplitNorth"}},"Recognized_s3iw1":{"component":"core/Merge","metadata":{"x":2234.999999999999,"y":803.1666666666667,"label":"Recognized"}},"SendEast_q82ex":{"component":"core/Repeat","metadata":{"x":2222.333333333333,"y":457,"label":"SendEast"}},"SendSouth_9bok0":{"component":"core/Repeat","metadata":{"x":2224.333333333333,"y":539,"label":"SendSouth"}},"SendWest_2y30t":{"component":"core/Repeat","metadata":{"x":2225.333333333333,"y":625,"label":"SendWest"}},"SendNorth_71bps":{"component":"core/Repeat","metadata":{"x":2229.333333333333,"y":718,"label":"SendNorth"}},"SendMoveCoordinates_gpv52":{"component":"core/Repeat","metadata":{"x":262.66666666666674,"y":878,"label":"SendMoveCoordinates"}}},"connections":[{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"SendStartCoordinates_d2gh7","port":"in"},"metadata":{"route":2}},{"src":{"process":"SendStartCoordinates_d2gh7","port":"out"},"tgt":{"process":"HoldStartCoordinates_yplcj","port":"in"},"metadata":{"route":2}},{"src":{"process":"StartEventCoordinates_rc5pw","port":"client"},"tgt":{"process":"HoldStartCoordinates_yplcj","port":"data"},"metadata":{"route":5}},{"src":{"process":"MoveEventCoordinates_iknb5","port":"client"},"tgt":{"process":"MoveCoordinates_6p0q","port":"in"},"metadata":{"route":2}},{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"AllowRecognize_9toik","port":"in"},"metadata":{"route":2}},{"src":{"process":"HoldStartCoordinates_yplcj","port":"out"},"tgt":{"process":"SplitStartCoordinates_yf4hh","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitStartCoordinates_yf4hh","port":"out"},"tgt":{"process":"CalculateDistance_g0t6q","port":"origin"},"metadata":{"route":5}},{"src":{"process":"CalculateDistance_g0t6q","port":"distance"},"tgt":{"process":"CheckDistance_w7bjx","port":"value"},"metadata":{"route":9}},{"src":{"process":"CheckDistance_w7bjx","port":"pass"},"tgt":{"process":"DistancePassed_ftnjf","port":"in"},"metadata":{"route":9}},{"src":{"process":"DistancePassed_ftnjf","port":"out"},"tgt":{"process":"HoldCoordinates_7cosq","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitForRecognition_rgwux","port":"out"},"tgt":{"process":"HoldCoordinates_7cosq","port":"data"},"metadata":{"route":2}},{"src":{"process":"SplitForRecognition_rgwux","port":"out"},"tgt":{"process":"CalculateDistance_g0t6q","port":"destination"},"metadata":{"route":2}},{"src":{"process":"AllowRecognize_9toik","port":"out"},"tgt":{"process":"SplitForRecognition_rgwux","port":"in"},"metadata":{"route":2}},{"src":{"process":"HoldCoordinates_7cosq","port":"out"},"tgt":{"process":"GetGestureAngle_zsc1o","port":"destination"},"metadata":{"route":2}},{"src":{"process":"SplitStartCoordinates_yf4hh","port":"out"},"tgt":{"process":"GetGestureAngle_zsc1o","port":"origin"},"metadata":{"route":5}},{"src":{"process":"GetGestureAngle_zsc1o","port":"angle"},"tgt":{"process":"GestureDirection_wonuj","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"e"},"tgt":{"process":"SplitEast_hlpzd","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"s"},"tgt":{"process":"SplitSouth_3z668","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"w"},"tgt":{"process":"SplitWest_penr4","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"n"},"tgt":{"process":"SplitNorth_7c1aj","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitEast_hlpzd","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitSouth_3z668","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitWest_penr4","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitNorth_7c1aj","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"Recognized_s3iw1","port":"out"},"tgt":{"process":"AllowRecognize_9toik","port":"close"},"metadata":{"route":1}},{"src":{"process":"SplitEast_hlpzd","port":"out"},"tgt":{"process":"SendEast_q82ex","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitSouth_3z668","port":"out"},"tgt":{"process":"SendSouth_9bok0","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitWest_penr4","port":"out"},"tgt":{"process":"SendWest_2y30t","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitNorth_7c1aj","port":"out"},"tgt":{"process":"SendNorth_71bps","port":"in"},"metadata":{"route":9}},{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"SendMoveCoordinates_gpv52","port":"in"},"metadata":{"route":0}},{"data":">=","tgt":{"process":"CheckDistance_w7bjx","port":"operator"}}]}');
+require.register("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":608,"y":121,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":606,"y":201,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":816,"y":201,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":1021,"y":158,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":1019,"y":260,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1266,"y":195,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
 });
 require.register("noflo-noflo-gestures/index.js", function(exports, require, module){
 /*
@@ -7195,23 +8528,32 @@ require.register("noflo-noflo-gestures/index.js", function(exports, require, mod
  */
 
 });
+require.register("noflo-noflo-gestures/graphs/DetectDrag.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectDrag"},"exports":[{"private":"receivegesture_3bwyo.in","public":"in"},{"private":"checkdistance_uzpv9.comparison","public":"distance"},{"private":"sendpass_lskxq.out","public":"pass"},{"private":"sendfail_64mm2.out","public":"fail"}],"processes":{"ReceiveGesture_3bwyo":{"component":"core/Repeat","metadata":{"x":314,"y":83,"label":"ReceiveGesture"}},"core/Split_qfhom":{"component":"core/Split","metadata":{"x":314,"y":160,"label":"core/Split"}},"SendPass_lskxq":{"component":"strings/SendString","metadata":{"x":1143,"y":28,"label":"SendPass"}},"SendFail_64mm2":{"component":"strings/SendString","metadata":{"x":1145,"y":305,"label":"SendFail"}},"Failures_13q8s":{"component":"core/Merge","metadata":{"x":941,"y":311,"label":"Failures"}},"GetDistance_bjx0s":{"component":"objects/GetObjectKey","metadata":{"x":697,"y":159,"label":"GetDistance"}},"CheckDistance_uzpv9":{"component":"math/Compare","metadata":{"x":884,"y":159,"label":"CheckDistance"}},"GetIndividualPointer_hv93t":{"component":"objects/SplitObject","metadata":{"x":509,"y":162,"label":"GetIndividualPointer"}}},"connections":[{"src":{"process":"ReceiveGesture_3bwyo","port":"out"},"tgt":{"process":"core/Split_qfhom","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"SendFail_64mm2","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"SendPass_lskxq","port":"string"},"metadata":{"route":9}},{"src":{"process":"Failures_13q8s","port":"out"},"tgt":{"process":"SendFail_64mm2","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetDistance_bjx0s","port":"missed"},"tgt":{"process":"Failures_13q8s","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_uzpv9","port":"fail"},"tgt":{"process":"Failures_13q8s","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_uzpv9","port":"pass"},"tgt":{"process":"SendPass_lskxq","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetDistance_bjx0s","port":"out"},"tgt":{"process":"CheckDistance_uzpv9","port":"value"},"metadata":{"route":1}},{"src":{"process":"core/Split_qfhom","port":"out"},"tgt":{"process":"GetIndividualPointer_hv93t","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetIndividualPointer_hv93t","port":"out"},"tgt":{"process":"GetDistance_bjx0s","port":"in"},"metadata":{"route":9}},{"data":"distance","tgt":{"process":"GetDistance_bjx0s","port":"key"}},{"data":">=","tgt":{"process":"CheckDistance_uzpv9","port":"operator"}}]}');
+});
+require.register("noflo-noflo-gestures/graphs/DetectSwipe.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectSwipe"},"exports":[{"private":"receivegesture_7fxc3.in","public":"in"},{"private":"sendpass_iuc21.out","public":"pass"},{"private":"sendfail_n9iay.out","public":"fail"},{"private":"checkspeed_cru21.comparison","public":"speed"},{"private":"checkdistance_786cc.comparison","public":"distance"}],"processes":{"ReceiveGesture_7fxc3":{"component":"core/Repeat","metadata":{"x":277,"y":124,"label":"ReceiveGesture"}},"GetIndividualPointer_9o878":{"component":"objects/SplitObject","metadata":{"x":473,"y":217,"label":"GetIndividualPointer"}},"SendPass_iuc21":{"component":"strings/SendString","metadata":{"x":2060,"y":113,"label":"SendPass"}},"GetSpeed_26n6h":{"component":"objects/GetObjectKey","metadata":{"x":863,"y":216,"label":"GetSpeed"}},"DetectionFailed_uj7oh":{"component":"core/Merge","metadata":{"x":1850,"y":337,"label":"DetectionFailed"}},"core/Split_cbjyy":{"component":"core/Split","metadata":{"x":273,"y":216,"label":"core/Split"}},"SendFail_n9iay":{"component":"strings/SendString","metadata":{"x":2062,"y":337.16666666666663,"label":"SendFail"}},"CheckSpeed_cru21":{"component":"math/Compare","metadata":{"x":1055.6666666666665,"y":215.66666666666666,"label":"CheckSpeed"}},"strings/SendString_75se6":{"component":"strings/SendString","metadata":{"x":1250.6666666666665,"y":216.66666666666666,"label":"strings/SendString"}},"GetDistance_zdjyf":{"component":"objects/GetObjectKey","metadata":{"x":1445.6666666666665,"y":215.66666666666666,"label":"GetDistance"}},"CheckDistance_786cc":{"component":"math/Compare","metadata":{"x":1648,"y":216,"label":"CheckDistance"}},"core/Split_x6p93":{"component":"core/Split","metadata":{"x":667.9999999999986,"y":215.66666666666663,"label":"core/Split"}}},"connections":[{"src":{"process":"GetSpeed_26n6h","port":"missed"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckSpeed_cru21","port":"pass"},"tgt":{"process":"strings/SendString_75se6","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetSpeed_26n6h","port":"out"},"tgt":{"process":"CheckSpeed_cru21","port":"value"},"metadata":{"route":1}},{"src":{"process":"CheckSpeed_cru21","port":"fail"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"strings/SendString_75se6","port":"out"},"tgt":{"process":"GetDistance_zdjyf","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetDistance_zdjyf","port":"missed"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"CheckDistance_786cc","port":"fail"},"tgt":{"process":"DetectionFailed_uj7oh","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetDistance_zdjyf","port":"out"},"tgt":{"process":"CheckDistance_786cc","port":"value"},"metadata":{"route":5}},{"src":{"process":"CheckDistance_786cc","port":"pass"},"tgt":{"process":"SendPass_iuc21","port":"in"},"metadata":{"route":5}},{"src":{"process":"DetectionFailed_uj7oh","port":"out"},"tgt":{"process":"SendFail_n9iay","port":"in"},"metadata":{"route":1}},{"src":{"process":"ReceiveGesture_7fxc3","port":"out"},"tgt":{"process":"core/Split_cbjyy","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"SendPass_iuc21","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"SendFail_n9iay","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_cbjyy","port":"out"},"tgt":{"process":"GetIndividualPointer_9o878","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetIndividualPointer_9o878","port":"out"},"tgt":{"process":"core/Split_x6p93","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x6p93","port":"out"},"tgt":{"process":"strings/SendString_75se6","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_x6p93","port":"out"},"tgt":{"process":"GetSpeed_26n6h","port":"in"},"metadata":{"route":9}},{"data":"speed","tgt":{"process":"GetSpeed_26n6h","port":"key"}},{"data":"distance","tgt":{"process":"GetDistance_zdjyf","port":"key"}},{"data":">=","tgt":{"process":"CheckSpeed_cru21","port":"operator"}},{"data":">=","tgt":{"process":"CheckDistance_786cc","port":"operator"}}]}');
+});
+require.register("noflo-noflo-gestures/graphs/DetectPinch.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectPinch"},"exports":[{"private":"core/split_ewbre.in","public":"in"},{"private":"sendpass_cf0pu.out","public":"pass"},{"private":"sendfail_vmi5n.out","public":"fail"}],"processes":{"core/Split_ewbre":{"component":"core/Split","metadata":{"x":740,"y":151,"label":"core/Split"}},"SendFail_vmi5n":{"component":"strings/SendString","metadata":{"x":1423,"y":259,"label":"SendFail"}},"SendPass_cf0pu":{"component":"strings/SendString","metadata":{"x":1421,"y":65,"label":"SendPass"}},"objects/Size_jjmmg":{"component":"objects/Size","metadata":{"x":939,"y":150,"label":"objects/Size"}},"math/Compare_hk3su":{"component":"math/Compare","metadata":{"x":1146,"y":147,"label":"math/Compare"}}},"connections":[{"src":{"process":"objects/Size_jjmmg","port":"out"},"tgt":{"process":"math/Compare_hk3su","port":"value"},"metadata":{"route":9}},{"src":{"process":"math/Compare_hk3su","port":"pass"},"tgt":{"process":"SendPass_cf0pu","port":"in"},"metadata":{"route":5}},{"src":{"process":"math/Compare_hk3su","port":"fail"},"tgt":{"process":"SendFail_vmi5n","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"SendFail_vmi5n","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"SendPass_cf0pu","port":"string"},"metadata":{"route":9}},{"src":{"process":"core/Split_ewbre","port":"out"},"tgt":{"process":"objects/Size_jjmmg","port":"in"},"metadata":{"route":9}},{"data":1,"tgt":{"process":"math/Compare_hk3su","port":"comparison"}},{"data":">","tgt":{"process":"math/Compare_hk3su","port":"operator"}}]}');
+});
 require.register("noflo-noflo-gestures/graphs/FilterByTarget.json", function(exports, require, module){
 module.exports = JSON.parse('{"properties":{"name":"FilterByTarget"},"exports":[{"private":"StartEvent_rjg24.in","public":"started"},{"private":"GetTarget_7cfim.object","public":"startevent"},{"private":"MoveEvent_reuhl.in","public":"move"},{"private":"VerifyTarget_ty3p5.accept","public":"accept"},{"private":"TargetElement_9tv87.out","public":"target"},{"private":"OnTarget_l85x9.out","public":"ontarget"},{"private":"AllowedMoves_y6ulv.out","public":"move"}],"processes":{"GetTarget_7cfim":{"component":"objects/GetObjectKey","metadata":{"x":634,"y":210,"label":"GetTarget"}},"MoveEvent_reuhl":{"component":"core/Repeat","metadata":{"x":425,"y":362,"label":"MoveEvent"}},"SplitTarget_sqlg0":{"component":"core/Split","metadata":{"x":836,"y":212,"label":"SplitTarget"}},"StartEvent_rjg24":{"component":"core/Repeat","metadata":{"x":426.00000000000006,"y":213,"label":"StartEvent"}},"VerifyTarget_ty3p5":{"component":"objects/FilterPropertyValue","metadata":{"x":1051.3333333333335,"y":211.33333333333331,"label":"VerifyTarget"}},"AllowedMoves_y6ulv":{"component":"flow/Gate","metadata":{"x":1508.6666666666665,"y":212.5,"label":"AllowedMoves"}},"SplitOnTarget_xmi67":{"component":"core/Split","metadata":{"x":1275.833333333334,"y":209.66666666666669,"label":"SplitOnTarget"}},"OnTarget_l85x9":{"component":"core/Repeat","metadata":{"x":1509.833333333334,"y":118.66666666666669,"label":"OnTarget"}},"TargetElement_9tv87":{"component":"core/Repeat","metadata":{"x":1507.833333333334,"y":26.666666666666686,"label":"TargetElement"}}},"connections":[{"src":{"process":"GetTarget_7cfim","port":"out"},"tgt":{"process":"SplitTarget_sqlg0","port":"in"},"metadata":{"route":5}},{"src":{"process":"StartEvent_rjg24","port":"out"},"tgt":{"process":"GetTarget_7cfim","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitTarget_sqlg0","port":"out"},"tgt":{"process":"VerifyTarget_ty3p5","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveEvent_reuhl","port":"out"},"tgt":{"process":"AllowedMoves_y6ulv","port":"in"},"metadata":{"route":2}},{"src":{"process":"VerifyTarget_ty3p5","port":"missed"},"tgt":{"process":"AllowedMoves_y6ulv","port":"close"},"metadata":{"route":1}},{"src":{"process":"VerifyTarget_ty3p5","port":"out"},"tgt":{"process":"SplitOnTarget_xmi67","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitOnTarget_xmi67","port":"out"},"tgt":{"process":"AllowedMoves_y6ulv","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitOnTarget_xmi67","port":"out"},"tgt":{"process":"OnTarget_l85x9","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitTarget_sqlg0","port":"out"},"tgt":{"process":"TargetElement_9tv87","port":"in"},"metadata":{"route":5}},{"data":"target","tgt":{"process":"GetTarget_7cfim","port":"key"}}]}');
 });
+require.register("noflo-noflo-gestures/graphs/GestureToObject.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"Behavior"},"exports":[{"private":"listengestures_ns8li.element","public":"element"},{"private":"gesturedatatoobject_yh3yq.out","public":"out"}],"processes":{"ListenGestures_ns8li":{"component":"gestures/ListenGestures","metadata":{"x":609,"y":139,"label":"ListenGestures"}},"GestureDataToObject_yh3yq":{"component":"groups/CollectObject","metadata":{"x":1252,"y":159,"label":"GestureDataToObject"}},"SplitEnd_akdq1":{"component":"core/Split","metadata":{"x":847.1666666666667,"y":85.66666666666666,"label":"SplitEnd"}},"ClearOnEnd_9w9o":{"component":"core/RepeatAsync","metadata":{"x":1051.1666666666667,"y":88.66666666666666,"label":"ClearOnEnd"}},"SplitSpeed_2jnkm":{"component":"core/Split","metadata":{"x":849.5,"y":147.5,"label":"SplitSpeed"}},"SplitStart_hr2rx":{"component":"core/Split","metadata":{"x":845.833333333333,"y":23.50000000000003,"label":"SplitStart"}},"ReleaseMoveOrEnd_ahcs5":{"component":"core/Merge","metadata":{"x":1050.3333333333326,"y":157.83333333333331,"label":"ReleaseMoveOrEnd"}}},"connections":[{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"ClearOnEnd_9w9o","port":"in"},"metadata":{"route":1}},{"src":{"process":"ClearOnEnd_9w9o","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"clear"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"end"},"tgt":{"process":"SplitEnd_akdq1","port":"in"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"start"},"tgt":{"process":"SplitStart_hr2rx","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitStart_hr2rx","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":5}},{"src":{"process":"ListenGestures_ns8li","port":"startpoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":5}},{"src":{"process":"ListenGestures_ns8li","port":"elements"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":7}},{"src":{"process":"ListenGestures_ns8li","port":"angle"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"ListenGestures_ns8li","port":"distance"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"SplitSpeed_2jnkm","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"ListenGestures_ns8li","port":"movepoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":3}},{"src":{"process":"ListenGestures_ns8li","port":"current"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":3}},{"src":{"process":"ListenGestures_ns8li","port":"duration"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":9}},{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"endpoint"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"collect"},"metadata":{"route":1}},{"src":{"process":"ListenGestures_ns8li","port":"speed"},"tgt":{"process":"SplitSpeed_2jnkm","port":"in"},"metadata":{"route":8}},{"src":{"process":"SplitSpeed_2jnkm","port":"out"},"tgt":{"process":"ReleaseMoveOrEnd_ahcs5","port":"in"},"metadata":{"route":8}},{"src":{"process":"SplitEnd_akdq1","port":"out"},"tgt":{"process":"ReleaseMoveOrEnd_ahcs5","port":"in"},"metadata":{"route":1}},{"src":{"process":"ReleaseMoveOrEnd_ahcs5","port":"out"},"tgt":{"process":"GestureDataToObject_yh3yq","port":"release"},"metadata":{"route":8}},{"data":"elements","tgt":{"process":"GestureDataToObject_yh3yq","port":"allpackets"}},{"data":"startelement,startpoint,elements,angle,distance,speed,movepoint,current,duration,endelement,endpoint","tgt":{"process":"GestureDataToObject_yh3yq","port":"keys"}}]}');
+});
 require.register("noflo-noflo-gestures/graphs/ListenGestures.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenGestures"},"exports":[{"private":"getgesturearea_h4opr.selector","public":"selector"},{"private":"distance_kwk39.out","public":"distance"},{"private":"gestureelements_yvm9m.out","public":"elements"},{"private":"angle_43qpo.out","public":"angle"},{"private":"speed_e99jq.out","public":"speed"},{"private":"getstartelement_w7m64.out","public":"start"},{"private":"startpoint_u8int.out","public":"startpoint"},{"private":"endpoint_m93v2.out","public":"endpoint"}],"processes":{"GestureStart_r8vr5":{"component":"core/Split","metadata":{"x":466,"y":-31,"label":"GestureStart"}},"GetStartingPoint_pidfs":{"component":"interaction/ReadCoordinates","metadata":{"x":765,"y":-191,"label":"GetStartingPoint"}},"GetEndingPoint_4sogu":{"component":"interaction/ReadCoordinates","metadata":{"x":1368,"y":136,"label":"GetEndingPoint"}},"core/Split_baeeb":{"component":"core/Split","metadata":{"x":1563,"y":137,"label":"core/Split"}},"core/Split_4ds1h":{"component":"core/Split","metadata":{"x":973,"y":-191,"label":"core/Split"}},"GestureAngle_dwjj":{"component":"math/CalculateAngle","metadata":{"x":1939,"y":-127,"label":"GestureAngle"}},"GestureDistance_esqkc":{"component":"math/CalculateDistance","metadata":{"x":1934,"y":20,"label":"GestureDistance"}},"LastMove_p5yj7":{"component":"core/Kick","metadata":{"x":1062,"y":176,"label":"LastMove"}},"GestureEnd_qqx8o":{"component":"core/Split","metadata":{"x":473,"y":180,"label":"GestureEnd"}},"GestureMove_hy46s":{"component":"core/Split","metadata":{"x":463,"y":65,"label":"GestureMove"}},"AllTouchedElements_i3x74":{"component":"packets/UniquePacket","metadata":{"x":1364,"y":1,"label":"AllTouchedElements"}},"objects/GetObjectKey_k1ap5":{"component":"objects/GetObjectKey","metadata":{"x":1059,"y":6,"label":"objects/GetObjectKey"}},"GetStartElement_w7m64":{"component":"objects/GetObjectKey","metadata":{"x":769,"y":-44.66666666666666,"label":"GetStartElement"}},"GetGestureArea_h4opr":{"component":"dom/GetElement","metadata":{"x":-32,"y":7,"label":"GetGestureArea"}},"EndDate_hx6m9":{"component":"objects/CreateDate","metadata":{"x":2154,"y":164,"label":"EndDate"}},"StartDate_swbwu":{"component":"objects/CreateDate","metadata":{"x":1936,"y":-271,"label":"StartDate"}},"math/Subtract_j5v20":{"component":"math/Subtract","metadata":{"x":2516,"y":-193,"label":"math/Subtract"}},"core/Kick_trnc6":{"component":"core/Kick","metadata":{"x":1937,"y":163,"label":"core/Kick"}},"SetStart_ql51c":{"component":"strings/SendString","metadata":{"x":768,"y":-310,"label":"SetStart"}},"math/Divide_x4gc8":{"component":"math/Divide","metadata":{"x":2737,"y":-194,"label":"math/Divide"}},"core/Split_ium1q":{"component":"core/Split","metadata":{"x":2954,"y":-196,"label":"core/Split"}},"core/Split_x0a12":{"component":"core/Split","metadata":{"x":2145,"y":20,"label":"core/Split"}},"objects/CallMethod_iu7k2":{"component":"objects/CallMethod","metadata":{"x":2348,"y":167,"label":"objects/CallMethod"}},"objects/CallMethod_rtfd2":{"component":"objects/CallMethod","metadata":{"x":2139,"y":-274,"label":"objects/CallMethod"}},"Distance_kwk39":{"component":"core/Repeat","metadata":{"x":2580,"y":20,"label":"Distance"}},"GestureElements_yvm9m":{"component":"core/Repeat","metadata":{"x":1558,"y":0,"label":"GestureElements"}},"Angle_43qpo":{"component":"core/Repeat","metadata":{"x":2141,"y":-126,"label":"Angle"}},"Speed_e99jq":{"component":"core/Repeat","metadata":{"x":3183,"y":-200,"label":"Speed"}},"EndPoint_m93v2":{"component":"core/Repeat","metadata":{"x":1939,"y":262,"label":"EndPoint"}},"StartPoint_u8int":{"component":"core/Repeat","metadata":{"x":1242,"y":-192,"label":"StartPoint"}},"gestures/ListenPointer_8ftd1":{"component":"gestures/ListenPointer","metadata":{"x":214,"y":-1,"label":"gestures/ListenPointer"}}},"connections":[{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"destination"},"metadata":{"route":1}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"destination"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetEndingPoint_4sogu","port":"client"},"tgt":{"process":"core/Split_baeeb","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"data"},"metadata":{"route":3}},{"src":{"process":"LastMove_p5yj7","port":"out"},"tgt":{"process":"GetEndingPoint_4sogu","port":"event"},"metadata":{"route":1}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"objects/GetObjectKey_k1ap5","port":"in"},"metadata":{"route":3}},{"src":{"process":"objects/GetObjectKey_k1ap5","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"clear"},"metadata":{"route":1}},{"src":{"process":"GetStartingPoint_pidfs","port":"client"},"tgt":{"process":"core/Split_4ds1h","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"GetStartElement_w7m64","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"core/Kick_trnc6","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Kick_trnc6","port":"out"},"tgt":{"process":"EndDate_hx6m9","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"SetStart_ql51c","port":"in"},"metadata":{"route":5}},{"src":{"process":"SetStart_ql51c","port":"out"},"tgt":{"process":"StartDate_swbwu","port":"in"},"metadata":{"route":5}},{"src":{"process":"math/Divide_x4gc8","port":"quotient"},"tgt":{"process":"core/Split_ium1q","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"clear"},"metadata":{"route":0}},{"src":{"process":"GestureDistance_esqkc","port":"distance"},"tgt":{"process":"core/Split_x0a12","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"dividend"},"metadata":{"route":9}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"GetStartingPoint_pidfs","port":"event"},"metadata":{"route":5}},{"src":{"process":"math/Subtract_j5v20","port":"difference"},"tgt":{"process":"math/Divide_x4gc8","port":"divisor"},"metadata":{"route":9}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"clear"},"metadata":{"route":0}},{"src":{"process":"objects/CallMethod_iu7k2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"minuend"},"metadata":{"route":1}},{"src":{"process":"EndDate_hx6m9","port":"out"},"tgt":{"process":"objects/CallMethod_iu7k2","port":"in"},"metadata":{"route":1}},{"src":{"process":"objects/CallMethod_rtfd2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"subtrahend"},"metadata":{"route":5}},{"src":{"process":"StartDate_swbwu","port":"out"},"tgt":{"process":"objects/CallMethod_rtfd2","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"Distance_kwk39","port":"in"},"metadata":{"route":9}},{"src":{"process":"AllTouchedElements_i3x74","port":"out"},"tgt":{"process":"GestureElements_yvm9m","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureAngle_dwjj","port":"angle"},"tgt":{"process":"Angle_43qpo","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_ium1q","port":"out"},"tgt":{"process":"Speed_e99jq","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"EndPoint_m93v2","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"StartPoint_u8int","port":"in"},"metadata":{"route":5}},{"src":{"process":"GetGestureArea_h4opr","port":"element"},"tgt":{"process":"gestures/ListenPointer_8ftd1","port":"element"},"metadata":{"route":7}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"end"},"tgt":{"process":"GestureEnd_qqx8o","port":"in"},"metadata":{"route":1}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"move"},"tgt":{"process":"GestureMove_hy46s","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"start"},"tgt":{"process":"GestureStart_r8vr5","port":"in"},"metadata":{"route":5}},{"data":"target","tgt":{"process":"objects/GetObjectKey_k1ap5","port":"key"}},{"data":"target","tgt":{"process":"GetStartElement_w7m64","port":"key"}},{"data":"now","tgt":{"process":"core/Kick_trnc6","port":"data"}},{"data":"now","tgt":{"process":"SetStart_ql51c","port":"string"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_iu7k2","port":"method"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_rtfd2","port":"method"}}]}');
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"ListenGestures"},"exports":[{"private":"gestures/listenpointer_8ftd1.element","public":"element"},{"private":"movepoint_fjlur.out","public":"movepoint"},{"private":"distance_kwk39.out","public":"distance"},{"private":"gestureelements_yvm9m.out","public":"elements"},{"private":"angle_43qpo.out","public":"angle"},{"private":"speed_e99jq.out","public":"speed"},{"private":"getstartelement_w7m64.out","public":"start"},{"private":"startpoint_u8int.out","public":"startpoint"},{"private":"getendelement_slbp9.out","public":"end"},{"private":"getendingpoint_dettb.client","public":"endpoint"},{"private":"currentelement_cu0q5.out","public":"current"},{"private":"duration_qyevv.out","public":"duration"}],"processes":{"GestureStart_r8vr5":{"component":"core/Split","metadata":{"x":466,"y":-31,"label":"GestureStart"}},"GetStartingPoint_pidfs":{"component":"interaction/ReadCoordinates","metadata":{"x":765,"y":-191,"label":"GetStartingPoint"}},"GetMovePoint_9dia9":{"component":"interaction/ReadCoordinates","metadata":{"x":1368,"y":136,"label":"GetMovePoint"}},"core/Split_baeeb":{"component":"core/Split","metadata":{"x":1563,"y":137,"label":"core/Split"}},"core/Split_4ds1h":{"component":"core/Split","metadata":{"x":973,"y":-191,"label":"core/Split"}},"GestureAngle_dwjj":{"component":"math/CalculateAngle","metadata":{"x":1939,"y":-127,"label":"GestureAngle"}},"GestureDistance_esqkc":{"component":"math/CalculateDistance","metadata":{"x":1934,"y":20,"label":"GestureDistance"}},"LastMove_p5yj7":{"component":"core/Kick","metadata":{"x":1062,"y":176,"label":"LastMove"}},"GestureEnd_qqx8o":{"component":"core/Split","metadata":{"x":460,"y":162,"label":"GestureEnd"}},"GestureMove_hy46s":{"component":"core/Split","metadata":{"x":463,"y":65,"label":"GestureMove"}},"AllTouchedElements_i3x74":{"component":"packets/UniquePacket","metadata":{"x":1445,"y":6,"label":"AllTouchedElements"}},"GetMoveElement_iaexm":{"component":"objects/GetObjectKey","metadata":{"x":1059,"y":6,"label":"GetMoveElement"}},"GetStartElement_w7m64":{"component":"objects/GetObjectKey","metadata":{"x":968,"y":-404.66666666666663,"label":"GetStartElement"}},"MoveDate_6bjnl":{"component":"objects/CreateDate","metadata":{"x":2145,"y":164,"label":"MoveDate"}},"StartDate_swbwu":{"component":"objects/CreateDate","metadata":{"x":968,"y":-281,"label":"StartDate"}},"math/Subtract_j5v20":{"component":"math/Subtract","metadata":{"x":2516,"y":-193,"label":"math/Subtract"}},"SetStart_ql51c":{"component":"strings/SendString","metadata":{"x":765,"y":-284,"label":"SetStart"}},"math/Divide_x4gc8":{"component":"math/Divide","metadata":{"x":2939,"y":-199,"label":"math/Divide"}},"core/Split_x0a12":{"component":"core/Split","metadata":{"x":2151,"y":23,"label":"core/Split"}},"objects/CallMethod_iu7k2":{"component":"objects/CallMethod","metadata":{"x":2348,"y":167,"label":"objects/CallMethod"}},"objects/CallMethod_rtfd2":{"component":"objects/CallMethod","metadata":{"x":2139,"y":-274,"label":"objects/CallMethod"}},"Distance_kwk39":{"component":"core/Repeat","metadata":{"x":2580,"y":20,"label":"Distance"}},"GestureElements_yvm9m":{"component":"core/Repeat","metadata":{"x":1639,"y":4,"label":"GestureElements"}},"Angle_43qpo":{"component":"core/Repeat","metadata":{"x":2312,"y":-121,"label":"Angle"}},"Speed_e99jq":{"component":"core/Repeat","metadata":{"x":3362,"y":-171,"label":"Speed"}},"MovePoint_fjlur":{"component":"core/Repeat","metadata":{"x":1939,"y":262,"label":"MovePoint"}},"StartPoint_u8int":{"component":"core/Repeat","metadata":{"x":1382,"y":-189,"label":"StartPoint"}},"gestures/ListenPointer_8ftd1":{"component":"gestures/ListenPointer","metadata":{"x":213,"y":-1,"label":"gestures/ListenPointer"}},"GetEndElement_slbp9":{"component":"objects/GetObjectKey","metadata":{"x":1367.3333333333335,"y":283.3333333333335,"label":"GetEndElement"}},"core/RepeatAsync_c56tj":{"component":"core/RepeatAsync","metadata":{"x":1058.666666666667,"y":312.33333333333326,"label":"core/RepeatAsync"}},"strings/SendString_t6gby":{"component":"strings/SendString","metadata":{"x":1935,"y":166.33333333333337,"label":"strings/SendString"}},"groups/SendByGroup_z06kk":{"component":"groups/SendByGroup","metadata":{"x":556,"y":-151.66666666666669,"label":"groups/SendByGroup"}},"core/Split_ekxij":{"component":"core/Split","metadata":{"x":3158.5,"y":-166.33333333333343,"label":"core/Split"}},"core/Split_eph3d":{"component":"core/Split","metadata":{"x":2123.333333333334,"y":-122.66666666666669,"label":"core/Split"}},"core/Split_3elep":{"component":"core/Split","metadata":{"x":2731.1666666666697,"y":-171.83333333333258,"label":"core/Split"}},"core/Split_8l3yu":{"component":"core/Split","metadata":{"x":1251.3333333333333,"y":7.166666666666629,"label":"core/Split"}},"CurrentElement_cu0q5":{"component":"core/Repeat","metadata":{"x":1599.833333333333,"y":-192.00000000000006,"label":"CurrentElement"}},"Duration_qyevv":{"component":"core/Repeat","metadata":{"x":2937.833333333333,"y":-295.83333333333326,"label":"Duration"}},"GetEndingPoint_dettb":{"component":"interaction/ReadCoordinates","metadata":{"x":727.8333333333331,"y":335.3333333333333,"label":"GetEndingPoint"}},"core/Merge_6so":{"component":"core/Merge","metadata":{"x":1196.666666666667,"y":-188.99999999999983,"label":"core/Merge"}},"interaction/ReadCoordinates_82cb1":{"component":"interaction/ReadCoordinates","metadata":{"x":767.3333333333339,"y":-85.83333333333314,"label":"interaction/ReadCoordinates"}},"core/Drop_sa8z5":{"component":"core/Drop","metadata":{"x":1596.833333333333,"y":326.0000000000001,"label":"core/Drop"}},"core/Merge_lqxll":{"component":"core/Merge","metadata":{"x":768.9999999999995,"y":-403.66666666666663,"label":"core/Merge"}},"groups/SendByGroup_8yaj":{"component":"groups/SendByGroup","metadata":{"x":1166.999999999999,"y":-286.83333333333326,"label":"groups/SendByGroup"}}},"connections":[{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"destination"},"metadata":{"route":3}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"origin"},"metadata":{"route":5}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"destination"},"metadata":{"route":3}},{"src":{"process":"GetMovePoint_9dia9","port":"client"},"tgt":{"process":"core/Split_baeeb","port":"in"},"metadata":{"route":3}},{"src":{"process":"GetStartingPoint_pidfs","port":"client"},"tgt":{"process":"core/Split_4ds1h","port":"in"},"metadata":{"route":5}},{"src":{"process":"SetStart_ql51c","port":"out"},"tgt":{"process":"StartDate_swbwu","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureDistance_esqkc","port":"distance"},"tgt":{"process":"core/Split_x0a12","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"dividend"},"metadata":{"route":9}},{"src":{"process":"objects/CallMethod_iu7k2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"minuend"},"metadata":{"route":3}},{"src":{"process":"MoveDate_6bjnl","port":"out"},"tgt":{"process":"objects/CallMethod_iu7k2","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"Distance_kwk39","port":"in"},"metadata":{"route":9}},{"src":{"process":"AllTouchedElements_i3x74","port":"out"},"tgt":{"process":"GestureElements_yvm9m","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"MovePoint_fjlur","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"end"},"tgt":{"process":"GestureEnd_qqx8o","port":"in"},"metadata":{"route":1}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"move"},"tgt":{"process":"GestureMove_hy46s","port":"in"},"metadata":{"route":3}},{"src":{"process":"gestures/ListenPointer_8ftd1","port":"start"},"tgt":{"process":"GestureStart_r8vr5","port":"in"},"metadata":{"route":5}},{"src":{"process":"LastMove_p5yj7","port":"out"},"tgt":{"process":"GetEndElement_slbp9","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"core/RepeatAsync_c56tj","port":"in"},"metadata":{"route":1}},{"src":{"process":"core/Split_baeeb","port":"out"},"tgt":{"process":"strings/SendString_t6gby","port":"in"},"metadata":{"route":3}},{"src":{"process":"strings/SendString_t6gby","port":"out"},"tgt":{"process":"MoveDate_6bjnl","port":"in"},"metadata":{"route":4}},{"src":{"process":"groups/SendByGroup_z06kk","port":"out"},"tgt":{"process":"GetStartingPoint_pidfs","port":"event"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"groups/SendByGroup_z06kk","port":"data"},"metadata":{"route":5}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"groups/SendByGroup_z06kk","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"LastMove_p5yj7","port":"data"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"GetMoveElement_iaexm","port":"in"},"metadata":{"route":3}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"GetMovePoint_9dia9","port":"event"},"metadata":{"route":3}},{"src":{"process":"core/Split_x0a12","port":"out"},"tgt":{"process":"GestureDistance_esqkc","port":"clear"},"metadata":{"route":0}},{"src":{"process":"core/Split_ekxij","port":"out"},"tgt":{"process":"Speed_e99jq","port":"in"},"metadata":{"route":8}},{"src":{"process":"math/Divide_x4gc8","port":"quotient"},"tgt":{"process":"core/Split_ekxij","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_ekxij","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"clear"},"metadata":{"route":0}},{"src":{"process":"core/RepeatAsync_c56tj","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"clear"},"metadata":{"route":1}},{"src":{"process":"GestureAngle_dwjj","port":"angle"},"tgt":{"process":"core/Split_eph3d","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_eph3d","port":"out"},"tgt":{"process":"Angle_43qpo","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_eph3d","port":"out"},"tgt":{"process":"GestureAngle_dwjj","port":"clear"},"metadata":{"route":0}},{"src":{"process":"math/Subtract_j5v20","port":"difference"},"tgt":{"process":"core/Split_3elep","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"math/Divide_x4gc8","port":"divisor"},"metadata":{"route":9}},{"src":{"process":"GetMoveElement_iaexm","port":"out"},"tgt":{"process":"core/Split_8l3yu","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_8l3yu","port":"out"},"tgt":{"process":"AllTouchedElements_i3x74","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_8l3yu","port":"out"},"tgt":{"process":"CurrentElement_cu0q5","port":"in"},"metadata":{"route":3}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"Duration_qyevv","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_3elep","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"clear"},"metadata":{"route":0}},{"src":{"process":"GestureEnd_qqx8o","port":"out"},"tgt":{"process":"GetEndingPoint_dettb","port":"event"},"metadata":{"route":1}},{"src":{"process":"objects/CallMethod_rtfd2","port":"out"},"tgt":{"process":"math/Subtract_j5v20","port":"subtrahend"},"metadata":{"route":5}},{"src":{"process":"core/Split_4ds1h","port":"out"},"tgt":{"process":"core/Merge_6so","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Merge_6so","port":"out"},"tgt":{"process":"StartPoint_u8int","port":"in"},"metadata":{"route":5}},{"src":{"process":"interaction/ReadCoordinates_82cb1","port":"client"},"tgt":{"process":"core/Merge_6so","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"interaction/ReadCoordinates_82cb1","port":"event"},"metadata":{"route":5}},{"src":{"process":"GetEndElement_slbp9","port":"missed"},"tgt":{"process":"core/Drop_sa8z5","port":"in"},"metadata":{"route":1}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"core/Merge_lqxll","port":"in"},"metadata":{"route":5}},{"src":{"process":"core/Merge_lqxll","port":"out"},"tgt":{"process":"GetStartElement_w7m64","port":"in"},"metadata":{"route":5}},{"src":{"process":"groups/SendByGroup_z06kk","port":"out"},"tgt":{"process":"core/Merge_lqxll","port":"in"},"metadata":{"route":5}},{"src":{"process":"groups/SendByGroup_8yaj","port":"out"},"tgt":{"process":"objects/CallMethod_rtfd2","port":"in"},"metadata":{"route":5}},{"src":{"process":"StartDate_swbwu","port":"out"},"tgt":{"process":"groups/SendByGroup_8yaj","port":"data"},"metadata":{"route":5}},{"src":{"process":"GestureStart_r8vr5","port":"out"},"tgt":{"process":"SetStart_ql51c","port":"in"},"metadata":{"route":5}},{"src":{"process":"GestureMove_hy46s","port":"out"},"tgt":{"process":"groups/SendByGroup_8yaj","port":"in"},"metadata":{"route":3}},{"data":"target","tgt":{"process":"GetMoveElement_iaexm","port":"key"}},{"data":"target","tgt":{"process":"GetStartElement_w7m64","port":"key"}},{"data":"now","tgt":{"process":"SetStart_ql51c","port":"string"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_iu7k2","port":"method"}},{"data":"getTime","tgt":{"process":"objects/CallMethod_rtfd2","port":"method"}},{"data":"target","tgt":{"process":"GetEndElement_slbp9","port":"key"}},{"data":"now","tgt":{"process":"strings/SendString_t6gby","port":"string"}}]}');
 });
 require.register("noflo-noflo-gestures/graphs/ListenPointer.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
+module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"Asynchronize_x0hqm":{"component":"core/RepeatAsync","metadata":{"x":1404,"y":171.33333333333331,"label":"Asynchronize"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"Asynchronize_x0hqm","port":"in"},"metadata":{"route":1}},{"src":{"process":"Asynchronize_x0hqm","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
 });
-require.register("noflo-noflo-gestures/graphs/ListenSwipe.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"ListenSwipe"},"exports":[{"private":"Listen_w7p7a.selector","public":"selector"},{"private":"TouchedElements_5mv0.out","public":"elements"},{"private":"StartElement_v6fcf.out","public":"start"},{"private":"Angle_xtmlw.out","public":"angle"}],"processes":{"Listen_w7p7a":{"component":"gestures/ListenGestures","metadata":{"x":407,"y":83,"label":"Listen"}},"StartElement_v6fcf":{"component":"core/Kick","metadata":{"x":1852,"y":-38,"label":"StartElement"}},"Angle_xtmlw":{"component":"core/Kick","metadata":{"x":1851,"y":-136,"label":"Angle"}},"math/Compare_q293g":{"component":"math/Compare","metadata":{"x":1170,"y":208,"label":"math/Compare"}},"math/Compare_lmqjs":{"component":"math/Compare","metadata":{"x":714,"y":263,"label":"math/Compare"}},"TouchedElements_5mv0":{"component":"core/Kick","metadata":{"x":1852,"y":56,"label":"TouchedElements"}},"packets/LastPacket_6zpy3":{"component":"packets/LastPacket","metadata":{"x":1375.6666666666665,"y":206,"label":"packets/LastPacket"}},"core/Split_b39r4":{"component":"core/Split","metadata":{"x":1585.6666666666665,"y":203,"label":"core/Split"}},"core/Kick_6g0q":{"component":"core/Kick","metadata":{"x":951,"y":206,"label":"core/Kick"}}},"connections":[{"src":{"process":"Listen_w7p7a","port":"start"},"tgt":{"process":"StartElement_v6fcf","port":"data"},"metadata":{"route":0}},{"src":{"process":"Listen_w7p7a","port":"angle"},"tgt":{"process":"Angle_xtmlw","port":"data"},"metadata":{"route":0}},{"src":{"process":"Listen_w7p7a","port":"speed"},"tgt":{"process":"math/Compare_lmqjs","port":"value"},"metadata":{"route":1}},{"src":{"process":"Listen_w7p7a","port":"elements"},"tgt":{"process":"TouchedElements_5mv0","port":"data"},"metadata":{"route":0}},{"src":{"process":"packets/LastPacket_6zpy3","port":"out"},"tgt":{"process":"core/Split_b39r4","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"TouchedElements_5mv0","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"Angle_xtmlw","port":"in"},"metadata":{"route":0}},{"src":{"process":"core/Split_b39r4","port":"out"},"tgt":{"process":"StartElement_v6fcf","port":"in"},"metadata":{"route":0}},{"src":{"process":"math/Compare_lmqjs","port":"pass"},"tgt":{"process":"core/Kick_6g0q","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_w7p7a","port":"distance"},"tgt":{"process":"core/Kick_6g0q","port":"data"},"metadata":{"route":0}},{"src":{"process":"core/Kick_6g0q","port":"out"},"tgt":{"process":"math/Compare_q293g","port":"value"},"metadata":{"route":1}},{"src":{"process":"math/Compare_q293g","port":"pass"},"tgt":{"process":"packets/LastPacket_6zpy3","port":"in"},"metadata":{"route":1}},{"data":">=","tgt":{"process":"math/Compare_q293g","port":"operator"}},{"data":50,"tgt":{"process":"math/Compare_q293g","port":"comparison"}},{"data":0.5,"tgt":{"process":"math/Compare_lmqjs","port":"comparison"}},{"data":">=","tgt":{"process":"math/Compare_lmqjs","port":"operator"}}]}');
-});
-require.register("noflo-noflo-gestures/graphs/RecognizeCardinalGesture.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"name":"RecognizeCardinalGesture"},"exports":[{"private":"StartEventCoordinates_rc5pw.event","public":"started"},{"private":"MoveEventCoordinates_iknb5.event","public":"moved"},{"private":"AllowRecognize_9toik.open","public":"recognize"},{"private":"SendEast_q82ex.out","public":"east"},{"private":"SendSouth_9bok0.out","public":"south"},{"private":"SendWest_2y30t.out","public":"west"},{"private":"SendNorth_71bps.out","public":"north"},{"private":"SendMoveCoordinates_gpv52.out","public":"moved"},{"private":"CheckDistance_w7bjx.comparison","public":"distance"}],"processes":{"StartEventCoordinates_rc5pw":{"component":"interaction/ReadCoordinates","metadata":{"x":-348,"y":431,"label":"StartEventCoordinates"}},"MoveEventCoordinates_iknb5":{"component":"interaction/ReadCoordinates","metadata":{"x":-348,"y":582,"label":"MoveEventCoordinates"}},"MoveCoordinates_6p0q":{"component":"core/Split","metadata":{"x":-142,"y":582,"label":"MoveCoordinates"}},"SendStartCoordinates_d2gh7":{"component":"core/DisconnectAfterPacket","metadata":{"x":64,"y":580,"label":"SendStartCoordinates"}},"HoldStartCoordinates_yplcj":{"component":"core/Kick","metadata":{"x":264,"y":430,"label":"HoldStartCoordinates"}},"AllowRecognize_9toik":{"component":"flow/Gate","metadata":{"x":262.1666666666665,"y":746.8333333333334,"label":"AllowRecognize"}},"SplitStartCoordinates_yf4hh":{"component":"core/Split","metadata":{"x":447.1666666666665,"y":426.5,"label":"SplitStartCoordinates"}},"CalculateDistance_g0t6q":{"component":"math/CalculateDistance","metadata":{"x":657.3333333333333,"y":563.8333333333334,"label":"CalculateDistance"}},"CheckDistance_w7bjx":{"component":"math/Compare","metadata":{"x":849.6666666666665,"y":565.6666666666666,"label":"CheckDistance"}},"HoldCoordinates_7cosq":{"component":"core/Kick","metadata":{"x":1264.4999999999995,"y":647.5,"label":"HoldCoordinates"}},"DistancePassed_ftnjf":{"component":"core/DisconnectAfterPacket","metadata":{"x":1044.833333333333,"y":564.5,"label":"DistancePassed"}},"SplitForRecognition_rgwux":{"component":"core/Split","metadata":{"x":450.5,"y":746.6666666666666,"label":"SplitForRecognition"}},"GetGestureAngle_zsc1o":{"component":"math/CalculateAngle","metadata":{"x":1493.166666666667,"y":529.5,"label":"GetGestureAngle"}},"GestureDirection_wonuj":{"component":"gestures/CardinalRouter","metadata":{"x":1725.3333333333326,"y":530,"label":"GestureDirection"}},"SplitEast_hlpzd":{"component":"core/Split","metadata":{"x":2004.9999999999993,"y":456.1666666666667,"label":"SplitEast"}},"SplitSouth_3z668":{"component":"core/Split","metadata":{"x":2004.9999999999993,"y":540.1666666666667,"label":"SplitSouth"}},"SplitWest_penr4":{"component":"core/Split","metadata":{"x":2008.9999999999993,"y":627.1666666666667,"label":"SplitWest"}},"SplitNorth_7c1aj":{"component":"core/Split","metadata":{"x":2009.9999999999993,"y":721.1666666666667,"label":"SplitNorth"}},"Recognized_s3iw1":{"component":"core/Merge","metadata":{"x":2234.999999999999,"y":803.1666666666667,"label":"Recognized"}},"SendEast_q82ex":{"component":"core/Repeat","metadata":{"x":2222.333333333333,"y":457,"label":"SendEast"}},"SendSouth_9bok0":{"component":"core/Repeat","metadata":{"x":2224.333333333333,"y":539,"label":"SendSouth"}},"SendWest_2y30t":{"component":"core/Repeat","metadata":{"x":2225.333333333333,"y":625,"label":"SendWest"}},"SendNorth_71bps":{"component":"core/Repeat","metadata":{"x":2229.333333333333,"y":718,"label":"SendNorth"}},"SendMoveCoordinates_gpv52":{"component":"core/Repeat","metadata":{"x":262.66666666666674,"y":878,"label":"SendMoveCoordinates"}}},"connections":[{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"SendStartCoordinates_d2gh7","port":"in"},"metadata":{"route":2}},{"src":{"process":"SendStartCoordinates_d2gh7","port":"out"},"tgt":{"process":"HoldStartCoordinates_yplcj","port":"in"},"metadata":{"route":2}},{"src":{"process":"StartEventCoordinates_rc5pw","port":"client"},"tgt":{"process":"HoldStartCoordinates_yplcj","port":"data"},"metadata":{"route":5}},{"src":{"process":"MoveEventCoordinates_iknb5","port":"client"},"tgt":{"process":"MoveCoordinates_6p0q","port":"in"},"metadata":{"route":2}},{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"AllowRecognize_9toik","port":"in"},"metadata":{"route":2}},{"src":{"process":"HoldStartCoordinates_yplcj","port":"out"},"tgt":{"process":"SplitStartCoordinates_yf4hh","port":"in"},"metadata":{"route":5}},{"src":{"process":"SplitStartCoordinates_yf4hh","port":"out"},"tgt":{"process":"CalculateDistance_g0t6q","port":"origin"},"metadata":{"route":5}},{"src":{"process":"CalculateDistance_g0t6q","port":"distance"},"tgt":{"process":"CheckDistance_w7bjx","port":"value"},"metadata":{"route":9}},{"src":{"process":"CheckDistance_w7bjx","port":"pass"},"tgt":{"process":"DistancePassed_ftnjf","port":"in"},"metadata":{"route":9}},{"src":{"process":"DistancePassed_ftnjf","port":"out"},"tgt":{"process":"HoldCoordinates_7cosq","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitForRecognition_rgwux","port":"out"},"tgt":{"process":"HoldCoordinates_7cosq","port":"data"},"metadata":{"route":2}},{"src":{"process":"SplitForRecognition_rgwux","port":"out"},"tgt":{"process":"CalculateDistance_g0t6q","port":"destination"},"metadata":{"route":2}},{"src":{"process":"AllowRecognize_9toik","port":"out"},"tgt":{"process":"SplitForRecognition_rgwux","port":"in"},"metadata":{"route":2}},{"src":{"process":"HoldCoordinates_7cosq","port":"out"},"tgt":{"process":"GetGestureAngle_zsc1o","port":"destination"},"metadata":{"route":2}},{"src":{"process":"SplitStartCoordinates_yf4hh","port":"out"},"tgt":{"process":"GetGestureAngle_zsc1o","port":"origin"},"metadata":{"route":5}},{"src":{"process":"GetGestureAngle_zsc1o","port":"angle"},"tgt":{"process":"GestureDirection_wonuj","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"e"},"tgt":{"process":"SplitEast_hlpzd","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"s"},"tgt":{"process":"SplitSouth_3z668","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"w"},"tgt":{"process":"SplitWest_penr4","port":"in"},"metadata":{"route":9}},{"src":{"process":"GestureDirection_wonuj","port":"n"},"tgt":{"process":"SplitNorth_7c1aj","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitEast_hlpzd","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitSouth_3z668","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitWest_penr4","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"SplitNorth_7c1aj","port":"out"},"tgt":{"process":"Recognized_s3iw1","port":"in"},"metadata":{"route":1}},{"src":{"process":"Recognized_s3iw1","port":"out"},"tgt":{"process":"AllowRecognize_9toik","port":"close"},"metadata":{"route":1}},{"src":{"process":"SplitEast_hlpzd","port":"out"},"tgt":{"process":"SendEast_q82ex","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitSouth_3z668","port":"out"},"tgt":{"process":"SendSouth_9bok0","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitWest_penr4","port":"out"},"tgt":{"process":"SendWest_2y30t","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitNorth_7c1aj","port":"out"},"tgt":{"process":"SendNorth_71bps","port":"in"},"metadata":{"route":9}},{"src":{"process":"MoveCoordinates_6p0q","port":"out"},"tgt":{"process":"SendMoveCoordinates_gpv52","port":"in"},"metadata":{"route":0}},{"data":">=","tgt":{"process":"CheckDistance_w7bjx","port":"operator"}}]}');
+require.register("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", function(exports, require, module){
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":608,"y":121,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":606,"y":201,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":816,"y":201,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":1021,"y":158,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":1019,"y":260,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1266,"y":195,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
 });
 require.register("noflo-noflo-gestures/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-gestures","description":"Gesture recognition components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-gestures","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-math":"*","noflo/noflo-flow":"*","noflo/noflo-packets":"*","noflo/noflo-objects":"*","noflo/noflo-dom":"*","noflo/noflo-strings":"*","noflo/noflo-core":"*"},"scripts":["components/CardinalRouter.coffee","components/DegreesToCardinal.coffee","components/DegreesToCompass.coffee","graphs/FilterByTarget.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/ListenSwipe.json","graphs/RecognizeCardinalGesture.json","index.js"],"json":["graphs/FilterByTarget.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/ListenSwipe.json","graphs/RecognizeCardinalGesture.json","component.json"],"noflo":{"components":{"CardinalRouter":"components/CardinalRouter.coffee","DegreesToCardinal":"components/DegreesToCardinal.coffee","DegreesToCompass":"components/DegreesToCompass.coffee"},"graphs":{"FilterByTarget":"graphs/FilterByTarget.json","ListenGestures":"graphs/ListenGestures.json","ListenPointer":"graphs/ListenPointer.json","ListenSwipe":"graphs/ListenSwipe.json","RecognizeCardinalGesture":"graphs/RecognizeCardinalGesture.json"}}}');
+module.exports = JSON.parse('{"name":"noflo-gestures","description":"Gesture recognition components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-gestures","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-math":"*","noflo/noflo-flow":"*","noflo/noflo-groups":"*","noflo/noflo-packets":"*","noflo/noflo-objects":"*","noflo/noflo-dom":"*","noflo/noflo-strings":"*","noflo/noflo-core":"*"},"scripts":["components/CardinalRouter.coffee","components/DegreesToCardinal.coffee","components/DegreesToCompass.coffee","components/DetectTarget.coffee","graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","index.js"],"json":["graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","component.json"],"noflo":{"icon":"hand-right","components":{"CardinalRouter":"components/CardinalRouter.coffee","DegreesToCardinal":"components/DegreesToCardinal.coffee","DegreesToCompass":"components/DegreesToCompass.coffee","DetectTarget":"components/DetectTarget.coffee"},"graphs":{"DetectDrag":"graphs/DetectDrag.json","DetectSwipe":"graphs/DetectSwipe.json","DetectPinch":"graphs/DetectPinch.json","FilterByTarget":"graphs/FilterByTarget.json","GestureToObject":"graphs/GestureToObject.json","ListenGestures":"graphs/ListenGestures.json","ListenPointer":"graphs/ListenPointer.json","DetectCardinalDirection":"graphs/DetectCardinalDirection.json"}}}');
 });
 require.register("noflo-noflo-gestures/components/CardinalRouter.js", function(exports, require, module){
 var CardinalRouter, noflo,
@@ -7224,6 +8566,8 @@ CardinalRouter = (function(_super) {
   __extends(CardinalRouter, _super);
 
   CardinalRouter.prototype.description = 'Route values based on their cardinal directions';
+
+  CardinalRouter.prototype.icon = 'compass';
 
   function CardinalRouter() {
     var headings,
@@ -7275,6 +8619,8 @@ DegreesToCardinal = (function(_super) {
 
   DegreesToCardinal.prototype.description = 'Convert a heading in degrees to a cardinal direction, e.g. N, S';
 
+  DegreesToCardinal.prototype.icon = 'compass';
+
   function DegreesToCardinal() {
     var headings,
       _this = this;
@@ -7320,6 +8666,8 @@ DegreesToCompass = (function(_super) {
 
   DegreesToCompass.prototype.description = 'Convert a heading in degrees to a compass direction, e.g. N, SW';
 
+  DegreesToCompass.prototype.icon = 'compass';
+
   function DegreesToCompass() {
     var headings,
       _this = this;
@@ -7353,6 +8701,109 @@ exports.getComponent = function() {
 };
 
 });
+require.register("noflo-noflo-gestures/components/DetectTarget.js", function(exports, require, module){
+var DetectTarget, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+DetectTarget = (function(_super) {
+  __extends(DetectTarget, _super);
+
+  DetectTarget.prototype.describe = 'Verify that the gesture target has the right properties';
+
+  function DetectTarget() {
+    var _this = this;
+    this.target = null;
+    this.key = 'current';
+    this.inPorts = {
+      "in": new noflo.Port('object'),
+      key: new noflo.Port('string'),
+      target: new noflo.Port('string'),
+      clear: new noflo.Port('bang')
+    };
+    this.outPorts = {
+      pass: new noflo.Port('object'),
+      fail: new noflo.Port('object'),
+      target: new noflo.Port('object')
+    };
+    this.inPorts.target.on('data', function(data) {
+      var parts;
+      parts = data.split('=');
+      if (!_this.target) {
+        _this.target = {};
+      }
+      return _this.target[parts[0]] = parts[1];
+    });
+    this.inPorts.key.on('data', function(key) {
+      _this.key = key;
+    });
+    this.inPorts.clear.on('data', function() {
+      return _this.target = null;
+    });
+    this.inPorts["in"].on('data', function(data) {
+      var element, passed, touch;
+      if (Object.keys(data).length > 1) {
+        passed = true;
+        for (touch in data) {
+          element = data[touch];
+          if (!_this.detectTarget(element)) {
+            passed = false;
+          }
+        }
+        if (passed) {
+          if (_this.outPorts.target.isAttached()) {
+            _this.outPorts.target.send(data[Object.keys(data)[0]][_this.key]);
+          }
+          _this.outPorts.pass.send(data);
+        } else {
+          _this.outPorts.fail.send(data);
+        }
+        return;
+      }
+      if (_this.detectTarget(data[Object.keys(data)[0]])) {
+        if (_this.outPorts.target.isAttached()) {
+          _this.outPorts.target.send(data[Object.keys(data)[0]][_this.key]);
+        }
+        return _this.outPorts.pass.send(data);
+      } else {
+        return _this.outPorts.fail.send(data);
+      }
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      _this.outPorts.pass.disconnect();
+      _this.outPorts.fail.disconnect();
+      if (_this.outPorts.target.isAttached()) {
+        return _this.outPorts.target.disconnect();
+      }
+    });
+  }
+
+  DetectTarget.prototype.detectTarget = function(element) {
+    var key, value, _ref;
+    if (!element[this.key]) {
+      return false;
+    }
+    _ref = this.target;
+    for (key in _ref) {
+      value = _ref[key];
+      if (element[this.key][key] !== value) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  return DetectTarget;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new DetectTarget;
+};
+
+});
 require.register("noflo-noflo-objects/index.js", function(exports, require, module){
 /*
  * This file can be used for general library features of objects.
@@ -7363,7 +8814,7 @@ require.register("noflo-noflo-objects/index.js", function(exports, require, modu
 
 });
 require.register("noflo-noflo-objects/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-objects","description":"Object Utilities for NoFlo","version":"0.1.0","keywords":["noflo","objects","utilities"],"author":"Kenneth Kan <kenhkan@gmail.com>","repo":"noflo/objects","dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/Extend.coffee","components/MergeObjects.coffee","components/SplitObject.coffee","components/ReplaceKey.coffee","components/Keys.coffee","components/Values.coffee","components/Join.coffee","components/ExtractProperty.coffee","components/InsertProperty.coffee","components/SliceArray.coffee","components/SplitArray.coffee","components/FilterPropertyValue.coffee","components/FlattenObject.coffee","components/MapProperty.coffee","components/RemoveProperty.coffee","components/MapPropertyValue.coffee","components/GetObjectKey.coffee","components/UniqueArray.coffee","components/SetProperty.coffee","components/SimplifyObject.coffee","components/DuplicateProperty.coffee","components/CreateObject.coffee","components/CreateDate.coffee","components/SetPropertyValue.coffee","components/CallMethod.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"Extend":"components/Extend.coffee","MergeObjects":"components/MergeObjects.coffee","SplitObject":"components/SplitObject.coffee","ReplaceKey":"components/ReplaceKey.coffee","Keys":"components/Keys.coffee","Values":"components/Values.coffee","Join":"components/Join.coffee","ExtractProperty":"components/ExtractProperty.coffee","InsertProperty":"components/InsertProperty.coffee","SliceArray":"components/SliceArray.coffee","SplitArray":"components/SplitArray.coffee","FilterPropertyValue":"components/FilterPropertyValue.coffee","FlattenObject":"components/FlattenObject.coffee","MapProperty":"components/MapProperty.coffee","RemoveProperty":"components/RemoveProperty.coffee","MapPropertyValue":"components/MapPropertyValue.coffee","GetObjectKey":"components/GetObjectKey.coffee","UniqueArray":"components/UniqueArray.coffee","SetProperty":"components/SetProperty.coffee","SimplifyObject":"components/SimplifyObject.coffee","DuplicateProperty":"components/DuplicateProperty.coffee","CreateObject":"components/CreateObject.coffee","CreateDate":"components/CreateDate.coffee","SetPropertyValue":"components/SetPropertyValue.coffee","CallMethod":"components/CallMethod.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-objects","description":"Object Utilities for NoFlo","version":"0.1.0","keywords":["noflo","objects","utilities"],"author":"Kenneth Kan <kenhkan@gmail.com>","repo":"noflo/objects","dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/Extend.coffee","components/MergeObjects.coffee","components/SplitObject.coffee","components/ReplaceKey.coffee","components/Keys.coffee","components/Size.coffee","components/Values.coffee","components/Join.coffee","components/ExtractProperty.coffee","components/InsertProperty.coffee","components/SliceArray.coffee","components/SplitArray.coffee","components/FilterPropertyValue.coffee","components/FlattenObject.coffee","components/MapProperty.coffee","components/RemoveProperty.coffee","components/MapPropertyValue.coffee","components/GetObjectKey.coffee","components/UniqueArray.coffee","components/SetProperty.coffee","components/SimplifyObject.coffee","components/DuplicateProperty.coffee","components/CreateObject.coffee","components/CreateDate.coffee","components/SetPropertyValue.coffee","components/CallMethod.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"list","components":{"Extend":"components/Extend.coffee","MergeObjects":"components/MergeObjects.coffee","SplitObject":"components/SplitObject.coffee","ReplaceKey":"components/ReplaceKey.coffee","Keys":"components/Keys.coffee","Size":"components/Size.coffee","Values":"components/Values.coffee","Join":"components/Join.coffee","ExtractProperty":"components/ExtractProperty.coffee","InsertProperty":"components/InsertProperty.coffee","SliceArray":"components/SliceArray.coffee","SplitArray":"components/SplitArray.coffee","FilterPropertyValue":"components/FilterPropertyValue.coffee","FlattenObject":"components/FlattenObject.coffee","MapProperty":"components/MapProperty.coffee","RemoveProperty":"components/RemoveProperty.coffee","MapPropertyValue":"components/MapPropertyValue.coffee","GetObjectKey":"components/GetObjectKey.coffee","UniqueArray":"components/UniqueArray.coffee","SetProperty":"components/SetProperty.coffee","SimplifyObject":"components/SimplifyObject.coffee","DuplicateProperty":"components/DuplicateProperty.coffee","CreateObject":"components/CreateObject.coffee","CreateDate":"components/CreateDate.coffee","SetPropertyValue":"components/SetPropertyValue.coffee","CallMethod":"components/CallMethod.coffee"}}}');
 });
 require.register("noflo-noflo-objects/components/Extend.js", function(exports, require, module){
 var Extend, noflo, _,
@@ -7651,10 +9102,10 @@ Keys = (function(_super) {
   function Keys() {
     var _this = this;
     this.inPorts = {
-      "in": new noflo.Port
+      "in": new noflo.Port('object')
     };
     this.outPorts = {
-      out: new noflo.Port
+      out: new noflo.Port('all')
     };
     this.inPorts["in"].on("begingroup", function(group) {
       return _this.outPorts.out.beginGroup(group);
@@ -7683,6 +9134,51 @@ Keys = (function(_super) {
 
 exports.getComponent = function() {
   return new Keys;
+};
+
+});
+require.register("noflo-noflo-objects/components/Size.js", function(exports, require, module){
+var Size, noflo, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+_ = require("underscore");
+
+Size = (function(_super) {
+  __extends(Size, _super);
+
+  Size.prototype.description = "gets the size of an object and sends that out as a number";
+
+  function Size() {
+    var _this = this;
+    this.inPorts = {
+      "in": new noflo.Port('object')
+    };
+    this.outPorts = {
+      out: new noflo.Port('integer')
+    };
+    this.inPorts["in"].on("begingroup", function(group) {
+      return _this.outPorts.out.beginGroup(group);
+    });
+    this.inPorts["in"].on("data", function(data) {
+      return _this.outPorts.out.send(_.size(data));
+    });
+    this.inPorts["in"].on("endgroup", function(group) {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on("disconnect", function() {
+      return _this.outPorts.out.disconnect();
+    });
+  }
+
+  return Size;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new Size;
 };
 
 });
@@ -8053,6 +9549,8 @@ noflo = require('noflo');
 FilterPropertyValue = (function(_super) {
   __extends(FilterPropertyValue, _super);
 
+  FilterPropertyValue.prototype.icon = 'filter';
+
   function FilterPropertyValue() {
     var _this = this;
     this.accepts = {};
@@ -8366,6 +9864,8 @@ _ = require('underscore');
 RemoveProperty = (function(_super) {
   __extends(RemoveProperty, _super);
 
+  RemoveProperty.prototype.icon = 'remove';
+
   function RemoveProperty() {
     var _this = this;
     this.properties = [];
@@ -8536,6 +10036,8 @@ noflo = require('noflo');
 
 GetObjectKey = (function(_super) {
   __extends(GetObjectKey, _super);
+
+  GetObjectKey.prototype.icon = 'indent-right';
 
   function GetObjectKey() {
     var _this = this;
@@ -8959,8 +10461,7 @@ CreateObject = (function(_super) {
       return _this.outPorts.out.beginGroup(group);
     });
     this.inPorts.start.on("data", function() {
-      _this.outPorts.out.send({});
-      return _this.outPorts.out.disconnect();
+      return _this.outPorts.out.send({});
     });
     this.inPorts.start.on('endgroup', function() {
       return _this.outPorts.out.endGroup();
@@ -8989,6 +10490,10 @@ noflo = require("noflo");
 CreateDate = (function(_super) {
   __extends(CreateDate, _super);
 
+  CreateDate.prototype.description = 'Create a new Date object from string';
+
+  CreateDate.prototype.icon = 'time';
+
   function CreateDate() {
     var _this = this;
     this.inPorts = {
@@ -8997,6 +10502,9 @@ CreateDate = (function(_super) {
     this.outPorts = {
       out: new noflo.Port('object')
     };
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.outPorts.out.beginGroup(group);
+    });
     this.inPorts["in"].on("data", function(data) {
       var date;
       if (data === "now" || data === null || data === true) {
@@ -9004,7 +10512,12 @@ CreateDate = (function(_super) {
       } else {
         date = new Date(data);
       }
-      _this.outPorts.out.send(date);
+      return _this.outPorts.out.send(date);
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.outPorts.out.endGroup();
+    });
+    this.inPorts["in"].on('disconnect', function() {
       return _this.outPorts.out.disconnect();
     });
   }
@@ -9138,6 +10651,8 @@ CallMethod = (function(_super) {
 
   CallMethod.prototype.description = "call a method on an object";
 
+  CallMethod.prototype.icon = 'gear';
+
   function CallMethod() {
     var _this = this;
     this.method = null;
@@ -9151,6 +10666,9 @@ CallMethod = (function(_super) {
       out: new noflo.Port('all'),
       error: new noflo.Port('string')
     };
+    this.inPorts["in"].on('begingroup', function(group) {
+      return _this.outPorts.out.beginGroup(group);
+    });
     this.inPorts["in"].on("data", function(data) {
       var msg;
       if (!_this.method) {
@@ -9167,6 +10685,9 @@ CallMethod = (function(_super) {
       }
       _this.outPorts.out.send(data[_this.method].apply(data, _this.args));
       return _this.args = [];
+    });
+    this.inPorts["in"].on('endgroup', function() {
+      return _this.outPorts.out.endGroup();
     });
     this.inPorts["in"].on('disconnect', function() {
       return _this.outPorts.out.disconnect();
@@ -9201,7 +10722,7 @@ require.register("noflo-noflo-flow/index.js", function(exports, require, module)
 
 });
 require.register("noflo-noflo-flow/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-flow","description":"Flow Control for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.2.0","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/Concat.coffee","components/Gate.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"Concat":"components/Concat.coffee","Gate":"components/Gate.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-flow","description":"Flow Control for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.2.0","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/Concat.coffee","components/Gate.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"random","components":{"Concat":"components/Concat.coffee","Gate":"components/Gate.coffee"}}}');
 });
 require.register("noflo-noflo-flow/components/Concat.js", function(exports, require, module){
 var Concat, noflo,
@@ -9394,7 +10915,7 @@ require.register("noflo-noflo-dom/index.js", function(exports, require, module){
 
 });
 require.register("noflo-noflo-dom/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-dom","description":"Document Object Model components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/AddClass.coffee","components/AppendChild.coffee","components/CreateElement.coffee","components/CreateFragment.coffee","components/GetAttribute.coffee","components/GetElement.coffee","components/HasClass.coffee","components/ReadHtml.coffee","components/SetAttribute.coffee","components/WriteHtml.coffee","components/RemoveClass.coffee","components/RequestAnimationFrame.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"AddClass":"components/AddClass.coffee","AppendChild":"components/AppendChild.coffee","CreateElement":"components/CreateElement.coffee","CreateFragment":"components/CreateFragment.coffee","GetAttribute":"components/GetAttribute.coffee","GetElement":"components/GetElement.coffee","HasClass":"components/HasClass.coffee","WriteHtml":"components/WriteHtml.coffee","ReadHtml":"components/ReadHtml.coffee","SetAttribute":"components/SetAttribute.coffee","RemoveClass":"components/RemoveClass.coffee","RequestAnimationFrame":"components/RequestAnimationFrame.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-dom","description":"Document Object Model components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/AddClass.coffee","components/AppendChild.coffee","components/CreateElement.coffee","components/CreateFragment.coffee","components/GetAttribute.coffee","components/GetElement.coffee","components/HasClass.coffee","components/ReadHtml.coffee","components/SetAttribute.coffee","components/WriteHtml.coffee","components/RemoveClass.coffee","components/RequestAnimationFrame.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"html5","components":{"AddClass":"components/AddClass.coffee","AppendChild":"components/AppendChild.coffee","CreateElement":"components/CreateElement.coffee","CreateFragment":"components/CreateFragment.coffee","GetAttribute":"components/GetAttribute.coffee","GetElement":"components/GetElement.coffee","HasClass":"components/HasClass.coffee","WriteHtml":"components/WriteHtml.coffee","ReadHtml":"components/ReadHtml.coffee","SetAttribute":"components/SetAttribute.coffee","RemoveClass":"components/RemoveClass.coffee","RequestAnimationFrame":"components/RequestAnimationFrame.coffee"}}}');
 });
 require.register("noflo-noflo-dom/components/AddClass.js", function(exports, require, module){
 var AddClass, noflo,
@@ -9833,7 +11354,7 @@ SetAttribute = (function(_super) {
       }
     });
     this.inPorts.value.on('data', function(value) {
-      _this.value = value;
+      _this.value = _this.normalizeValue(value);
       if (_this.attribute && _this.element) {
         return _this.setAttribute();
       }
@@ -9847,6 +11368,22 @@ SetAttribute = (function(_super) {
       this.outPorts.element.send(this.element);
       return this.outPorts.element.disconnect();
     }
+  };
+
+  SetAttribute.prototype.normalizeValue = function(value) {
+    var key, newVal, val;
+    if (typeof value === 'object') {
+      if (toString.call(value) !== '[object Array]') {
+        newVal = [];
+        for (key in value) {
+          val = value[key];
+          newVal.push(val);
+        }
+        value = newVal;
+      }
+      return value.join(' ');
+    }
+    return value;
   };
 
   return SetAttribute;
@@ -9979,6 +11516,8 @@ RequestAnimationFrame = (function(_super) {
 
   RequestAnimationFrame.prototype.description = 'Sends bangs that correspond with screen refresh rate.';
 
+  RequestAnimationFrame.prototype.icon = 'film';
+
   function RequestAnimationFrame() {
     var _this = this;
     this.running = false;
@@ -10026,7 +11565,7 @@ require.register("noflo-noflo-css/index.js", function(exports, require, module){
 
 });
 require.register("noflo-noflo-css/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-css","description":"Cascading Style Sheets components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-css","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/MoveElement.coffee","components/RotateElement.coffee","components/SetElementTop.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"MoveElement":"components/MoveElement.coffee","RotateElement":"components/RotateElement.coffee","SetElementTop":"components/SetElementTop.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-css","description":"Cascading Style Sheets components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-css","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/MoveElement.coffee","components/RotateElement.coffee","components/SetElementTop.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"css3","components":{"MoveElement":"components/MoveElement.coffee","RotateElement":"components/RotateElement.coffee","SetElementTop":"components/SetElementTop.coffee"}}}');
 });
 require.register("noflo-noflo-css/components/MoveElement.js", function(exports, require, module){
 var MoveElement, noflo,
@@ -10039,6 +11578,8 @@ MoveElement = (function(_super) {
   __extends(MoveElement, _super);
 
   MoveElement.prototype.description = 'Change the coordinates of a DOM element';
+
+  MoveElement.prototype.icon = 'move';
 
   function MoveElement() {
     var _this = this;
@@ -10093,6 +11634,8 @@ RotateElement = (function(_super) {
   __extends(RotateElement, _super);
 
   RotateElement.prototype.description = 'Change the coordinates of a DOM element';
+
+  RotateElement.prototype.icon = 'rotate-right';
 
   function RotateElement() {
     var _this = this;
@@ -10156,6 +11699,8 @@ SetElementTop = (function(_super) {
 
   SetElementTop.prototype.description = 'Set element\'s CSS top';
 
+  SetElementTop.prototype.icon = 'resize-vertical';
+
   function SetElementTop() {
     var _this = this;
     this.element = null;
@@ -10194,56 +11739,31 @@ require.register("noflo-noflo-math/index.js", function(exports, require, module)
 
 });
 require.register("noflo-noflo-math/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-math","description":"Mathematical components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-math","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/Add.coffee","components/Subtract.coffee","components/Multiply.coffee","components/Divide.coffee","components/CalculateAngle.coffee","components/CalculateDistance.coffee","components/Compare.coffee","components/CountSum.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"Add":"components/Add.coffee","Subtract":"components/Subtract.coffee","Multiply":"components/Multiply.coffee","Divide":"components/Divide.coffee","CalculateAngle":"components/CalculateAngle.coffee","CalculateDistance":"components/CalculateDistance.coffee","Compare":"components/Compare.coffee","CountSum":"components/CountSum.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-math","description":"Mathematical components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-math","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/Add.coffee","components/Subtract.coffee","components/Multiply.coffee","components/Divide.coffee","components/CalculateAngle.coffee","components/CalculateDistance.coffee","components/Compare.coffee","components/CountSum.coffee","lib/MathComponent.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"plus-sign","components":{"Add":"components/Add.coffee","Subtract":"components/Subtract.coffee","Multiply":"components/Multiply.coffee","Divide":"components/Divide.coffee","CalculateAngle":"components/CalculateAngle.coffee","CalculateDistance":"components/CalculateDistance.coffee","Compare":"components/Compare.coffee","CountSum":"components/CountSum.coffee"}}}');
 });
 require.register("noflo-noflo-math/components/Add.js", function(exports, require, module){
-var Add, noflo,
+var Add, MathComponent,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 Add = (function(_super) {
   __extends(Add, _super);
 
+  Add.prototype.icon = 'plus';
+
   function Add() {
-    var _this = this;
-    this.augend = null;
-    this.addend = null;
-    this.inPorts = {
-      augend: new noflo.Port('number'),
-      addend: new noflo.Port('number'),
-      clear: new noflo.Port('bang')
-    };
-    this.outPorts = {
-      sum: new noflo.Port('number')
-    };
-    this.inPorts.augend.on('data', function(data) {
-      _this.augend = data;
-      if (_this.addend !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.addend.on('data', function(data) {
-      _this.addend = data;
-      if (_this.augend !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.clear.on('data', function(data) {
-      _this.augend = null;
-      return _this.addend = null;
-    });
+    Add.__super__.constructor.call(this, 'augend', 'addend', 'sum');
   }
 
-  Add.prototype.add = function() {
-    this.outPorts.sum.send(this.augend + this.addend);
-    return this.outPorts.sum.disconnect();
+  Add.prototype.calculate = function(augend, addend) {
+    return augend + addend;
   };
 
   return Add;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new Add;
@@ -10251,53 +11771,28 @@ exports.getComponent = function() {
 
 });
 require.register("noflo-noflo-math/components/Subtract.js", function(exports, require, module){
-var Subtract, noflo,
+var MathComponent, Subtract,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 Subtract = (function(_super) {
   __extends(Subtract, _super);
 
+  Subtract.prototype.icon = 'minus';
+
   function Subtract() {
-    var _this = this;
-    this.minuend = null;
-    this.subtrahend = null;
-    this.inPorts = {
-      minuend: new noflo.Port('number'),
-      subtrahend: new noflo.Port('number'),
-      clear: new noflo.Port('bang')
-    };
-    this.outPorts = {
-      difference: new noflo.Port('number')
-    };
-    this.inPorts.minuend.on('data', function(data) {
-      _this.minuend = data;
-      if (_this.subtrahend !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.subtrahend.on('data', function(data) {
-      _this.subtrahend = data;
-      if (_this.minuend !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.clear.on('data', function(data) {
-      _this.minuend = null;
-      return _this.subtrahend = null;
-    });
+    Subtract.__super__.constructor.call(this, 'minuend', 'subtrahend', 'difference');
   }
 
-  Subtract.prototype.add = function() {
-    this.outPorts.difference.send(this.minuend - this.subtrahend);
-    return this.outPorts.difference.disconnect();
+  Subtract.prototype.calculate = function(minuend, subtrahend) {
+    return minuend - subtrahend;
   };
 
   return Subtract;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new Subtract;
@@ -10305,53 +11800,28 @@ exports.getComponent = function() {
 
 });
 require.register("noflo-noflo-math/components/Multiply.js", function(exports, require, module){
-var Multiply, noflo,
+var MathComponent, Multiply,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 Multiply = (function(_super) {
   __extends(Multiply, _super);
 
+  Multiply.prototype.icon = 'asterisk';
+
   function Multiply() {
-    var _this = this;
-    this.multiplicand = null;
-    this.multiplier = null;
-    this.inPorts = {
-      multiplicand: new noflo.Port('number'),
-      multiplier: new noflo.Port('number'),
-      clear: new noflo.Port('bang')
-    };
-    this.outPorts = {
-      product: new noflo.Port('number')
-    };
-    this.inPorts.multiplicand.on('data', function(data) {
-      _this.multiplicand = data;
-      if (_this.multiplier !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.multiplier.on('data', function(data) {
-      _this.multiplier = data;
-      if (_this.multiplicand !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.clear.on('data', function(data) {
-      _this.multiplicand = null;
-      return _this.multiplier = null;
-    });
+    Multiply.__super__.constructor.call(this, 'multiplicand', 'multiplier', 'product');
   }
 
-  Multiply.prototype.add = function() {
-    this.outPorts.product.send(this.multiplicand * this.multiplier);
-    return this.outPorts.product.disconnect();
+  Multiply.prototype.calculate = function(multiplicand, multiplier) {
+    return multiplicand * multiplier;
   };
 
   return Multiply;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new Multiply;
@@ -10359,53 +11829,26 @@ exports.getComponent = function() {
 
 });
 require.register("noflo-noflo-math/components/Divide.js", function(exports, require, module){
-var Divide, noflo,
+var Divide, MathComponent,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 Divide = (function(_super) {
   __extends(Divide, _super);
 
   function Divide() {
-    var _this = this;
-    this.dividend = null;
-    this.divisor = null;
-    this.inPorts = {
-      dividend: new noflo.Port('number'),
-      divisor: new noflo.Port('number'),
-      clear: new noflo.Port('bang')
-    };
-    this.outPorts = {
-      quotient: new noflo.Port('number')
-    };
-    this.inPorts.dividend.on('data', function(data) {
-      _this.dividend = data;
-      if (_this.divisor !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.divisor.on('data', function(data) {
-      _this.divisor = data;
-      if (_this.dividend !== null) {
-        return _this.add();
-      }
-    });
-    this.inPorts.clear.on('data', function(data) {
-      _this.dividend = null;
-      return _this.divisor = null;
-    });
+    Divide.__super__.constructor.call(this, 'dividend', 'divisor', 'quotient');
   }
 
-  Divide.prototype.add = function() {
-    this.outPorts.quotient.send(this.dividend / this.divisor);
-    return this.outPorts.quotient.disconnect();
+  Divide.prototype.calculate = function(dividend, divisor) {
+    return dividend / divisor;
   };
 
   return Divide;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new Divide;
@@ -10413,58 +11856,39 @@ exports.getComponent = function() {
 
 });
 require.register("noflo-noflo-math/components/CalculateAngle.js", function(exports, require, module){
-var CalculateAngle, noflo,
+var CalculateAngle, MathComponent,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 CalculateAngle = (function(_super) {
   __extends(CalculateAngle, _super);
 
   CalculateAngle.prototype.description = 'Calculate the angle between two points';
 
+  CalculateAngle.prototype.icon = 'compass';
+
   function CalculateAngle() {
-    var _this = this;
-    this.origin = null;
-    this.destination = null;
-    this.inPorts = {
-      origin: new noflo.Port('object'),
-      destination: new noflo.Port('object')
-    };
-    this.outPorts = {
-      angle: new noflo.Port('number')
-    };
-    this.inPorts.origin.on('data', function(origin) {
-      _this.origin = origin;
-      if (_this.destination) {
-        return _this.calculate();
-      }
-    });
-    this.inPorts.destination.on('data', function(destination) {
-      _this.destination = destination;
-      if (_this.origin) {
-        return _this.calculate();
-      }
-    });
+    CalculateAngle.__super__.constructor.call(this, 'origin', 'destination', 'angle', 'object');
   }
 
-  CalculateAngle.prototype.calculate = function() {
+  CalculateAngle.prototype.calculate = function(origin, destination) {
     var angle, deltaX, deltaY;
-    deltaX = this.destination.x - this.origin.x;
-    deltaY = this.destination.y - this.origin.y;
-    this.origin = null;
-    this.destination = null;
+    deltaX = destination.x - origin.x;
+    deltaY = destination.y - origin.y;
+    origin = null;
+    destination = null;
     angle = (Math.atan2(deltaY, deltaX) * 180 / Math.PI) + 90;
     if (angle < 0) {
       angle = angle + 360;
     }
-    return this.outPorts.angle.send(angle);
+    return angle;
   };
 
   return CalculateAngle;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new CalculateAngle;
@@ -10472,55 +11896,36 @@ exports.getComponent = function() {
 
 });
 require.register("noflo-noflo-math/components/CalculateDistance.js", function(exports, require, module){
-var CalculateDistance, noflo,
+var CalculateDistance, MathComponent,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-noflo = require('noflo');
+MathComponent = require('../lib/MathComponent').MathComponent;
 
 CalculateDistance = (function(_super) {
   __extends(CalculateDistance, _super);
 
+  CalculateDistance.prototype.icon = 'arrow-right';
+
   CalculateDistance.prototype.description = 'Calculate the distance between two points';
 
   function CalculateDistance() {
-    var _this = this;
-    this.origin = null;
-    this.destination = null;
-    this.inPorts = {
-      origin: new noflo.Port('object'),
-      destination: new noflo.Port('object')
-    };
-    this.outPorts = {
-      distance: new noflo.Port('number')
-    };
-    this.inPorts.origin.on('data', function(origin) {
-      _this.origin = origin;
-      if (_this.destination) {
-        return _this.calculate();
-      }
-    });
-    this.inPorts.destination.on('data', function(destination) {
-      _this.destination = destination;
-      if (_this.origin) {
-        return _this.calculate();
-      }
-    });
+    CalculateDistance.__super__.constructor.call(this, 'origin', 'destination', 'distance', 'object');
   }
 
-  CalculateDistance.prototype.calculate = function() {
+  CalculateDistance.prototype.calculate = function(origin, destination) {
     var deltaX, deltaY, distance;
-    deltaX = this.destination.x - this.origin.x;
-    deltaY = this.destination.y - this.origin.y;
-    this.origin = null;
-    this.destination = null;
+    deltaX = destination.x - origin.x;
+    deltaY = destination.y - origin.y;
+    origin = null;
+    destination = null;
     distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-    return this.outPorts.distance.send(distance);
+    return distance;
   };
 
   return CalculateDistance;
 
-})(noflo.Component);
+})(MathComponent);
 
 exports.getComponent = function() {
   return new CalculateDistance;
@@ -10538,6 +11943,8 @@ Compare = (function(_super) {
   __extends(Compare, _super);
 
   Compare.prototype.description = 'Compare two numbers';
+
+  Compare.prototype.icon = 'check';
 
   function Compare() {
     var _this = this;
@@ -10578,39 +11985,38 @@ Compare = (function(_super) {
       case 'eq':
       case '==':
         if (this.value === this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
+        break;
       case 'ne':
       case '!=':
         if (this.value !== this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
+        break;
       case 'gt':
       case '>':
         if (this.value > this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
+        break;
       case 'lt':
       case '<':
         if (this.value < this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
+        break;
       case 'ge':
       case '>=':
         if (this.value >= this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
+        break;
       case 'le':
       case '<=':
         if (this.value <= this.comparison) {
-          this.send(this.value);
+          return this.send(this.value);
         }
-        return;
     }
     if (!this.outPorts.fail.isAttached()) {
       return;
@@ -10691,6 +12097,107 @@ exports.getComponent = function() {
 };
 
 });
+require.register("noflo-noflo-math/lib/MathComponent.js", function(exports, require, module){
+var MathComponent, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+MathComponent = (function(_super) {
+  __extends(MathComponent, _super);
+
+  function MathComponent(primary, secondary, res, inputType) {
+    var calculate,
+      _this = this;
+    if (inputType == null) {
+      inputType = 'number';
+    }
+    this.inPorts = {};
+    this.outPorts = {};
+    this.inPorts[primary] = new noflo.Port(inputType);
+    this.inPorts[secondary] = new noflo.Port(inputType);
+    this.inPorts.clear = new noflo.Port('bang');
+    this.outPorts[res] = new noflo.Port('number');
+    this.primary = {
+      value: null,
+      group: [],
+      disconnect: false
+    };
+    this.secondary = null;
+    this.groups = [];
+    calculate = function() {
+      var group, _i, _j, _len, _len1, _ref, _ref1;
+      _ref = _this.primary.group;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _this.outPorts[res].beginGroup(group);
+      }
+      _this.outPorts[res].send(_this.calculate(_this.primary.value, _this.secondary));
+      _ref1 = _this.primary.group;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        group = _ref1[_j];
+        _this.outPorts[res].endGroup();
+      }
+      if (_this.primary.disconnect) {
+        return _this.outPorts[res].disconnect();
+      }
+    };
+    this.inPorts[primary].on('begingroup', function(group) {
+      return _this.groups.push(group);
+    });
+    this.inPorts[primary].on('data', function(data) {
+      _this.primary = {
+        value: data,
+        group: _this.groups.slice(0),
+        disconnect: false
+      };
+      if (_this.secondary !== null) {
+        return calculate();
+      }
+    });
+    this.inPorts[primary].on('endgroup', function() {
+      return _this.groups.pop();
+    });
+    this.inPorts[primary].on('disconnect', function() {
+      if (_this.primary.value && _this.secondary) {
+        return _this.outPorts[res].disconnect();
+      }
+      return _this.primary.disconnect = true;
+    });
+    this.inPorts[secondary].on('data', function(data) {
+      _this.secondary = data;
+      if (_this.primary.value !== null) {
+        return calculate();
+      }
+    });
+    this.inPorts.clear.on('data', function(data) {
+      var group, _i, _len, _ref;
+      if (_this.outPorts[res].isConnected()) {
+        _ref = _this.primary.group;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          group = _ref[_i];
+          _this.outPorts[res].endGroup();
+        }
+        _this.outPorts[res].disconnect();
+      }
+      _this.primary = {
+        value: null,
+        group: [],
+        disconnect: false
+      };
+      _this.secondary = null;
+      return _this.groups = [];
+    });
+  }
+
+  return MathComponent;
+
+})(noflo.Component);
+
+exports.MathComponent = MathComponent;
+
+});
 require.register("noflo-noflo-core/index.js", function(exports, require, module){
 /*
  * This file can be used for general library features of core.
@@ -10718,6 +12225,8 @@ Callback = (function(_super) {
   Callback.prototype.description = 'This component calls a given callback function for each\
   IP it receives.  The Callback component is typically used to connect\
   NoFlo with external Node.js code.';
+
+  Callback.prototype.icon = 'signout';
 
   function Callback() {
     var _this = this;
@@ -10775,6 +12284,8 @@ DisconnectAfterPacket = (function(_super) {
 
   DisconnectAfterPacket.prototype.description = 'Forwards any packets, but also sends a disconnect after each of them';
 
+  DisconnectAfterPacket.prototype.icon = 'pause';
+
   function DisconnectAfterPacket() {
     var _this = this;
     this.inPorts = {
@@ -10817,9 +12328,11 @@ Drop = (function(_super) {
   Drop.prototype.description = 'This component drops every packet it receives with no\
   action';
 
+  Drop.prototype.icon = 'trash';
+
   function Drop() {
     this.inPorts = {
-      "in": new noflo.Port('all')
+      "in": new noflo.ArrayPort('all')
     };
     this.outPorts = {};
   }
@@ -10844,6 +12357,8 @@ Group = (function(_super) {
   __extends(Group, _super);
 
   Group.prototype.description = 'Adds a set of groups around the packets received at each connection';
+
+  Group.prototype.icon = 'tags';
 
   function Group() {
     var _this = this;
@@ -10925,6 +12440,8 @@ Kick = (function(_super) {
   the output port. Mostly usable for debugging, but can also be useful\
   for starting up networks.';
 
+  Kick.prototype.icon = 'share';
+
   function Kick() {
     var _this = this;
     this.data = {
@@ -10995,6 +12512,8 @@ Merge = (function(_super) {
   Merge.prototype.description = 'This component receives data on multiple input ports and\
     sends the same data out to the connected output port';
 
+  Merge.prototype.icon = 'resize-small';
+
   function Merge() {
     var _this = this;
     this.inPorts = {
@@ -11059,6 +12578,8 @@ Output = (function(_super) {
 
   Output.prototype.description = 'This component receives input on a single inport, and\
     sends the data items directly to console.log';
+
+  Output.prototype.icon = 'bug';
 
   function Output() {
     var _this = this;
@@ -11132,6 +12653,8 @@ Repeat = (function(_super) {
 
   Repeat.prototype.description = 'Forwards packets and metadata in the same way it receives them';
 
+  Repeat.prototype.icon = 'forward';
+
   function Repeat() {
     var _this = this;
     this.inPorts = {
@@ -11177,6 +12700,8 @@ RepeatAsync = (function(_super) {
   __extends(RepeatAsync, _super);
 
   RepeatAsync.prototype.description = "Like 'Repeat', except repeat on next tick";
+
+  RepeatAsync.prototype.icon = 'step-forward';
 
   function RepeatAsync() {
     var _this = this;
@@ -11235,6 +12760,8 @@ Split = (function(_super) {
   Split.prototype.description = 'This component receives data on a single input port and\
     sends the same data out to all connected output ports';
 
+  Split.prototype.icon = 'resize-full';
+
   function Split() {
     var _this = this;
     this.inPorts = {
@@ -11280,6 +12807,8 @@ RunInterval = (function(_super) {
   __extends(RunInterval, _super);
 
   RunInterval.prototype.description = 'Send a packet at the given interval';
+
+  RunInterval.prototype.icon = 'clock';
 
   function RunInterval() {
     var _this = this;
@@ -11350,6 +12879,8 @@ MakeFunction = (function(_super) {
   and sends the return value to "out". Within the function "x" will\
   be the variable from the in port. For example, to make a ^2 function\
   input "return x*x;" to the function port.';
+
+  MakeFunction.prototype.icon = 'code';
 
   function MakeFunction() {
     var _this = this;
@@ -11423,105 +12954,174 @@ exports.runGraph = function (graph, callback) {
 };
 
 exports.prepareGraph = function (instance) {
+  var prevNode;
+
+  // Initialize graph
+  var graph = new noflo.Graph('Drag');
+  graph.addNode('Failed', 'core/Drop');
+  //graph.addNode('Failed', 'core/Output');
+  graph.addNode('Passed', 'core/Merge');
+  graph.addNode('Detect', 'flow/Gate');
+  graph.addNode('Target', 'core/Repeat');
+  graph.addNode('AllowDetect', 'core/Merge');
+  graph.addEdge('AllowDetect', 'out', 'Detect', 'open');
+  // Initially detection is enabled
+  graph.addInitial(true, 'AllowDetect', 'in');
+
+  // Go to action
+  graph.addNode('DoAction', 'core/Merge');
+
+  // Listen to gestures
+  prevNode = exports.prepareGesture(graph, instance);
+
+  // Handle pass-thru
+  prevNode = exports.preparePassThrough(graph, instance, prevNode);
+
+  // Validate target node
+  prevNode = exports.prepareAccept(graph, instance, prevNode);
+  // Check the gesture
   switch (instance.type) {
     case 'drag':
-      return exports.prepareDrag(instance);
+      prevNode = exports.prepareDrag(graph, instance, prevNode);
+      break;
   }
-}
+  // Check gesture direction
+  prevNode = exports.prepareDirection(graph, instance, prevNode);
 
-exports.prepareDrag = function (instance) {
-  var graph = new noflo.Graph('Drag');
-  graph.addNode('Listen', 'gestures/ListenPointer');
-  graph.addNode('Direction', 'gestures/RecognizeCardinalGesture');
-  graph.addInitial(instance.container, 'Listen', 'element');
-  graph.addInitial(parseInt(instance.distance), 'Direction', 'distance');
+  // Gesture has been accepted, pass data to action
+  graph.addEdge(prevNode[0], prevNode[1], 'Passed', 'in');
+  prevNode = ['DoAction', 'out'];
 
-  // Filtering by target
-  if (instance.accept) {
-    graph.addNode('EnsureTarget', 'gestures/FilterByTarget');
-    graph.addEdge('Listen', 'start', 'EnsureTarget', 'started');
-    graph.addEdge('Listen', 'move', 'EnsureTarget', 'move');
-    graph.addInitial(instance.accept, 'EnsureTarget', 'accept');
-    graph.addNode('LogTgt', 'core/Repeat');
-    //graph.addEdge('EnsureTarget', 'ontarget', 'Direction', 'recognize');
-    graph.addEdge('EnsureTarget', 'ontarget', 'LogTgt', 'in');
-    graph.addEdge('LogTgt', 'out', 'Direction', 'recognize');
-    graph.addEdge('EnsureTarget', 'startevent', 'Direction', 'started');
-    graph.addEdge('EnsureTarget', 'move', 'Direction', 'moved');
-  } else {
-    // TODO: Set up for filterless drag (i.e. no EnsureTarget)
-  }
-  var cardinals = ['east', 'south', 'north', 'west'];
-  var directions = instance.direction.split(' ');
-  if (directions.length < 4) {
-    graph.addNode('Ignored', 'core/Merge');
-    graph.addNode('DropIgnored', 'core/Drop');
-    graph.addEdge('Ignored', 'out', 'DropIgnored', 'in');
-  }
-  graph.addNode('Actionable', 'core/Merge');
-  cardinals.forEach(function (dir) {
-    if (directions.indexOf(dir) !== -1) {
-      return;
-    }
-    graph.addEdge('Direction', dir, 'Ignored', 'in');
-  });
-  directions.forEach(function (dir) {
-    graph.addEdge('Direction', dir, 'Actionable', 'in');
-  });
-
-  graph.addNode('AcceptMove', 'flow/Gate');
-  graph.addEdge('Actionable', 'out', 'AcceptMove', 'open');
-  graph.addEdge('Direction', 'moved', 'AcceptMove', 'in');
-  graph.addNode('SplitEnd', 'core/Split');
-  graph.addEdge('Listen', 'end', 'SplitEnd', 'in');
-  graph.addEdge('SplitEnd', 'out', 'AcceptMove', 'close');
-
+  // Handle action
   switch (instance.action) {
     case 'move':
-      graph.addNode('Move', 'css/MoveElement');
-      graph.addEdge('AcceptMove', 'out', 'Move', 'point');
-      if (instance.accept) {
-        graph.addEdge('EnsureTarget', 'target', 'Move', 'element');
-      } else {
-        graph.addInitial(instance.container, 'Move', 'element');
-      }
+      exports.prepareMove(graph, instance, prevNode);
       break;
-    case 'attributes':
-      graph.addNode('GetX', 'objects/GetObjectKey');
-      graph.addInitial('x', 'GetX', 'key');
-      graph.addNode('GetY', 'objects/GetObjectKey');
-      graph.addInitial('y', 'GetY', 'key');
-      graph.addEdge('AcceptMove', 'out', 'GetX', 'in');
-      graph.addEdge('GetX', 'object', 'GetY', 'in');
-      graph.addNode('SetX', 'dom/SetAttribute');
-      graph.addInitial('x', 'SetX', 'attribute');
-      graph.addEdge('GetX', 'out', 'SetX', 'value');
-      graph.addNode('SetY', 'dom/SetAttribute');
-      graph.addInitial('y', 'SetY', 'attribute');
-      graph.addEdge('GetY', 'out', 'SetY', 'value');
-      if (instance.accept) {
-        graph.addEdge('EnsureTarget', 'target', 'SetX', 'element');
-      } else {
-        graph.addInitial(instance.container, 'SetX', 'element');
-      }
-      graph.addEdge('SetX', 'element', 'SetY', 'element');
+    case 'attribute':
+      exports.prepareAttribute(graph, instance, prevNode);
       break;
-    default:
-      graph.addNode('Log', 'core/Output');
-      graph.addEdge('AcceptMove', 'out', 'Log', 'in');
-      if (instance.accept) {
-        graph.addNode('DropTarget', 'core/Drop');
-        graph.addEdge('EnsureTarget', 'target', 'DropTarget', 'in');
-      }
+  }
+  //console.log(graph.toDOT());
+  return graph;
+}
+
+exports.prepareGesture = function (graph, instance) {
+  graph.addNode('Listen', 'gestures/GestureToObject');
+  graph.addInitial(instance.container, 'Listen', 'element');
+  return ['Listen', 'out'];
+};
+
+exports.preparePassThrough = function (graph, instance, prevNode) {
+  graph.addNode('SplitGesture', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitGesture', 'in');
+
+  // We use a gate for stopping detection once the first one has happened
+  graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
+  // Close the gate after detection
+  graph.addNode('SplitPassed', 'core/Split');
+  graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
+  graph.addEdge('SplitPassed', 'out', 'Detect', 'close');
+  // Reopen it once the gesture has ended
+  graph.addNode('AfterGesture', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGesture', 'in');
+  graph.addEdge('AfterGesture', 'out', 'AllowDetect', 'in');
+
+  // We use a gate for passing things after recognition straight to action
+  graph.addNode('PassThru', 'flow/Gate');
+  graph.addEdge('SplitGesture', 'out', 'PassThru', 'in');
+  graph.addEdge('PassThru', 'out', 'DoAction', 'in');
+  // Open on detected gesture
+  graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
+
+  // Close passthrough after end of gesture
+  graph.addNode('AfterGestureClose', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureClose', 'in');
+  graph.addEdge('AfterGestureClose', 'out', 'PassThru', 'close');
+
+  return ['Detect', 'out'];
+};
+
+exports.prepareAccept = function (graph, instance, prevNode) {
+  if (!instance.accept) {
+    graph.addInitial(instance.container, 'Target', 'in');
+    return prevNode;
   }
 
-  return graph;
+  graph.addNode('DetectTarget', 'gestures/DetectTarget');
+  graph.addInitial('startelement', 'DetectTarget', 'key');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectTarget', 'in');
+  graph.addEdge('DetectTarget', 'target', 'Target', 'in');
+  graph.addInitial(instance.accept, 'DetectTarget', 'target');
+  graph.addEdge('DetectTarget', 'fail', 'Failed', 'in');
+  return ['DetectTarget', 'pass'];
+};
+
+exports.prepareDrag = function (graph, instance, prevNode) {
+  var distance = 20;
+  if (instance.distance) {
+    distance = parseInt(instance.distance);
+  }
+  graph.addNode('DetectDrag', 'gestures/DetectDrag');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
+  graph.addInitial(distance, 'DetectDrag', 'distance');
+  graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  return ['DetectDrag', 'pass'];
+};
+
+exports.prepareDirection = function (graph, instance, prevNode) {
+  if (!instance.direction) {
+    return prevNode;
+  }
+  var directions = instance.direction.split(' ');
+  if (directions.length === 4) {
+    return prevNode;
+  }
+  var cardinals = ['east', 'south', 'north', 'west'];
+  graph.addNode('DetectDirection', 'gestures/DetectCardinalDirection');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectDirection', 'in');
+  graph.addNode('DirectionPassed', 'core/Merge');
+  cardinals.forEach(function (dir) {
+    if (directions.indexOf(dir) !== -1) {
+      // Allowed direction
+      graph.addEdge('DetectDirection', dir, 'DirectionPassed', 'in');
+      return;
+    }
+    graph.addEdge('DetectDirection', dir, 'Failed', 'in');
+  });
+  graph.addEdge('DetectDirection', 'fail', 'Failed', 'in');
+  return ['DirectionPassed', 'out'];
+};
+
+exports.prepareMove = function (graph, instance, prevNode) {
+  graph.addNode('EachTouch', 'objects/SplitObject');
+  graph.addEdge('DoAction', 'out', 'EachTouch', 'in');
+  graph.addNode('GetPoint', 'objects/GetObjectKey');
+  graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
+  graph.addInitial('movepoint', 'GetPoint', 'key');
+  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addNode('Move', 'css/MoveElement');
+  graph.addEdge('Target', 'out', 'Move', 'element');
+  graph.addEdge('GetPoint', 'out', 'Move', 'point');
+};
+
+exports.prepareAttribute = function (graph, instance, prevNode) {
+  graph.addNode('EachTouch', 'objects/SplitObject');
+  graph.addEdge(prevNode[0], prevNode[1], 'EachTouch', 'in');
+  graph.addNode('GetPoint', 'objects/GetObjectKey');
+  graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
+  graph.addInitial('movepoint', 'GetPoint', 'key');
+  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addNode('Set', 'dom/SetAttribute');
+  graph.addEdge('Target', 'out', 'Set', 'element');
+  graph.addInitial(instance.type, 'Set', 'attribute');
+  graph.addEdge('GetPoint', 'out', 'Set', 'value');
 };
 
 });
 require.register("the-behavior/component.json", function(exports, require, module){
 module.exports = JSON.parse('{"name":"the-behavior","description":"Polymer elements for gestural behavior","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-ui","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-gestures":"*","noflo/noflo-objects":"*","noflo/noflo-flow":"*","noflo/noflo-dom":"*","noflo/noflo-css":"*","noflo/noflo-math":"*","noflo/noflo-core":"*"},"noflo":{"components":{},"graphs":{}},"main":"index.js","scripts":["index.js"],"json":["component.json"],"files":[]}');
 });
+
 
 
 
@@ -11592,21 +13192,28 @@ require.alias("noflo-fbp/lib/fbp.js", "noflo-noflo/deps/fbp/lib/fbp.js");
 require.alias("noflo-fbp/lib/fbp.js", "noflo-noflo/deps/fbp/index.js");
 require.alias("noflo-fbp/lib/fbp.js", "noflo-fbp/index.js");
 require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo/index.js");
+require.alias("noflo-noflo-gestures/graphs/DetectDrag.json", "the-behavior/deps/noflo-gestures/graphs/DetectDrag.json");
+require.alias("noflo-noflo-gestures/graphs/DetectSwipe.json", "the-behavior/deps/noflo-gestures/graphs/DetectSwipe.json");
+require.alias("noflo-noflo-gestures/graphs/DetectPinch.json", "the-behavior/deps/noflo-gestures/graphs/DetectPinch.json");
 require.alias("noflo-noflo-gestures/graphs/FilterByTarget.json", "the-behavior/deps/noflo-gestures/graphs/FilterByTarget.json");
+require.alias("noflo-noflo-gestures/graphs/GestureToObject.json", "the-behavior/deps/noflo-gestures/graphs/GestureToObject.json");
 require.alias("noflo-noflo-gestures/graphs/ListenGestures.json", "the-behavior/deps/noflo-gestures/graphs/ListenGestures.json");
 require.alias("noflo-noflo-gestures/graphs/ListenPointer.json", "the-behavior/deps/noflo-gestures/graphs/ListenPointer.json");
-require.alias("noflo-noflo-gestures/graphs/ListenSwipe.json", "the-behavior/deps/noflo-gestures/graphs/ListenSwipe.json");
-require.alias("noflo-noflo-gestures/graphs/RecognizeCardinalGesture.json", "the-behavior/deps/noflo-gestures/graphs/RecognizeCardinalGesture.json");
+require.alias("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", "the-behavior/deps/noflo-gestures/graphs/DetectCardinalDirection.json");
 require.alias("noflo-noflo-gestures/index.js", "the-behavior/deps/noflo-gestures/index.js");
+require.alias("noflo-noflo-gestures/graphs/DetectDrag.json", "the-behavior/deps/noflo-gestures/graphs/DetectDrag.json");
+require.alias("noflo-noflo-gestures/graphs/DetectSwipe.json", "the-behavior/deps/noflo-gestures/graphs/DetectSwipe.json");
+require.alias("noflo-noflo-gestures/graphs/DetectPinch.json", "the-behavior/deps/noflo-gestures/graphs/DetectPinch.json");
 require.alias("noflo-noflo-gestures/graphs/FilterByTarget.json", "the-behavior/deps/noflo-gestures/graphs/FilterByTarget.json");
+require.alias("noflo-noflo-gestures/graphs/GestureToObject.json", "the-behavior/deps/noflo-gestures/graphs/GestureToObject.json");
 require.alias("noflo-noflo-gestures/graphs/ListenGestures.json", "the-behavior/deps/noflo-gestures/graphs/ListenGestures.json");
 require.alias("noflo-noflo-gestures/graphs/ListenPointer.json", "the-behavior/deps/noflo-gestures/graphs/ListenPointer.json");
-require.alias("noflo-noflo-gestures/graphs/ListenSwipe.json", "the-behavior/deps/noflo-gestures/graphs/ListenSwipe.json");
-require.alias("noflo-noflo-gestures/graphs/RecognizeCardinalGesture.json", "the-behavior/deps/noflo-gestures/graphs/RecognizeCardinalGesture.json");
+require.alias("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", "the-behavior/deps/noflo-gestures/graphs/DetectCardinalDirection.json");
 require.alias("noflo-noflo-gestures/component.json", "the-behavior/deps/noflo-gestures/component.json");
 require.alias("noflo-noflo-gestures/components/CardinalRouter.js", "the-behavior/deps/noflo-gestures/components/CardinalRouter.js");
 require.alias("noflo-noflo-gestures/components/DegreesToCardinal.js", "the-behavior/deps/noflo-gestures/components/DegreesToCardinal.js");
 require.alias("noflo-noflo-gestures/components/DegreesToCompass.js", "the-behavior/deps/noflo-gestures/components/DegreesToCompass.js");
+require.alias("noflo-noflo-gestures/components/DetectTarget.js", "the-behavior/deps/noflo-gestures/components/DetectTarget.js");
 require.alias("noflo-noflo-gestures/index.js", "noflo-gestures/index.js");
 require.alias("noflo-noflo/component.json", "noflo-noflo-gestures/deps/noflo/component.json");
 require.alias("noflo-noflo/src/lib/Graph.js", "noflo-noflo-gestures/deps/noflo/src/lib/Graph.js");
@@ -11674,6 +13281,7 @@ require.alias("noflo-noflo-math/components/CalculateAngle.js", "noflo-noflo-gest
 require.alias("noflo-noflo-math/components/CalculateDistance.js", "noflo-noflo-gestures/deps/noflo-math/components/CalculateDistance.js");
 require.alias("noflo-noflo-math/components/Compare.js", "noflo-noflo-gestures/deps/noflo-math/components/Compare.js");
 require.alias("noflo-noflo-math/components/CountSum.js", "noflo-noflo-gestures/deps/noflo-math/components/CountSum.js");
+require.alias("noflo-noflo-math/lib/MathComponent.js", "noflo-noflo-gestures/deps/noflo-math/lib/MathComponent.js");
 require.alias("noflo-noflo/component.json", "noflo-noflo-math/deps/noflo/component.json");
 require.alias("noflo-noflo/src/lib/Graph.js", "noflo-noflo-math/deps/noflo/src/lib/Graph.js");
 require.alias("noflo-noflo/src/lib/InternalSocket.js", "noflo-noflo-math/deps/noflo/src/lib/InternalSocket.js");
@@ -11713,6 +13321,47 @@ require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo-flow/deps/noflo/src/l
 require.alias("noflo-noflo/src/lib/Network.js", "noflo-noflo-flow/deps/noflo/src/lib/Network.js");
 require.alias("noflo-noflo/src/components/Graph.js", "noflo-noflo-flow/deps/noflo/src/components/Graph.js");
 require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo-flow/deps/noflo/index.js");
+require.alias("component-emitter/index.js", "noflo-noflo/deps/emitter/index.js");
+require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
+
+require.alias("component-underscore/index.js", "noflo-noflo/deps/underscore/index.js");
+
+require.alias("noflo-fbp/lib/fbp.js", "noflo-noflo/deps/fbp/lib/fbp.js");
+require.alias("noflo-fbp/lib/fbp.js", "noflo-noflo/deps/fbp/index.js");
+require.alias("noflo-fbp/lib/fbp.js", "noflo-fbp/index.js");
+require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo/index.js");
+require.alias("noflo-noflo-groups/index.js", "noflo-noflo-gestures/deps/noflo-groups/index.js");
+require.alias("noflo-noflo-groups/component.json", "noflo-noflo-gestures/deps/noflo-groups/component.json");
+require.alias("noflo-noflo-groups/components/ReadGroups.js", "noflo-noflo-gestures/deps/noflo-groups/components/ReadGroups.js");
+require.alias("noflo-noflo-groups/components/RemoveGroups.js", "noflo-noflo-gestures/deps/noflo-groups/components/RemoveGroups.js");
+require.alias("noflo-noflo-groups/components/Regroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/Regroup.js");
+require.alias("noflo-noflo-groups/components/Group.js", "noflo-noflo-gestures/deps/noflo-groups/components/Group.js");
+require.alias("noflo-noflo-groups/components/GroupZip.js", "noflo-noflo-gestures/deps/noflo-groups/components/GroupZip.js");
+require.alias("noflo-noflo-groups/components/FilterByGroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/FilterByGroup.js");
+require.alias("noflo-noflo-groups/components/Objectify.js", "noflo-noflo-gestures/deps/noflo-groups/components/Objectify.js");
+require.alias("noflo-noflo-groups/components/ReadGroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/ReadGroup.js");
+require.alias("noflo-noflo-groups/components/SendByGroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/SendByGroup.js");
+require.alias("noflo-noflo-groups/components/CollectGroups.js", "noflo-noflo-gestures/deps/noflo-groups/components/CollectGroups.js");
+require.alias("noflo-noflo-groups/components/CollectObject.js", "noflo-noflo-gestures/deps/noflo-groups/components/CollectObject.js");
+require.alias("noflo-noflo-groups/components/FirstGroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/FirstGroup.js");
+require.alias("noflo-noflo-groups/components/MapGroup.js", "noflo-noflo-gestures/deps/noflo-groups/components/MapGroup.js");
+require.alias("noflo-noflo-groups/components/MergeGroups.js", "noflo-noflo-gestures/deps/noflo-groups/components/MergeGroups.js");
+require.alias("noflo-noflo-groups/components/GroupByObjectKey.js", "noflo-noflo-gestures/deps/noflo-groups/components/GroupByObjectKey.js");
+require.alias("component-underscore/index.js", "noflo-noflo-groups/deps/underscore/index.js");
+
+require.alias("noflo-noflo/component.json", "noflo-noflo-groups/deps/noflo/component.json");
+require.alias("noflo-noflo/src/lib/Graph.js", "noflo-noflo-groups/deps/noflo/src/lib/Graph.js");
+require.alias("noflo-noflo/src/lib/InternalSocket.js", "noflo-noflo-groups/deps/noflo/src/lib/InternalSocket.js");
+require.alias("noflo-noflo/src/lib/Port.js", "noflo-noflo-groups/deps/noflo/src/lib/Port.js");
+require.alias("noflo-noflo/src/lib/ArrayPort.js", "noflo-noflo-groups/deps/noflo/src/lib/ArrayPort.js");
+require.alias("noflo-noflo/src/lib/Component.js", "noflo-noflo-groups/deps/noflo/src/lib/Component.js");
+require.alias("noflo-noflo/src/lib/AsyncComponent.js", "noflo-noflo-groups/deps/noflo/src/lib/AsyncComponent.js");
+require.alias("noflo-noflo/src/lib/LoggingComponent.js", "noflo-noflo-groups/deps/noflo/src/lib/LoggingComponent.js");
+require.alias("noflo-noflo/src/lib/ComponentLoader.js", "noflo-noflo-groups/deps/noflo/src/lib/ComponentLoader.js");
+require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo-groups/deps/noflo/src/lib/NoFlo.js");
+require.alias("noflo-noflo/src/lib/Network.js", "noflo-noflo-groups/deps/noflo/src/lib/Network.js");
+require.alias("noflo-noflo/src/components/Graph.js", "noflo-noflo-groups/deps/noflo/src/components/Graph.js");
+require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo-groups/deps/noflo/index.js");
 require.alias("component-emitter/index.js", "noflo-noflo/deps/emitter/index.js");
 require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
@@ -11773,6 +13422,7 @@ require.alias("noflo-noflo-objects/components/MergeObjects.js", "noflo-noflo-ges
 require.alias("noflo-noflo-objects/components/SplitObject.js", "noflo-noflo-gestures/deps/noflo-objects/components/SplitObject.js");
 require.alias("noflo-noflo-objects/components/ReplaceKey.js", "noflo-noflo-gestures/deps/noflo-objects/components/ReplaceKey.js");
 require.alias("noflo-noflo-objects/components/Keys.js", "noflo-noflo-gestures/deps/noflo-objects/components/Keys.js");
+require.alias("noflo-noflo-objects/components/Size.js", "noflo-noflo-gestures/deps/noflo-objects/components/Size.js");
 require.alias("noflo-noflo-objects/components/Values.js", "noflo-noflo-gestures/deps/noflo-objects/components/Values.js");
 require.alias("noflo-noflo-objects/components/Join.js", "noflo-noflo-gestures/deps/noflo-objects/components/Join.js");
 require.alias("noflo-noflo-objects/components/ExtractProperty.js", "noflo-noflo-gestures/deps/noflo-objects/components/ExtractProperty.js");
@@ -11932,6 +13582,7 @@ require.alias("noflo-noflo-objects/components/MergeObjects.js", "the-behavior/de
 require.alias("noflo-noflo-objects/components/SplitObject.js", "the-behavior/deps/noflo-objects/components/SplitObject.js");
 require.alias("noflo-noflo-objects/components/ReplaceKey.js", "the-behavior/deps/noflo-objects/components/ReplaceKey.js");
 require.alias("noflo-noflo-objects/components/Keys.js", "the-behavior/deps/noflo-objects/components/Keys.js");
+require.alias("noflo-noflo-objects/components/Size.js", "the-behavior/deps/noflo-objects/components/Size.js");
 require.alias("noflo-noflo-objects/components/Values.js", "the-behavior/deps/noflo-objects/components/Values.js");
 require.alias("noflo-noflo-objects/components/Join.js", "the-behavior/deps/noflo-objects/components/Join.js");
 require.alias("noflo-noflo-objects/components/ExtractProperty.js", "the-behavior/deps/noflo-objects/components/ExtractProperty.js");
@@ -12079,6 +13730,7 @@ require.alias("noflo-noflo-math/components/CalculateAngle.js", "the-behavior/dep
 require.alias("noflo-noflo-math/components/CalculateDistance.js", "the-behavior/deps/noflo-math/components/CalculateDistance.js");
 require.alias("noflo-noflo-math/components/Compare.js", "the-behavior/deps/noflo-math/components/Compare.js");
 require.alias("noflo-noflo-math/components/CountSum.js", "the-behavior/deps/noflo-math/components/CountSum.js");
+require.alias("noflo-noflo-math/lib/MathComponent.js", "the-behavior/deps/noflo-math/lib/MathComponent.js");
 require.alias("noflo-noflo-math/index.js", "noflo-math/index.js");
 require.alias("noflo-noflo/component.json", "noflo-noflo-math/deps/noflo/component.json");
 require.alias("noflo-noflo/src/lib/Graph.js", "noflo-noflo-math/deps/noflo/src/lib/Graph.js");
