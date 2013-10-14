@@ -13118,6 +13118,17 @@ exports.prepareGraph = function (instance) {
     case 'attribute':
       exports.prepareAttribute(graph, instance, prevNode);
       break;
+    default:
+      // No built-in action, trigger event
+      graph.addNode('Callback', 'core/Callback');
+      graph.addEdge(prevNode[0], prevNode[1], 'Callback', 'in');
+      var callback = function (gesture) {
+        instance.fire('gesture', gesture);
+      };
+      graph.addInitial(callback, 'Callback', 'callback');
+      graph.addNode('DropTarget', 'core/Drop');
+      graph.addEdge('Target', 'out', 'DropTarget', 'in');
+      break;
   }
 
   // Handle gesture end
@@ -13195,7 +13206,7 @@ exports.prepareDrag = function (graph, instance, prevNode) {
 
 exports.prepareSwipe = function (graph, instance, prevNode) {
   var distance = 50;
-  var speed = 2;
+  var speed = 1.5;
   if (instance.distance) {
     distance = parseInt(instance.distance);
   }
