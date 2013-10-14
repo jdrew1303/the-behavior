@@ -1,4 +1,4 @@
-<polymer-element name="the-behavior" attributes="type direction distance action accept arguments debug">
+<polymer-element name="the-behavior" attributes="type direction speed distance action accept arguments debug">
   <script src="../browser/the-behavior.js"></script>
   <script>
     var behavior = require('the-behavior');
@@ -15,9 +15,6 @@
           if (debug.length) {
             network.on('data', function (data) {
               var matches = false;
-              if (data.subgraph) {
-                return;
-              }
               debug.forEach(function (debuggable) {
                 if (data.id.indexOf(debuggable) !== -1) {
                   matches = true;
@@ -26,17 +23,12 @@
               if (!matches) {
                 return;
               }
-
-              console.log(data.id);
-            });
-            /*
-            network.on('disconnect', function (data) {
-              if (data.subgraph) {
-                return;
+              var val = data.data;
+              if (typeof data.data === 'object') {
+                val = data.data.toString()
               }
-              console.log('DISC', data.id);
+              console.log(data.id, val);
             });
-            */
           }
         });
       }
