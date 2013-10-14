@@ -10975,7 +10975,7 @@ require.register("noflo-noflo-dom/index.js", function(exports, require, module){
 
 });
 require.register("noflo-noflo-dom/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-dom","description":"Document Object Model components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/AddClass.coffee","components/AppendChild.coffee","components/CreateElement.coffee","components/CreateFragment.coffee","components/GetAttribute.coffee","components/GetElement.coffee","components/HasClass.coffee","components/ReadHtml.coffee","components/SetAttribute.coffee","components/WriteHtml.coffee","components/RemoveClass.coffee","components/RequestAnimationFrame.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"html5","components":{"AddClass":"components/AddClass.coffee","AppendChild":"components/AppendChild.coffee","CreateElement":"components/CreateElement.coffee","CreateFragment":"components/CreateFragment.coffee","GetAttribute":"components/GetAttribute.coffee","GetElement":"components/GetElement.coffee","HasClass":"components/HasClass.coffee","WriteHtml":"components/WriteHtml.coffee","ReadHtml":"components/ReadHtml.coffee","SetAttribute":"components/SetAttribute.coffee","RemoveClass":"components/RemoveClass.coffee","RequestAnimationFrame":"components/RequestAnimationFrame.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-dom","description":"Document Object Model components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-dom","version":"0.0.1","keywords":[],"dependencies":{"noflo/noflo":"*"},"scripts":["components/AddClass.coffee","components/AppendChild.coffee","components/CreateElement.coffee","components/CreateFragment.coffee","components/GetAttribute.coffee","components/GetElement.coffee","components/HasClass.coffee","components/ReadHtml.coffee","components/RemoveElement.coffee","components/SetAttribute.coffee","components/WriteHtml.coffee","components/RemoveClass.coffee","components/RequestAnimationFrame.coffee","index.js"],"json":["component.json"],"noflo":{"icon":"html5","components":{"AddClass":"components/AddClass.coffee","AppendChild":"components/AppendChild.coffee","CreateElement":"components/CreateElement.coffee","CreateFragment":"components/CreateFragment.coffee","GetAttribute":"components/GetAttribute.coffee","GetElement":"components/GetElement.coffee","HasClass":"components/HasClass.coffee","WriteHtml":"components/WriteHtml.coffee","ReadHtml":"components/ReadHtml.coffee","RemoveElement":"components/RemoveElement.coffee","SetAttribute":"components/SetAttribute.coffee","RemoveClass":"components/RemoveClass.coffee","RequestAnimationFrame":"components/RequestAnimationFrame.coffee"}}}');
 });
 require.register("noflo-noflo-dom/components/AddClass.js", function(exports, require, module){
 var AddClass, noflo,
@@ -11375,6 +11375,40 @@ ReadHtml = (function(_super) {
 
 exports.getComponent = function() {
   return new ReadHtml;
+};
+
+});
+require.register("noflo-noflo-dom/components/RemoveElement.js", function(exports, require, module){
+var RemoveElement, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+RemoveElement = (function(_super) {
+  __extends(RemoveElement, _super);
+
+  RemoveElement.prototype.description = 'Remove an element from DOM';
+
+  function RemoveElement() {
+    var _this = this;
+    this.inPorts = {
+      element: new noflo.Port('object')
+    };
+    this.inPorts.element.on('data', function(element) {
+      if (!element.parentNode) {
+        return;
+      }
+      return element.parentNode.removeChild(element);
+    });
+  }
+
+  return RemoveElement;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new RemoveElement;
 };
 
 });
@@ -13043,8 +13077,27 @@ exports.prepareGraph = function (instance) {
   prevNode = exports.prepareAccept(graph, instance, prevNode);
   // Check the gesture
   switch (instance.type) {
+    case 'pinch':
+      graph.addNode('DetectPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
+      graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
+      prevNode = ['DetectPinch', 'pass'];
+      break;
     case 'drag':
+      // Pinch can't be a drag
+      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareDrag(graph, instance, prevNode);
+      break;
+    case 'swipe':
+      // Pinch can't be a swipe
+      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+      prevNode = ['IgnoreOnPinch', 'fail'];
+      prevNode = exports.prepareSwipe(graph, instance, prevNode);
       break;
   }
   // Check gesture direction
@@ -13058,6 +13111,9 @@ exports.prepareGraph = function (instance) {
   switch (instance.action) {
     case 'move':
       exports.prepareMove(graph, instance, prevNode);
+      break;
+    case 'remove':
+      exports.prepareRemove(graph, instance, prevNode);
       break;
     case 'attribute':
       exports.prepareAttribute(graph, instance, prevNode);
@@ -13138,6 +13194,23 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   return ['DetectDrag', 'pass'];
 };
 
+exports.prepareSwipe = function (graph, instance, prevNode) {
+  var distance = 50;
+  var speed = 2;
+  if (instance.distance) {
+    distance = parseInt(instance.distance);
+  }
+  if (instance.speed) {
+    speed = parseFloat(instance.speed);
+  }
+  graph.addNode('DetectSwipe', 'gestures/DetectSwipe');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectSwipe', 'in');
+  graph.addInitial(distance, 'DetectSwipe', 'distance');
+  graph.addInitial(speed, 'DetectSwipe', 'speed');
+  graph.addEdge('DetectSwipe', 'fail', 'Failed', 'in');
+  return ['DetectSwipe', 'pass'];
+};
+
 exports.prepareDirection = function (graph, instance, prevNode) {
   if (!instance.direction) {
     return prevNode;
@@ -13172,6 +13245,14 @@ exports.prepareMove = function (graph, instance, prevNode) {
   graph.addNode('Move', 'css/MoveElement');
   graph.addEdge('Target', 'out', 'Move', 'element');
   graph.addEdge('GetPoint', 'out', 'Move', 'point');
+};
+
+exports.prepareRemove = function (graph, instance, prevNode) {
+  graph.addNode('SendNode', 'strings/SendString');
+  graph.addEdge('Target', 'out', 'SendNode', 'string');
+  graph.addEdge('DoAction', 'out', 'SendNode', 'in');
+  graph.addNode('RemoveNode', 'dom/RemoveElement');
+  graph.addEdge('SendNode', 'out', 'RemoveNode', 'element');
 };
 
 exports.prepareAttribute = function (graph, instance, prevNode) {
@@ -13548,6 +13629,7 @@ require.alias("noflo-noflo-dom/components/GetAttribute.js", "noflo-noflo-gesture
 require.alias("noflo-noflo-dom/components/GetElement.js", "noflo-noflo-gestures/deps/noflo-dom/components/GetElement.js");
 require.alias("noflo-noflo-dom/components/HasClass.js", "noflo-noflo-gestures/deps/noflo-dom/components/HasClass.js");
 require.alias("noflo-noflo-dom/components/ReadHtml.js", "noflo-noflo-gestures/deps/noflo-dom/components/ReadHtml.js");
+require.alias("noflo-noflo-dom/components/RemoveElement.js", "noflo-noflo-gestures/deps/noflo-dom/components/RemoveElement.js");
 require.alias("noflo-noflo-dom/components/SetAttribute.js", "noflo-noflo-gestures/deps/noflo-dom/components/SetAttribute.js");
 require.alias("noflo-noflo-dom/components/WriteHtml.js", "noflo-noflo-gestures/deps/noflo-dom/components/WriteHtml.js");
 require.alias("noflo-noflo-dom/components/RemoveClass.js", "noflo-noflo-gestures/deps/noflo-dom/components/RemoveClass.js");
@@ -13736,6 +13818,7 @@ require.alias("noflo-noflo-dom/components/GetAttribute.js", "the-behavior/deps/n
 require.alias("noflo-noflo-dom/components/GetElement.js", "the-behavior/deps/noflo-dom/components/GetElement.js");
 require.alias("noflo-noflo-dom/components/HasClass.js", "the-behavior/deps/noflo-dom/components/HasClass.js");
 require.alias("noflo-noflo-dom/components/ReadHtml.js", "the-behavior/deps/noflo-dom/components/ReadHtml.js");
+require.alias("noflo-noflo-dom/components/RemoveElement.js", "the-behavior/deps/noflo-dom/components/RemoveElement.js");
 require.alias("noflo-noflo-dom/components/SetAttribute.js", "the-behavior/deps/noflo-dom/components/SetAttribute.js");
 require.alias("noflo-noflo-dom/components/WriteHtml.js", "the-behavior/deps/noflo-dom/components/WriteHtml.js");
 require.alias("noflo-noflo-dom/components/RemoveClass.js", "the-behavior/deps/noflo-dom/components/RemoveClass.js");

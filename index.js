@@ -35,8 +35,27 @@ exports.prepareGraph = function (instance) {
   prevNode = exports.prepareAccept(graph, instance, prevNode);
   // Check the gesture
   switch (instance.type) {
+    case 'pinch':
+      graph.addNode('DetectPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
+      graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
+      prevNode = ['DetectPinch', 'pass'];
+      break;
     case 'drag':
+      // Pinch can't be a drag
+      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareDrag(graph, instance, prevNode);
+      break;
+    case 'swipe':
+      // Pinch can't be a swipe
+      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+      prevNode = ['IgnoreOnPinch', 'fail'];
+      prevNode = exports.prepareSwipe(graph, instance, prevNode);
       break;
   }
   // Check gesture direction
@@ -50,6 +69,9 @@ exports.prepareGraph = function (instance) {
   switch (instance.action) {
     case 'move':
       exports.prepareMove(graph, instance, prevNode);
+      break;
+    case 'remove':
+      exports.prepareRemove(graph, instance, prevNode);
       break;
     case 'attribute':
       exports.prepareAttribute(graph, instance, prevNode);
@@ -130,6 +152,23 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   return ['DetectDrag', 'pass'];
 };
 
+exports.prepareSwipe = function (graph, instance, prevNode) {
+  var distance = 50;
+  var speed = 2;
+  if (instance.distance) {
+    distance = parseInt(instance.distance);
+  }
+  if (instance.speed) {
+    speed = parseFloat(instance.speed);
+  }
+  graph.addNode('DetectSwipe', 'gestures/DetectSwipe');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectSwipe', 'in');
+  graph.addInitial(distance, 'DetectSwipe', 'distance');
+  graph.addInitial(speed, 'DetectSwipe', 'speed');
+  graph.addEdge('DetectSwipe', 'fail', 'Failed', 'in');
+  return ['DetectSwipe', 'pass'];
+};
+
 exports.prepareDirection = function (graph, instance, prevNode) {
   if (!instance.direction) {
     return prevNode;
@@ -164,6 +203,14 @@ exports.prepareMove = function (graph, instance, prevNode) {
   graph.addNode('Move', 'css/MoveElement');
   graph.addEdge('Target', 'out', 'Move', 'element');
   graph.addEdge('GetPoint', 'out', 'Move', 'point');
+};
+
+exports.prepareRemove = function (graph, instance, prevNode) {
+  graph.addNode('SendNode', 'strings/SendString');
+  graph.addEdge('Target', 'out', 'SendNode', 'string');
+  graph.addEdge('DoAction', 'out', 'SendNode', 'in');
+  graph.addNode('RemoveNode', 'dom/RemoveElement');
+  graph.addEdge('SendNode', 'out', 'RemoveNode', 'element');
 };
 
 exports.prepareAttribute = function (graph, instance, prevNode) {
