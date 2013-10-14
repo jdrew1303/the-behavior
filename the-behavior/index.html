@@ -31,7 +31,7 @@
     <div class="node">World</div>
     <script>
       document.querySelector('the-behavior[type="pinch"]').addEventListener('gesture', function (e) {
-        console.log(e.detail);
+        console.log('pinch-zoom', e.detail.scale, e.detail.center);
       });
     </script>
   </body>

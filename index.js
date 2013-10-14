@@ -36,25 +36,12 @@ exports.prepareGraph = function (instance) {
   // Check the gesture
   switch (instance.type) {
     case 'pinch':
-      graph.addNode('DetectPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
-      graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
-      prevNode = ['DetectPinch', 'pass'];
+      prevNode = exports.preparePinch(graph, instance, prevNode);
       break;
     case 'drag':
-      // Pinch can't be a drag
-      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
-      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
-      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareDrag(graph, instance, prevNode);
       break;
     case 'swipe':
-      // Pinch can't be a swipe
-      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
-      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
-      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareSwipe(graph, instance, prevNode);
       break;
   }
@@ -78,14 +65,7 @@ exports.prepareGraph = function (instance) {
       break;
     default:
       // No built-in action, trigger event
-      graph.addNode('Callback', 'core/Callback');
-      graph.addEdge(prevNode[0], prevNode[1], 'Callback', 'in');
-      var callback = function (gesture) {
-        instance.fire('gesture', gesture);
-      };
-      graph.addInitial(callback, 'Callback', 'callback');
-      graph.addNode('DropTarget', 'core/Drop');
-      graph.addEdge('Target', 'out', 'DropTarget', 'in');
+      exports.prepareCallback(graph, instance, prevNode);
       break;
   }
 
@@ -146,7 +126,23 @@ exports.prepareAccept = function (graph, instance, prevNode) {
   return ['DetectTarget', 'pass'];
 };
 
+exports.preparePinch = function (graph, instance, prevNode) {
+  graph.addNode('DetectPinch', 'gestures/DetectPinch');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
+  graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
+  return ['DetectPinch', 'pass'];
+};
+
+exports.ignoreOnPinch = function (graph, instance, prevNode) {
+  graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+  graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+  graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+  return ['IgnoreOnPinch', 'fail'];
+};
+
 exports.prepareDrag = function (graph, instance, prevNode) {
+  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
+
   var distance = 20;
   if (instance.distance) {
     distance = parseInt(instance.distance);
@@ -163,6 +159,8 @@ exports.prepareDrag = function (graph, instance, prevNode) {
 };
 
 exports.prepareSwipe = function (graph, instance, prevNode) {
+  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
+
   var distance = 50;
   var speed = 1.5;
   if (instance.distance) {
@@ -234,4 +232,44 @@ exports.prepareAttribute = function (graph, instance, prevNode) {
   graph.addEdge('Target', 'out', 'Set', 'element');
   graph.addInitial(instance.type, 'Set', 'attribute');
   graph.addEdge('GetPoint', 'out', 'Set', 'value');
+};
+
+exports.getCenter = function (graph, instance, prevNode) {
+  // Calculate center
+  graph.addNode('AddCenter', 'objects/SetPropertyValue');
+  graph.addInitial('center', 'AddCenter', 'property');
+  graph.addNode('SplitPinch', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitPinch', 'in');
+  graph.addEdge('SplitPinch', 'out', 'AddCenter', 'in');
+  graph.addNode('CalculateCenter', 'gestures/CalculateCenter');
+  graph.addEdge('SplitPinch', 'out', 'CalculateCenter', 'in');
+  graph.addEdge('CalculateCenter', 'center', 'AddCenter', 'value');
+  return ['AddCenter', 'out'];
+};
+
+exports.getScale = function (graph, instance, prevNode) {
+  // Calculate scale
+  graph.addNode('SplitAfterAdd', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitAfterAdd', 'in');
+  graph.addNode('AddScale', 'objects/SetPropertyValue');
+  graph.addInitial('scale', 'AddScale', 'property');
+  graph.addEdge('SplitAfterAdd', 'out', 'AddScale', 'in');
+  graph.addNode('CalculateScale', 'gestures/CalculateScale');
+  graph.addEdge('SplitAfterAdd', 'out', 'CalculateScale', 'in');
+  graph.addEdge('CalculateScale', 'scale', 'AddScale', 'value');
+  return ['AddScale', 'out'];
+};
+exports.prepareCallback = function (graph, instance, prevNode) {
+  prevNode = exports.getCenter(graph, instance, prevNode);
+  if (instance.type === 'pinch') {
+    prevNode = exports.getScale(graph, instance, prevNode);
+  }
+  graph.addNode('Callback', 'core/Callback');
+  graph.addEdge(prevNode[0], prevNode[1], 'Callback', 'in');
+  var callback = function (gesture) {
+    instance.fire('gesture', gesture);
+  };
+  graph.addInitial(callback, 'Callback', 'callback');
+  graph.addNode('DropTarget', 'core/Drop');
+  graph.addEdge('Target', 'out', 'DropTarget', 'in');
 };

@@ -8613,7 +8613,135 @@ require.register("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", fun
 module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":466,"y":120,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":464,"y":200,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":674,"y":200,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":879,"y":157,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":877,"y":259,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1083,"y":193,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}},"core/Split_n3qif":{"component":"core/Split","metadata":{"x":1276.999999999999,"y":193.66666666666669,"label":"core/Split"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"core/Split_n3qif","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"clear"},"metadata":{"route":0}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
 });
 require.register("noflo-noflo-gestures/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-gestures","description":"Gesture recognition components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-gestures","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-math":"*","noflo/noflo-flow":"*","noflo/noflo-groups":"*","noflo/noflo-packets":"*","noflo/noflo-objects":"*","noflo/noflo-dom":"*","noflo/noflo-strings":"*","noflo/noflo-core":"*"},"scripts":["components/CardinalRouter.coffee","components/DegreesToCardinal.coffee","components/DegreesToCompass.coffee","components/DetectTarget.coffee","graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","index.js"],"json":["graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","component.json"],"noflo":{"icon":"hand-right","components":{"CardinalRouter":"components/CardinalRouter.coffee","DegreesToCardinal":"components/DegreesToCardinal.coffee","DegreesToCompass":"components/DegreesToCompass.coffee","DetectTarget":"components/DetectTarget.coffee"},"graphs":{"DetectDrag":"graphs/DetectDrag.json","DetectSwipe":"graphs/DetectSwipe.json","DetectPinch":"graphs/DetectPinch.json","FilterByTarget":"graphs/FilterByTarget.json","GestureToObject":"graphs/GestureToObject.json","ListenGestures":"graphs/ListenGestures.json","ListenPointer":"graphs/ListenPointer.json","DetectCardinalDirection":"graphs/DetectCardinalDirection.json"}}}');
+module.exports = JSON.parse('{"name":"noflo-gestures","description":"Gesture recognition components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-gestures","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-math":"*","noflo/noflo-flow":"*","noflo/noflo-groups":"*","noflo/noflo-packets":"*","noflo/noflo-objects":"*","noflo/noflo-dom":"*","noflo/noflo-strings":"*","noflo/noflo-core":"*"},"scripts":["components/CalculateCenter.coffee","components/CalculateScale.coffee","components/CardinalRouter.coffee","components/DegreesToCardinal.coffee","components/DegreesToCompass.coffee","components/DetectTarget.coffee","graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","index.js"],"json":["graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","component.json"],"noflo":{"icon":"hand-right","components":{"CalculateCenter":"components/CalculateCenter.coffee","CalculateScale":"components/CalculateScale.coffee","CardinalRouter":"components/CardinalRouter.coffee","DegreesToCardinal":"components/DegreesToCardinal.coffee","DegreesToCompass":"components/DegreesToCompass.coffee","DetectTarget":"components/DetectTarget.coffee"},"graphs":{"DetectDrag":"graphs/DetectDrag.json","DetectSwipe":"graphs/DetectSwipe.json","DetectPinch":"graphs/DetectPinch.json","FilterByTarget":"graphs/FilterByTarget.json","GestureToObject":"graphs/GestureToObject.json","ListenGestures":"graphs/ListenGestures.json","ListenPointer":"graphs/ListenPointer.json","DetectCardinalDirection":"graphs/DetectCardinalDirection.json"}}}');
+});
+require.register("noflo-noflo-gestures/components/CalculateCenter.js", function(exports, require, module){
+var CalculateCenter, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+CalculateCenter = (function(_super) {
+  __extends(CalculateCenter, _super);
+
+  CalculateCenter.prototype.description = 'Calculate the center point for a gesture';
+
+  function CalculateCenter() {
+    var _this = this;
+    this.inPorts = {
+      "in": new noflo.Port('object')
+    };
+    this.outPorts = {
+      center: new noflo.Port('object')
+    };
+    this.inPorts["in"].on('data', function(gesture) {
+      return _this.outPorts.center.send(_this.calculateCenter(gesture));
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      return _this.outPorts.center.disconnect();
+    });
+  }
+
+  CalculateCenter.prototype.calculateCenter = function(gesture) {
+    var center, id, startX, startY, touch;
+    if (Object.keys(gesture).length === 1) {
+      return gesture.startpoint;
+    }
+    startX = [];
+    startY = [];
+    for (id in gesture) {
+      touch = gesture[id];
+      if (!touch.startpoint) {
+        continue;
+      }
+      startX.push(touch.startpoint.x);
+      startY.push(touch.startpoint.y);
+    }
+    return center = {
+      x: Math.min.apply(Math, startX) + Math.max.apply(Math, startX) / 2,
+      y: Math.min.apply(Math, startY) + Math.max.apply(Math, startY) / 2
+    };
+  };
+
+  return CalculateCenter;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new CalculateCenter;
+};
+
+});
+require.register("noflo-noflo-gestures/components/CalculateScale.js", function(exports, require, module){
+var CalculateScale, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require('noflo');
+
+CalculateScale = (function(_super) {
+  __extends(CalculateScale, _super);
+
+  CalculateScale.prototype.description = 'Calculate the scale based on gestural movement';
+
+  function CalculateScale() {
+    var _this = this;
+    this.inPorts = {
+      "in": new noflo.Port('object')
+    };
+    this.outPorts = {
+      scale: new noflo.Port('number')
+    };
+    this.inPorts["in"].on('data', function(gesture) {
+      return _this.outPorts.scale.send(_this.calculateScale(gesture));
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      return _this.outPorts.scale.disconnect();
+    });
+  }
+
+  CalculateScale.prototype.calculateScale = function(gesture) {
+    var id, movePoints, scale, startPoints, touch;
+    if (Object.keys(gesture).length === 1) {
+      return 1;
+    }
+    startPoints = [];
+    movePoints = [];
+    for (id in gesture) {
+      touch = gesture[id];
+      if (touch.startpoint) {
+        startPoints.push(touch.startpoint);
+      }
+      if (touch.movepoint) {
+        movePoints.push(touch.movepoint);
+      }
+    }
+    if (startPoints.length < 2 || movePoints.length < 2) {
+      return 1;
+    }
+    scale = this.calculateDistance(movePoints[0], movePoints[1]) / this.calculateDistance(startPoints[0], startPoints[1]);
+    return scale;
+  };
+
+  CalculateScale.prototype.calculateDistance = function(origin, destination) {
+    var deltaX, deltaY, distance;
+    deltaX = destination.x - origin.x;
+    deltaY = destination.y - origin.y;
+    origin = null;
+    destination = null;
+    distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    return distance;
+  };
+
+  return CalculateScale;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new CalculateScale;
+};
+
 });
 require.register("noflo-noflo-gestures/components/CardinalRouter.js", function(exports, require, module){
 var CardinalRouter, noflo,
@@ -13078,25 +13206,12 @@ exports.prepareGraph = function (instance) {
   // Check the gesture
   switch (instance.type) {
     case 'pinch':
-      graph.addNode('DetectPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
-      graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
-      prevNode = ['DetectPinch', 'pass'];
+      prevNode = exports.preparePinch(graph, instance, prevNode);
       break;
     case 'drag':
-      // Pinch can't be a drag
-      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
-      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
-      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareDrag(graph, instance, prevNode);
       break;
     case 'swipe':
-      // Pinch can't be a swipe
-      graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
-      graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
-      graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
-      prevNode = ['IgnoreOnPinch', 'fail'];
       prevNode = exports.prepareSwipe(graph, instance, prevNode);
       break;
   }
@@ -13120,14 +13235,7 @@ exports.prepareGraph = function (instance) {
       break;
     default:
       // No built-in action, trigger event
-      graph.addNode('Callback', 'core/Callback');
-      graph.addEdge(prevNode[0], prevNode[1], 'Callback', 'in');
-      var callback = function (gesture) {
-        instance.fire('gesture', gesture);
-      };
-      graph.addInitial(callback, 'Callback', 'callback');
-      graph.addNode('DropTarget', 'core/Drop');
-      graph.addEdge('Target', 'out', 'DropTarget', 'in');
+      exports.prepareCallback(graph, instance, prevNode);
       break;
   }
 
@@ -13188,7 +13296,23 @@ exports.prepareAccept = function (graph, instance, prevNode) {
   return ['DetectTarget', 'pass'];
 };
 
+exports.preparePinch = function (graph, instance, prevNode) {
+  graph.addNode('DetectPinch', 'gestures/DetectPinch');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectPinch', 'in');
+  graph.addEdge('DetectPinch', 'fail', 'Failed', 'in');
+  return ['DetectPinch', 'pass'];
+};
+
+exports.ignoreOnPinch = function (graph, instance, prevNode) {
+  graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
+  graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
+  graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
+  return ['IgnoreOnPinch', 'fail'];
+};
+
 exports.prepareDrag = function (graph, instance, prevNode) {
+  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
+
   var distance = 20;
   if (instance.distance) {
     distance = parseInt(instance.distance);
@@ -13205,6 +13329,8 @@ exports.prepareDrag = function (graph, instance, prevNode) {
 };
 
 exports.prepareSwipe = function (graph, instance, prevNode) {
+  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
+
   var distance = 50;
   var speed = 1.5;
   if (instance.distance) {
@@ -13276,6 +13402,46 @@ exports.prepareAttribute = function (graph, instance, prevNode) {
   graph.addEdge('Target', 'out', 'Set', 'element');
   graph.addInitial(instance.type, 'Set', 'attribute');
   graph.addEdge('GetPoint', 'out', 'Set', 'value');
+};
+
+exports.getCenter = function (graph, instance, prevNode) {
+  // Calculate center
+  graph.addNode('AddCenter', 'objects/SetPropertyValue');
+  graph.addInitial('center', 'AddCenter', 'property');
+  graph.addNode('SplitPinch', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitPinch', 'in');
+  graph.addEdge('SplitPinch', 'out', 'AddCenter', 'in');
+  graph.addNode('CalculateCenter', 'gestures/CalculateCenter');
+  graph.addEdge('SplitPinch', 'out', 'CalculateCenter', 'in');
+  graph.addEdge('CalculateCenter', 'center', 'AddCenter', 'value');
+  return ['AddCenter', 'out'];
+};
+
+exports.getScale = function (graph, instance, prevNode) {
+  // Calculate scale
+  graph.addNode('SplitAfterAdd', 'core/Split');
+  graph.addEdge(prevNode[0], prevNode[1], 'SplitAfterAdd', 'in');
+  graph.addNode('AddScale', 'objects/SetPropertyValue');
+  graph.addInitial('scale', 'AddScale', 'property');
+  graph.addEdge('SplitAfterAdd', 'out', 'AddScale', 'in');
+  graph.addNode('CalculateScale', 'gestures/CalculateScale');
+  graph.addEdge('SplitAfterAdd', 'out', 'CalculateScale', 'in');
+  graph.addEdge('CalculateScale', 'scale', 'AddScale', 'value');
+  return ['AddScale', 'out'];
+};
+exports.prepareCallback = function (graph, instance, prevNode) {
+  prevNode = exports.getCenter(graph, instance, prevNode);
+  if (instance.type === 'pinch') {
+    prevNode = exports.getScale(graph, instance, prevNode);
+  }
+  graph.addNode('Callback', 'core/Callback');
+  graph.addEdge(prevNode[0], prevNode[1], 'Callback', 'in');
+  var callback = function (gesture) {
+    instance.fire('gesture', gesture);
+  };
+  graph.addInitial(callback, 'Callback', 'callback');
+  graph.addNode('DropTarget', 'core/Drop');
+  graph.addEdge('Target', 'out', 'DropTarget', 'in');
 };
 
 });
@@ -13371,6 +13537,8 @@ require.alias("noflo-noflo-gestures/graphs/ListenGestures.json", "the-behavior/d
 require.alias("noflo-noflo-gestures/graphs/ListenPointer.json", "the-behavior/deps/noflo-gestures/graphs/ListenPointer.json");
 require.alias("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", "the-behavior/deps/noflo-gestures/graphs/DetectCardinalDirection.json");
 require.alias("noflo-noflo-gestures/component.json", "the-behavior/deps/noflo-gestures/component.json");
+require.alias("noflo-noflo-gestures/components/CalculateCenter.js", "the-behavior/deps/noflo-gestures/components/CalculateCenter.js");
+require.alias("noflo-noflo-gestures/components/CalculateScale.js", "the-behavior/deps/noflo-gestures/components/CalculateScale.js");
 require.alias("noflo-noflo-gestures/components/CardinalRouter.js", "the-behavior/deps/noflo-gestures/components/CardinalRouter.js");
 require.alias("noflo-noflo-gestures/components/DegreesToCardinal.js", "the-behavior/deps/noflo-gestures/components/DegreesToCardinal.js");
 require.alias("noflo-noflo-gestures/components/DegreesToCompass.js", "the-behavior/deps/noflo-gestures/components/DegreesToCompass.js");
