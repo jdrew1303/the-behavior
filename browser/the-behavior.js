@@ -13128,7 +13128,6 @@ exports.prepareGraph = function (instance) {
   graph.addEdge('SplitGesture', 'out', 'AfterGestureClosePassthru', 'in');
   graph.addEdge('AfterGestureClosePassthru', 'out', 'PassThru', 'close');
 
-  console.log(graph.toDOT());
   return graph;
 }
 
