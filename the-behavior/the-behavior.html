@@ -5,8 +5,8 @@
 
     Polymer('the-behavior', {
       network: null,
-      created: function () {
-        this.container = this.parentElement.impl;
+      enteredView: function () {
+        this.container = this.parentElement;
         var debug = [];
         if (this.debug) {
           debug = this.debug.split(' ');
