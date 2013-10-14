@@ -7,21 +7,36 @@
       network: null,
       created: function () {
         this.container = this.parentElement.impl;
-        var debug = this.debug;
+        var debug = [];
+        if (this.debug) {
+          debug = this.debug.split(' ');
+        }
         behavior.runGraph(behavior.prepareGraph(this), function (network) {
-          if (debug) {
+          if (debug.length) {
             network.on('data', function (data) {
+              var matches = false;
               if (data.subgraph) {
                 return;
               }
-              console.log('DATA', data.id);
+              debug.forEach(function (debuggable) {
+                if (data.id.indexOf(debuggable) !== -1) {
+                  matches = true;
+                }
+              });
+              if (!matches) {
+                return;
+              }
+
+              console.log(data.id);
             });
+            /*
             network.on('disconnect', function (data) {
               if (data.subgraph) {
                 return;
               }
               console.log('DISC', data.id);
             });
+            */
           }
         });
       }

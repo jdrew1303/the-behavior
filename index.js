@@ -10,13 +10,15 @@ exports.prepareGraph = function (instance) {
 
   // Initialize graph
   var graph = new noflo.Graph('Drag');
-  graph.addNode('Failed', 'core/Drop');
+  graph.addNode('NotYet', 'core/Drop');
   //graph.addNode('Failed', 'core/Output');
   graph.addNode('Passed', 'core/Merge');
   graph.addNode('Detect', 'flow/Gate');
   graph.addNode('Target', 'core/Repeat');
   graph.addNode('AllowDetect', 'core/Merge');
   graph.addEdge('AllowDetect', 'out', 'Detect', 'open');
+  graph.addNode('StopDetect', 'core/Merge');
+  graph.addEdge('StopDetect', 'out', 'Detect', 'close');
   // Initially detection is enabled
   graph.addInitial(true, 'AllowDetect', 'in');
 
@@ -53,7 +55,16 @@ exports.prepareGraph = function (instance) {
       exports.prepareAttribute(graph, instance, prevNode);
       break;
   }
-  //console.log(graph.toDOT());
+
+  // Handle gesture end
+  graph.addNode('AfterGestureReallowDetect', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureReallowDetect', 'in');
+  graph.addEdge('AfterGestureReallowDetect', 'out', 'AllowDetect', 'in');
+  graph.addNode('AfterGestureClosePassthru', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureClosePassthru', 'in');
+  graph.addEdge('AfterGestureClosePassthru', 'out', 'PassThru', 'close');
+
+  console.log(graph.toDOT());
   return graph;
 }
 
@@ -69,14 +80,14 @@ exports.preparePassThrough = function (graph, instance, prevNode) {
 
   // We use a gate for stopping detection once the first one has happened
   graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
+
   // Close the gate after detection
   graph.addNode('SplitPassed', 'core/Split');
   graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
-  graph.addEdge('SplitPassed', 'out', 'Detect', 'close');
-  // Reopen it once the gesture has ended
-  graph.addNode('AfterGesture', 'core/Kick');
-  graph.addEdge('SplitGesture', 'out', 'AfterGesture', 'in');
-  graph.addEdge('AfterGesture', 'out', 'AllowDetect', 'in');
+  graph.addEdge('SplitPassed', 'out', 'StopDetect', 'in');
+  // Close it also on failure
+  graph.addNode('Failed', 'core/Merge');
+  graph.addEdge('Failed', 'out', 'StopDetect', 'in');
 
   // We use a gate for passing things after recognition straight to action
   graph.addNode('PassThru', 'flow/Gate');
@@ -84,11 +95,6 @@ exports.preparePassThrough = function (graph, instance, prevNode) {
   graph.addEdge('PassThru', 'out', 'DoAction', 'in');
   // Open on detected gesture
   graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
-
-  // Close passthrough after end of gesture
-  graph.addNode('AfterGestureClose', 'core/Kick');
-  graph.addEdge('SplitGesture', 'out', 'AfterGestureClose', 'in');
-  graph.addEdge('AfterGestureClose', 'out', 'PassThru', 'close');
 
   return ['Detect', 'out'];
 };
@@ -116,7 +122,11 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   graph.addNode('DetectDrag', 'gestures/DetectDrag');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
   graph.addInitial(distance, 'DetectDrag', 'distance');
-  graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  if (instance.type === 'drag') {
+    graph.addEdge('DetectDrag', 'fail', 'NotYet', 'in');
+  } else {
+    graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  }
   return ['DetectDrag', 'pass'];
 };
 
@@ -150,7 +160,7 @@ exports.prepareMove = function (graph, instance, prevNode) {
   graph.addNode('GetPoint', 'objects/GetObjectKey');
   graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
   graph.addInitial('movepoint', 'GetPoint', 'key');
-  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addEdge('GetPoint', 'missed', 'NotYet', 'in');
   graph.addNode('Move', 'css/MoveElement');
   graph.addEdge('Target', 'out', 'Move', 'element');
   graph.addEdge('GetPoint', 'out', 'Move', 'point');

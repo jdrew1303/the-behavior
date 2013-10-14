@@ -6497,6 +6497,9 @@ CollectObject = (function(_super) {
     this.inPorts.release.on('data', function() {
       return _this.release();
     });
+    this.inPorts.release.on('disconnect', function() {
+      return _this.outPorts.out.disconnect();
+    });
     this.inPorts.clear.on('data', function() {
       return _this.clear();
     });
@@ -6504,7 +6507,6 @@ CollectObject = (function(_super) {
 
   CollectObject.prototype.release = function() {
     this.outPorts.out.send(this.data);
-    this.outPorts.out.disconnect();
     return this.data = this.clone(this.data);
   };
 
@@ -6932,7 +6934,7 @@ require.register("noflo-noflo-packets/index.js", function(exports, require, modu
 
 });
 require.register("noflo-noflo-packets/component.json", function(exports, require, module){
-module.exports = JSON.parse('{"name":"noflo-packets","description":"The best project ever.","version":"0.0.8","author":"Kenneth Kan <kenhkan@gmail.com>","repo":"kenhkan/packets","keywords":[],"dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/CountPackets.coffee","components/Unzip.coffee","components/Defaults.coffee","components/DoNotDisconnect.coffee","components/OnlyDisconnect.coffee","components/SplitPacket.coffee","components/Range.coffee","components/Flatten.coffee","components/Compact.coffee","components/Zip.coffee","components/SendWith.coffee","components/FilterPackets.coffee","components/FilterByPosition.coffee","components/FilterPacket.coffee","components/UniquePacket.coffee","components/GroupByPacket.coffee","components/LastPacket.coffee","components/Counter.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"CountPackets":"components/CountPackets.coffee","Unzip":"components/Unzip.coffee","Defaults":"components/Defaults.coffee","DoNotDisconnect":"components/DoNotDisconnect.coffee","OnlyDisconnect":"components/OnlyDisconnect.coffee","SplitPacket":"components/SplitPacket.coffee","Range":"components/Range.coffee","Flatten":"components/Flatten.coffee","Compact":"components/Compact.coffee","Zip":"components/Zip.coffee","SendWith":"components/SendWith.coffee","FilterPackets":"components/FilterPackets.coffee","FilterByPosition":"components/FilterByPosition.coffee","FilterPacket":"components/FilterPacket.coffee","UniquePacket":"components/UniquePacket.coffee","GroupByPacket":"components/GroupByPacket.coffee","LastPacket":"components/LastPacket.coffee","Counter":"components/Counter.coffee"}}}');
+module.exports = JSON.parse('{"name":"noflo-packets","description":"The best project ever.","version":"0.0.8","author":"Kenneth Kan <kenhkan@gmail.com>","repo":"kenhkan/packets","keywords":[],"dependencies":{"noflo/noflo":"*","component/underscore":"*"},"scripts":["components/CountPackets.coffee","components/Unzip.coffee","components/Defaults.coffee","components/DoNotDisconnect.coffee","components/OnlyDisconnect.coffee","components/SplitPacket.coffee","components/Range.coffee","components/Flatten.coffee","components/Compact.coffee","components/Zip.coffee","components/SendWith.coffee","components/FilterPackets.coffee","components/FilterByValue.coffee","components/FilterByPosition.coffee","components/FilterPacket.coffee","components/UniquePacket.coffee","components/GroupByPacket.coffee","components/LastPacket.coffee","components/Counter.coffee","index.js"],"json":["component.json"],"noflo":{"components":{"CountPackets":"components/CountPackets.coffee","Unzip":"components/Unzip.coffee","Defaults":"components/Defaults.coffee","DoNotDisconnect":"components/DoNotDisconnect.coffee","OnlyDisconnect":"components/OnlyDisconnect.coffee","SplitPacket":"components/SplitPacket.coffee","Range":"components/Range.coffee","Flatten":"components/Flatten.coffee","Compact":"components/Compact.coffee","Zip":"components/Zip.coffee","SendWith":"components/SendWith.coffee","FilterPackets":"components/FilterPackets.coffee","FilterByValue":"components/FilterByValue.coffee","FilterByPosition":"components/FilterByPosition.coffee","FilterPacket":"components/FilterPacket.coffee","UniquePacket":"components/UniquePacket.coffee","GroupByPacket":"components/GroupByPacket.coffee","LastPacket":"components/LastPacket.coffee","Counter":"components/Counter.coffee"}}}');
 });
 require.register("noflo-noflo-packets/components/CountPackets.js", function(exports, require, module){
 var CountPackets, noflo, _,
@@ -7652,6 +7654,64 @@ FilterPackets = (function(_super) {
 
 exports.getComponent = function() {
   return new FilterPackets;
+};
+
+});
+require.register("noflo-noflo-packets/components/FilterByValue.js", function(exports, require, module){
+var FilterByValue, noflo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+noflo = require("noflo");
+
+FilterByValue = (function(_super) {
+  __extends(FilterByValue, _super);
+
+  FilterByValue.prototype.description = "Filter packets based on their value";
+
+  function FilterByValue() {
+    var _this = this;
+    this.filterValue = null;
+    this.inPorts = {
+      "in": new noflo.Port,
+      filtervalue: new noflo.Port
+    };
+    this.outPorts = {
+      lower: new noflo.Port,
+      higher: new noflo.Port,
+      equal: new noflo.Port
+    };
+    this.inPorts.filtervalue.on('data', function(data) {
+      return _this.filterValue = data;
+    });
+    this.inPorts["in"].on('data', function(data) {
+      if (data < _this.filterValue) {
+        return _this.outPorts.lower.send(data);
+      } else if (data > _this.filterValue) {
+        return _this.outPorts.higher.send(data);
+      } else if (data === _this.filterValue) {
+        return _this.outPorts.equal.send(data);
+      }
+    });
+    this.inPorts["in"].on('disconnect', function() {
+      if (_this.outPorts.lower.isConnected()) {
+        _this.outPorts.lower.disconnect();
+      }
+      if (_this.outPorts.higher.isConnected()) {
+        _this.outPorts.higher.disconnect();
+      }
+      if (_this.outPorts.equal.isConnected()) {
+        return _this.outPorts.equal.disconnect();
+      }
+    });
+  }
+
+  return FilterByValue;
+
+})(noflo.Component);
+
+exports.getComponent = function() {
+  return new FilterByValue;
 };
 
 });
@@ -8517,7 +8577,7 @@ require.register("noflo-noflo-gestures/graphs/ListenPointer.json", function(expo
 module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"Asynchronize_x0hqm":{"component":"core/RepeatAsync","metadata":{"x":1404,"y":171.33333333333331,"label":"Asynchronize"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"Asynchronize_x0hqm","port":"in"},"metadata":{"route":1}},{"src":{"process":"Asynchronize_x0hqm","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
 });
 require.register("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":608,"y":121,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":606,"y":201,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":816,"y":201,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":1021,"y":158,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":1019,"y":260,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1266,"y":195,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":466,"y":120,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":464,"y":200,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":674,"y":200,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":879,"y":157,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":877,"y":259,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1083,"y":193,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}},"core/Split_n3qif":{"component":"core/Split","metadata":{"x":1276.999999999999,"y":193.66666666666669,"label":"core/Split"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"core/Split_n3qif","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"clear"},"metadata":{"route":0}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
 });
 require.register("noflo-noflo-gestures/index.js", function(exports, require, module){
 /*
@@ -8550,7 +8610,7 @@ require.register("noflo-noflo-gestures/graphs/ListenPointer.json", function(expo
 module.exports = JSON.parse('{"properties":{"name":"ListenPointer"},"exports":[{"private":"Listen_1025g.element","public":"element"},{"private":"Listen_1025g.capture","public":"capture"},{"private":"StartEvent_x8itv.out","public":"start"},{"private":"MoveEvent_qa3pp.out","public":"move"},{"private":"EndEvent_hmwp9.out","public":"end"}],"processes":{"Listen_1025g":{"component":"interaction/ListenPointer","metadata":{"x":500,"y":-65,"label":"Listen"}},"End_vom22":{"component":"core/Merge","metadata":{"x":843,"y":96,"label":"End"}},"Start_86u3g":{"component":"core/Split","metadata":{"x":848,"y":-157,"label":"Start"}},"MoveOnlyDuringGesture_986zt":{"component":"flow/Gate","metadata":{"x":1106,"y":-40,"label":"MoveOnlyDuringGesture"}},"EndOnlyOnce_vexfn":{"component":"flow/Gate","metadata":{"x":1107,"y":75,"label":"EndOnlyOnce"}},"SplitEnd_cnfy6":{"component":"core/Split","metadata":{"x":1407,"y":79,"label":"SplitEnd"}},"Asynchronize_x0hqm":{"component":"core/RepeatAsync","metadata":{"x":1404,"y":171.33333333333331,"label":"Asynchronize"}},"StartEvent_x8itv":{"component":"core/Repeat","metadata":{"x":1662,"y":-162,"label":"StartEvent"}},"MoveEvent_qa3pp":{"component":"core/Repeat","metadata":{"x":1662,"y":-35,"label":"MoveEvent"}},"EndEvent_hmwp9":{"component":"core/Repeat","metadata":{"x":1659,"y":75,"label":"EndEvent"}}},"connections":[{"src":{"process":"Listen_1025g","port":"leave"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"cancel"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"up"},"tgt":{"process":"End_vom22","port":"in"},"metadata":{"route":1}},{"src":{"process":"Listen_1025g","port":"down"},"tgt":{"process":"Start_86u3g","port":"in"},"metadata":{"route":5}},{"src":{"process":"Listen_1025g","port":"move"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"in"},"metadata":{"route":3}},{"src":{"process":"End_vom22","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"in"},"metadata":{"route":1}},{"src":{"process":"EndOnlyOnce_vexfn","port":"out"},"tgt":{"process":"SplitEnd_cnfy6","port":"in"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"Asynchronize_x0hqm","port":"in"},"metadata":{"route":1}},{"src":{"process":"Asynchronize_x0hqm","port":"out"},"tgt":{"process":"EndOnlyOnce_vexfn","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"open"},"metadata":{"route":5}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"MoveOnlyDuringGesture_986zt","port":"close"},"metadata":{"route":1}},{"src":{"process":"Start_86u3g","port":"out"},"tgt":{"process":"StartEvent_x8itv","port":"in"},"metadata":{"route":5}},{"src":{"process":"MoveOnlyDuringGesture_986zt","port":"out"},"tgt":{"process":"MoveEvent_qa3pp","port":"in"},"metadata":{"route":3}},{"src":{"process":"SplitEnd_cnfy6","port":"out"},"tgt":{"process":"EndEvent_hmwp9","port":"in"},"metadata":{"route":1}}]}');
 });
 require.register("noflo-noflo-gestures/graphs/DetectCardinalDirection.json", function(exports, require, module){
-module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":608,"y":121,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":606,"y":201,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":816,"y":201,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":1021,"y":158,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":1019,"y":260,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1266,"y":195,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
+module.exports = JSON.parse('{"properties":{"environment":{"runtime":"html","src":"./preview/iframe.html","width":"300","height":"300","content":""},"name":"DetectCardinalDirection"},"exports":[{"private":"receivegesture_thbmw.in","public":"in"},{"private":"sendeast_218qx.out","public":"east"},{"private":"sendsouth_wx2b5.out","public":"south"},{"private":"sendwest_rkdz9.out","public":"west"},{"private":"sendnorth_c562k.out","public":"north"},{"private":"fail_5b0qo.out","public":"fail"}],"processes":{"ReceiveGesture_thbmw":{"component":"core/Repeat","metadata":{"x":466,"y":120,"label":"ReceiveGesture"}},"SplitGesture_dkk87":{"component":"core/Split","metadata":{"x":464,"y":200,"label":"SplitGesture"}},"SendNorth_c562k":{"component":"strings/SendString","metadata":{"x":1733,"y":447,"label":"SendNorth"}},"SendEast_218qx":{"component":"strings/SendString","metadata":{"x":1721,"y":-5,"label":"SendEast"}},"RouteDirection_apgsp":{"component":"gestures/CardinalRouter","metadata":{"x":1469,"y":195,"label":"RouteDirection"}},"GetIndividualPointer_ozjfa":{"component":"objects/SplitObject","metadata":{"x":674,"y":200,"label":"GetIndividualPointer"}},"GetStartPoint_bhrl2":{"component":"objects/GetObjectKey","metadata":{"x":879,"y":157,"label":"GetStartPoint"}},"GetCurrentPoint_rwwt0":{"component":"objects/GetObjectKey","metadata":{"x":877,"y":259,"label":"GetCurrentPoint"}},"GetGestureAngle_djpr6":{"component":"math/CalculateAngle","metadata":{"x":1083,"y":193,"label":"GetGestureAngle"}},"SendWest_rkdz9":{"component":"strings/SendString","metadata":{"x":1730.8333333333333,"y":348.33333333333337,"label":"SendWest"}},"SendSouth_wx2b5":{"component":"strings/SendString","metadata":{"x":1721.8333333333333,"y":107.33333333333337,"label":"SendSouth"}},"Fail_5b0qo":{"component":"core/Merge","metadata":{"x":1732.1666666666665,"y":574,"label":"Fail"}},"core/Split_n3qif":{"component":"core/Split","metadata":{"x":1276.999999999999,"y":193.66666666666669,"label":"core/Split"}}},"connections":[{"src":{"process":"GetIndividualPointer_ozjfa","port":"out"},"tgt":{"process":"GetStartPoint_bhrl2","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"object"},"tgt":{"process":"GetCurrentPoint_rwwt0","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetStartPoint_bhrl2","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"origin"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"destination"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendEast_218qx","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendWest_rkdz9","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendNorth_c562k","port":"string"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"SendSouth_wx2b5","port":"string"},"metadata":{"route":9}},{"src":{"process":"RouteDirection_apgsp","port":"n"},"tgt":{"process":"SendNorth_c562k","port":"in"},"metadata":{"route":4}},{"src":{"process":"RouteDirection_apgsp","port":"w"},"tgt":{"process":"SendWest_rkdz9","port":"in"},"metadata":{"route":5}},{"src":{"process":"RouteDirection_apgsp","port":"s"},"tgt":{"process":"SendSouth_wx2b5","port":"in"},"metadata":{"route":6}},{"src":{"process":"RouteDirection_apgsp","port":"e"},"tgt":{"process":"SendEast_218qx","port":"in"},"metadata":{"route":7}},{"src":{"process":"ReceiveGesture_thbmw","port":"out"},"tgt":{"process":"SplitGesture_dkk87","port":"in"},"metadata":{"route":9}},{"src":{"process":"SplitGesture_dkk87","port":"out"},"tgt":{"process":"GetIndividualPointer_ozjfa","port":"in"},"metadata":{"route":9}},{"src":{"process":"GetCurrentPoint_rwwt0","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetStartPoint_bhrl2","port":"missed"},"tgt":{"process":"Fail_5b0qo","port":"in"},"metadata":{"route":1}},{"src":{"process":"GetGestureAngle_djpr6","port":"angle"},"tgt":{"process":"core/Split_n3qif","port":"in"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"RouteDirection_apgsp","port":"degrees"},"metadata":{"route":9}},{"src":{"process":"core/Split_n3qif","port":"out"},"tgt":{"process":"GetGestureAngle_djpr6","port":"clear"},"metadata":{"route":0}},{"data":"startpoint","tgt":{"process":"GetStartPoint_bhrl2","port":"key"}},{"data":"movepoint","tgt":{"process":"GetCurrentPoint_rwwt0","port":"key"}}]}');
 });
 require.register("noflo-noflo-gestures/component.json", function(exports, require, module){
 module.exports = JSON.parse('{"name":"noflo-gestures","description":"Gesture recognition components for NoFlo","author":"Henri Bergius <henri.bergius@iki.fi>","repo":"noflo/noflo-gestures","version":"0.1.0","keywords":[],"dependencies":{"noflo/noflo":"*","noflo/noflo-interaction":"*","noflo/noflo-math":"*","noflo/noflo-flow":"*","noflo/noflo-groups":"*","noflo/noflo-packets":"*","noflo/noflo-objects":"*","noflo/noflo-dom":"*","noflo/noflo-strings":"*","noflo/noflo-core":"*"},"scripts":["components/CardinalRouter.coffee","components/DegreesToCardinal.coffee","components/DegreesToCompass.coffee","components/DetectTarget.coffee","graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","index.js"],"json":["graphs/DetectDrag.json","graphs/DetectSwipe.json","graphs/DetectPinch.json","graphs/FilterByTarget.json","graphs/GestureToObject.json","graphs/ListenGestures.json","graphs/ListenPointer.json","graphs/DetectCardinalDirection.json","component.json"],"noflo":{"icon":"hand-right","components":{"CardinalRouter":"components/CardinalRouter.coffee","DegreesToCardinal":"components/DegreesToCardinal.coffee","DegreesToCompass":"components/DegreesToCompass.coffee","DetectTarget":"components/DetectTarget.coffee"},"graphs":{"DetectDrag":"graphs/DetectDrag.json","DetectSwipe":"graphs/DetectSwipe.json","DetectPinch":"graphs/DetectPinch.json","FilterByTarget":"graphs/FilterByTarget.json","GestureToObject":"graphs/GestureToObject.json","ListenGestures":"graphs/ListenGestures.json","ListenPointer":"graphs/ListenPointer.json","DetectCardinalDirection":"graphs/DetectCardinalDirection.json"}}}');
@@ -12160,10 +12220,8 @@ MathComponent = (function(_super) {
       return _this.groups.pop();
     });
     this.inPorts[primary].on('disconnect', function() {
-      if (_this.primary.value && _this.secondary) {
-        return _this.outPorts[res].disconnect();
-      }
-      return _this.primary.disconnect = true;
+      _this.primary.disconnect = true;
+      return _this.outPorts[res].disconnect();
     });
     this.inPorts[secondary].on('data', function(data) {
       _this.secondary = data;
@@ -12179,7 +12237,9 @@ MathComponent = (function(_super) {
           group = _ref[_i];
           _this.outPorts[res].endGroup();
         }
-        _this.outPorts[res].disconnect();
+        if (_this.primary.disconnect) {
+          _this.outPorts[res].disconnect();
+        }
       }
       _this.primary = {
         value: null,
@@ -12958,13 +13018,15 @@ exports.prepareGraph = function (instance) {
 
   // Initialize graph
   var graph = new noflo.Graph('Drag');
-  graph.addNode('Failed', 'core/Drop');
+  graph.addNode('NotYet', 'core/Drop');
   //graph.addNode('Failed', 'core/Output');
   graph.addNode('Passed', 'core/Merge');
   graph.addNode('Detect', 'flow/Gate');
   graph.addNode('Target', 'core/Repeat');
   graph.addNode('AllowDetect', 'core/Merge');
   graph.addEdge('AllowDetect', 'out', 'Detect', 'open');
+  graph.addNode('StopDetect', 'core/Merge');
+  graph.addEdge('StopDetect', 'out', 'Detect', 'close');
   // Initially detection is enabled
   graph.addInitial(true, 'AllowDetect', 'in');
 
@@ -13001,7 +13063,16 @@ exports.prepareGraph = function (instance) {
       exports.prepareAttribute(graph, instance, prevNode);
       break;
   }
-  //console.log(graph.toDOT());
+
+  // Handle gesture end
+  graph.addNode('AfterGestureReallowDetect', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureReallowDetect', 'in');
+  graph.addEdge('AfterGestureReallowDetect', 'out', 'AllowDetect', 'in');
+  graph.addNode('AfterGestureClosePassthru', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureClosePassthru', 'in');
+  graph.addEdge('AfterGestureClosePassthru', 'out', 'PassThru', 'close');
+
+  console.log(graph.toDOT());
   return graph;
 }
 
@@ -13017,14 +13088,14 @@ exports.preparePassThrough = function (graph, instance, prevNode) {
 
   // We use a gate for stopping detection once the first one has happened
   graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
+
   // Close the gate after detection
   graph.addNode('SplitPassed', 'core/Split');
   graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
-  graph.addEdge('SplitPassed', 'out', 'Detect', 'close');
-  // Reopen it once the gesture has ended
-  graph.addNode('AfterGesture', 'core/Kick');
-  graph.addEdge('SplitGesture', 'out', 'AfterGesture', 'in');
-  graph.addEdge('AfterGesture', 'out', 'AllowDetect', 'in');
+  graph.addEdge('SplitPassed', 'out', 'StopDetect', 'in');
+  // Close it also on failure
+  graph.addNode('Failed', 'core/Merge');
+  graph.addEdge('Failed', 'out', 'StopDetect', 'in');
 
   // We use a gate for passing things after recognition straight to action
   graph.addNode('PassThru', 'flow/Gate');
@@ -13032,11 +13103,6 @@ exports.preparePassThrough = function (graph, instance, prevNode) {
   graph.addEdge('PassThru', 'out', 'DoAction', 'in');
   // Open on detected gesture
   graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
-
-  // Close passthrough after end of gesture
-  graph.addNode('AfterGestureClose', 'core/Kick');
-  graph.addEdge('SplitGesture', 'out', 'AfterGestureClose', 'in');
-  graph.addEdge('AfterGestureClose', 'out', 'PassThru', 'close');
 
   return ['Detect', 'out'];
 };
@@ -13064,7 +13130,11 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   graph.addNode('DetectDrag', 'gestures/DetectDrag');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
   graph.addInitial(distance, 'DetectDrag', 'distance');
-  graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  if (instance.type === 'drag') {
+    graph.addEdge('DetectDrag', 'fail', 'NotYet', 'in');
+  } else {
+    graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
+  }
   return ['DetectDrag', 'pass'];
 };
 
@@ -13098,7 +13168,7 @@ exports.prepareMove = function (graph, instance, prevNode) {
   graph.addNode('GetPoint', 'objects/GetObjectKey');
   graph.addEdge('EachTouch', 'out', 'GetPoint', 'in');
   graph.addInitial('movepoint', 'GetPoint', 'key');
-  graph.addEdge('GetPoint', 'missed', 'Failed', 'in');
+  graph.addEdge('GetPoint', 'missed', 'NotYet', 'in');
   graph.addNode('Move', 'css/MoveElement');
   graph.addEdge('Target', 'out', 'Move', 'element');
   graph.addEdge('GetPoint', 'out', 'Move', 'point');
@@ -13385,6 +13455,7 @@ require.alias("noflo-noflo-packets/components/Compact.js", "noflo-noflo-gestures
 require.alias("noflo-noflo-packets/components/Zip.js", "noflo-noflo-gestures/deps/noflo-packets/components/Zip.js");
 require.alias("noflo-noflo-packets/components/SendWith.js", "noflo-noflo-gestures/deps/noflo-packets/components/SendWith.js");
 require.alias("noflo-noflo-packets/components/FilterPackets.js", "noflo-noflo-gestures/deps/noflo-packets/components/FilterPackets.js");
+require.alias("noflo-noflo-packets/components/FilterByValue.js", "noflo-noflo-gestures/deps/noflo-packets/components/FilterByValue.js");
 require.alias("noflo-noflo-packets/components/FilterByPosition.js", "noflo-noflo-gestures/deps/noflo-packets/components/FilterByPosition.js");
 require.alias("noflo-noflo-packets/components/FilterPacket.js", "noflo-noflo-gestures/deps/noflo-packets/components/FilterPacket.js");
 require.alias("noflo-noflo-packets/components/UniquePacket.js", "noflo-noflo-gestures/deps/noflo-packets/components/UniquePacket.js");
