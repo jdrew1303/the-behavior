@@ -147,9 +147,14 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   if (instance.distance) {
     distance = parseInt(instance.distance);
   }
+  var maxSpeed = Infinity;
+  if (instance.maxspeed) {
+    maxSpeed = parseInt(instance.maxspeed);
+  }
   graph.addNode('DetectDrag', 'gestures/DetectDrag');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
   graph.addInitial(distance, 'DetectDrag', 'distance');
+  graph.addInitial(maxSpeed, 'DetectDrag', 'maxspeed');
   if (instance.type === 'drag') {
     graph.addEdge('DetectDrag', 'fail', 'NotYet', 'in');
   } else {
@@ -162,17 +167,17 @@ exports.prepareSwipe = function (graph, instance, prevNode) {
   prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
 
   var distance = 50;
-  var speed = 1.5;
   if (instance.distance) {
     distance = parseInt(instance.distance);
   }
-  if (instance.speed) {
-    speed = parseFloat(instance.speed);
+  var minSpeed = 1.5;
+  if (instance.minspeed) {
+    minSpeed = parseFloat(instance.minspeed);
   }
   graph.addNode('DetectSwipe', 'gestures/DetectSwipe');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectSwipe', 'in');
   graph.addInitial(distance, 'DetectSwipe', 'distance');
-  graph.addInitial(speed, 'DetectSwipe', 'speed');
+  graph.addInitial(minSpeed, 'DetectSwipe', 'speed');
   graph.addEdge('DetectSwipe', 'fail', 'Failed', 'in');
   return ['DetectSwipe', 'pass'];
 };
