@@ -81,12 +81,19 @@ exports.prepareGraph = function (instance) {
   graph.addNode('EndCallback', 'core/Callback');
   graph.addNode('AfterGestureCall', 'core/Kick');
   graph.addEdge('SplitGesture', 'out', 'AfterGestureCall', 'data');
-  graph.addEdge('SplitGesture', 'out', 'AfterGestureCall', 'in');
   graph.addEdge('AfterGestureCall', 'out', 'EndCallback', 'in');
   var endCallback = function (gesture) {
     instance.fire('gestureend', gesture);
   };
   graph.addInitial(endCallback, 'EndCallback', 'callback');
+  // Only after a recognized resture
+  graph.addNode('AllowEnd', 'flow/Gate');
+  graph.addEdge('SplitPassed', 'out', 'AllowEnd', 'open');
+  graph.addEdge('SplitGesture', 'out', 'AllowEnd', 'in');
+  graph.addEdge('AllowEnd', 'out', 'AfterGestureCall', 'in');
+  graph.addNode('AfterGestureCloseCallback', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureCloseCallback', 'in');
+  graph.addEdge('AfterGestureCloseCallback', 'out', 'AllowEnd', 'close');
 
   return graph;
 }
