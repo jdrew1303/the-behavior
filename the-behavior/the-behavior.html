@@ -26,7 +26,7 @@
               }
               var val = data.data;
               if (typeof data.data === 'object') {
-                val = data.data.toString()
+                val = toString.call(data.data);
               }
               console.log(data.id, val);
             });
