@@ -1,10 +1,11 @@
-<polymer-element name="the-behavior" attributes="type direction minspeed maxspeed distance action accept arguments debug">
+<polymer-element name="the-behavior" attributes="type direction minspeed maxspeed distance action accept arguments debug listento">
   <script src="../browser/the-behavior.js"></script>
   <script>
     var behavior = require('the-behavior');
 
     Polymer('the-behavior', {
       network: null,
+      listento: 'container',
       enteredView: function () {
         this.container = this.parentElement;
         var debug = [];

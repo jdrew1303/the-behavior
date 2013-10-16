@@ -82,7 +82,16 @@ exports.prepareGraph = function (instance) {
 
 exports.prepareGesture = function (graph, instance) {
   graph.addNode('Listen', 'gestures/GestureToObject');
-  graph.addInitial(instance.container, 'Listen', 'element');
+
+  switch (instance.listento) {
+    case 'document':
+      graph.addInitial(document, 'Listen', 'element');
+      break;
+    case 'container':
+    default:
+      graph.addInitial(instance.container, 'Listen', 'element');
+      break;
+  }
   return ['Listen', 'out'];
 };
 

@@ -5196,7 +5196,9 @@ ListenPointer = (function(_super) {
   }
 
   ListenPointer.prototype.subscribe = function(element) {
-    element.setAttribute('touch-action', this.action);
+    if (element.setAttribute) {
+      element.setAttribute('touch-action', this.action);
+    }
     element.addEventListener('pointerdown', this.pointerDown, this.capture);
     element.addEventListener('pointerup', this.pointerUp, this.capture);
     element.addEventListener('pointercancel', this.pointerCancel, this.capture);
@@ -5210,7 +5212,9 @@ ListenPointer = (function(_super) {
 
   ListenPointer.prototype.unsubscribe = function(element) {
     var name, port, _ref, _results;
-    element.removeAttribute('touch-action');
+    if (element.removeAttribute) {
+      element.removeAttribute('touch-action');
+    }
     element.removeEventListener('pointerdown', this.pointerDown, this.capture);
     element.removeEventListener('pointerup', this.pointerUp, this.capture);
     element.removeEventListener('pointercancel', this.pointerCancel, this.capture);
@@ -13252,7 +13256,16 @@ exports.prepareGraph = function (instance) {
 
 exports.prepareGesture = function (graph, instance) {
   graph.addNode('Listen', 'gestures/GestureToObject');
-  graph.addInitial(instance.container, 'Listen', 'element');
+
+  switch (instance.listento) {
+    case 'document':
+      graph.addInitial(document, 'Listen', 'element');
+      break;
+    case 'container':
+    default:
+      graph.addInitial(instance.container, 'Listen', 'element');
+      break;
+  }
   return ['Listen', 'out'];
 };
 
