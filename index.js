@@ -170,9 +170,9 @@ exports.ignoreOnPinch = function (graph, instance, prevNode) {
 exports.prepareDrag = function (graph, instance, prevNode) {
   prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
 
-  var distance = 20;
-  if (instance.distance) {
-    distance = parseInt(instance.distance);
+  var minDistance = 20;
+  if (instance.mindistance) {
+    minDistance = parseInt(instance.mindistance);
   }
   var maxSpeed = Infinity;
   if (instance.maxspeed) {
@@ -180,7 +180,7 @@ exports.prepareDrag = function (graph, instance, prevNode) {
   }
   graph.addNode('DetectDrag', 'gestures/DetectDrag');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectDrag', 'in');
-  graph.addInitial(distance, 'DetectDrag', 'distance');
+  graph.addInitial(minDistance, 'DetectDrag', 'distance');
   graph.addInitial(maxSpeed, 'DetectDrag', 'maxspeed');
   if (instance.type === 'drag') {
     graph.addEdge('DetectDrag', 'fail', 'NotYet', 'in');
@@ -193,9 +193,9 @@ exports.prepareDrag = function (graph, instance, prevNode) {
 exports.prepareSwipe = function (graph, instance, prevNode) {
   prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
 
-  var distance = 50;
-  if (instance.distance) {
-    distance = parseInt(instance.distance);
+  var minDistance = 50;
+  if (instance.mindistance) {
+    minDistance = parseInt(instance.mindistance);
   }
   var minSpeed = 1.5;
   if (instance.minspeed) {
@@ -203,7 +203,7 @@ exports.prepareSwipe = function (graph, instance, prevNode) {
   }
   graph.addNode('DetectSwipe', 'gestures/DetectSwipe');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectSwipe', 'in');
-  graph.addInitial(distance, 'DetectSwipe', 'distance');
+  graph.addInitial(minDistance, 'DetectSwipe', 'distance');
   graph.addInitial(minSpeed, 'DetectSwipe', 'speed');
   graph.addEdge('DetectSwipe', 'fail', 'Failed', 'in');
   return ['DetectSwipe', 'pass'];
@@ -217,8 +217,13 @@ exports.prepareDirection = function (graph, instance, prevNode) {
   if (directions.length === 4) {
     return prevNode;
   }
+  var maxDistance = Infinity;
+  if (instance.maxdistance) {
+    maxDistance = parseInt(instance.maxdistance);
+  }
   var cardinals = ['east', 'south', 'north', 'west'];
   graph.addNode('DetectDirection', 'gestures/DetectCardinalDirection');
+  graph.addInitial(maxDistance, 'DetectDirection', 'maxdistance');
   graph.addEdge(prevNode[0], prevNode[1], 'DetectDirection', 'in');
   graph.addNode('DirectionPassed', 'core/Merge');
   cardinals.forEach(function (dir) {
