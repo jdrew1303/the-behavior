@@ -6,30 +6,90 @@ exports.runGraph = function (graph, callback) {
 };
 
 exports.prepareGraph = function (instance) {
-  var prevNode;
+  var graph = new noflo.Graph('the-behaviors');
+  var behaviors = Array.prototype.slice.call(instance.getElementsByTagName('the-behavior'));
 
-  // Initialize graph
-  var graph = new noflo.Graph('Drag');
-  graph.addNode('NotYet', 'core/Drop');
-  //graph.addNode('Failed', 'core/Output');
-  graph.addNode('Passed', 'core/Merge');
+  // We use a single listener for all behaviors
+  prevNode = exports.prepareListener(graph, instance);
+
+  var componentLoader = require('/noflo-noflo/src/lib/ComponentLoader');
+  var loader = new componentLoader.ComponentLoader('the-behavior');
+  loader.listComponents(function () {});
+
+  // Control detection with a gate. When any behavior has been recognized we stop
+  // detection
   graph.addNode('Detect', 'flow/Gate');
-  graph.addNode('Target', 'core/Repeat');
   graph.addNode('AllowDetect', 'core/Merge');
   graph.addEdge('AllowDetect', 'out', 'Detect', 'open');
   graph.addNode('StopDetect', 'core/Merge');
   graph.addEdge('StopDetect', 'out', 'Detect', 'close');
+  graph.addNode('SplitGesture', 'core/Split');
+  graph.addEdge('Listen', 'out', 'SplitGesture', 'in');
+  graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
+  // when that gesture ends we reopen it
+  graph.addNode('AfterGestureReallowDetect', 'core/Kick');
+  graph.addEdge('SplitGesture', 'out', 'AfterGestureReallowDetect', 'in');
+  graph.addEdge('AfterGestureReallowDetect', 'out', 'AllowDetect', 'in');
+
   // Initially detection is enabled
   graph.addInitial(true, 'AllowDetect', 'in');
+
+  // Connect listener to detection
+
+  prevNode = ['Detect', 'out'];
+  behaviors.forEach(function (behavior, idx) {
+    // Build a subgraph for the behavior
+    var id = behavior.type.charAt(0).toUpperCase() + behavior.type.slice(1) + idx;
+    behavior.container = instance.container;
+    var subgraph = exports.prepareDetectionGraph(behavior);
+    //console.log(subgraph.toDOT());
+    subgraph.baseDir = 'the-behavior';
+    loader.loadGraph(id, subgraph, function (instance) {
+      var graphNode = graph.addNode(id, instance);
+
+      // Connect it with our listener
+      graph.addEdge(prevNode[0], prevNode[1], id, 'detect');
+      graph.addEdge('SplitGesture', 'out', id, 'in');
+
+      // If the behavior passes we can stop detection
+      graph.addEdge(id, 'pass', 'StopDetect', 'in');
+    });
+
+    // If this behavior fails, try next one
+    prevNode = [id, 'fail'];
+  });
+
+  // If all detection failed, close detection
+  graph.addEdge(prevNode[0], prevNode[1], 'StopDetect', 'in');
+
+  return graph;
+}
+
+exports.prepareDetectionGraph = function (instance) {
+  var prevNode;
+
+  // Initialize subgraph
+  var graph = new noflo.Graph(instance.type);
+
+  // Entry point
+  graph.addNode('Gesture', 'core/Repeat');
+  graph.addExport('gesture.in', 'detect');
+  graph.addNode('SplitGesture', 'core/Split');
+  graph.addExport('splitgesture.in', 'in');
+  prevNode = ['Gesture', 'out'];
+
+  graph.addNode('Passed', 'core/Merge');
+  graph.addNode('Target', 'core/Repeat');
+  graph.addNode('AllowDetect', 'core/Repeat');
 
   // Go to action
   graph.addNode('DoAction', 'core/Merge');
 
-  // Listen to gestures
-  prevNode = exports.prepareGesture(graph, instance);
+  // When no gesture has been recognized we ignore the situation
+  graph.addNode('NotYet', 'core/Drop');
 
   // Handle pass-thru
-  prevNode = exports.preparePassThrough(graph, instance, prevNode);
+  exports.preparePassThrough(graph, instance);
 
   // Validate target node
   prevNode = exports.prepareAccept(graph, instance, prevNode);
@@ -50,6 +110,7 @@ exports.prepareGraph = function (instance) {
 
   // Gesture has been accepted, pass data to action
   graph.addEdge(prevNode[0], prevNode[1], 'Passed', 'in');
+
   prevNode = ['DoAction', 'out'];
 
   // Handle action
@@ -70,9 +131,6 @@ exports.prepareGraph = function (instance) {
   }
 
   // Handle gesture end
-  graph.addNode('AfterGestureReallowDetect', 'core/Kick');
-  graph.addEdge('SplitGesture', 'out', 'AfterGestureReallowDetect', 'in');
-  graph.addEdge('AfterGestureReallowDetect', 'out', 'AllowDetect', 'in');
   graph.addNode('AfterGestureClosePassthru', 'core/Kick');
   graph.addEdge('SplitGesture', 'out', 'AfterGestureClosePassthru', 'in');
   graph.addEdge('AfterGestureClosePassthru', 'out', 'PassThru', 'close');
@@ -89,6 +147,7 @@ exports.prepareGraph = function (instance) {
   // Only after a recognized resture
   graph.addNode('AllowEnd', 'flow/Gate');
   graph.addEdge('SplitPassed', 'out', 'AllowEnd', 'open');
+  graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
   graph.addEdge('SplitGesture', 'out', 'AllowEnd', 'in');
   graph.addEdge('AllowEnd', 'out', 'AfterGestureCall', 'in');
   graph.addNode('AfterGestureCloseCallback', 'core/Kick');
@@ -98,7 +157,7 @@ exports.prepareGraph = function (instance) {
   return graph;
 }
 
-exports.prepareGesture = function (graph, instance) {
+exports.prepareListener = function (graph, instance) {
   graph.addNode('Listen', 'gestures/GestureToObject');
 
   switch (instance.listento) {
@@ -114,28 +173,25 @@ exports.prepareGesture = function (graph, instance) {
 };
 
 exports.preparePassThrough = function (graph, instance, prevNode) {
-  graph.addNode('SplitGesture', 'core/Split');
-  graph.addEdge(prevNode[0], prevNode[1], 'SplitGesture', 'in');
-
-  // We use a gate for stopping detection once the first one has happened
-  graph.addEdge('SplitGesture', 'out', 'Detect', 'in');
-
-  // Close the gate after detection
-  graph.addNode('SplitPassed', 'core/Split');
-  graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
-  graph.addEdge('SplitPassed', 'out', 'StopDetect', 'in');
-  // Close it also on failure
+  // Report failures upstread
   graph.addNode('Failed', 'core/Merge');
-  graph.addEdge('Failed', 'out', 'StopDetect', 'in');
+  graph.addExport('failed.out', 'fail');
 
   // We use a gate for passing things after recognition straight to action
   graph.addNode('PassThru', 'flow/Gate');
   graph.addEdge('SplitGesture', 'out', 'PassThru', 'in');
   graph.addEdge('PassThru', 'out', 'DoAction', 'in');
+
   // Open on detected gesture
   graph.addEdge('SplitPassed', 'out', 'PassThru', 'open');
 
-  return ['Detect', 'out'];
+  // Close the gate after detection
+  graph.addNode('SplitPassed', 'core/Split');
+  graph.addEdge('Passed', 'out', 'SplitPassed', 'in');
+  graph.addEdge('SplitPassed', 'out', 'DoAction', 'in');
+
+  // Report passes upstream
+  graph.addExport('splitpassed.out', 'pass');
 };
 
 exports.prepareAccept = function (graph, instance, prevNode) {
@@ -160,16 +216,7 @@ exports.preparePinch = function (graph, instance, prevNode) {
   return ['DetectPinch', 'pass'];
 };
 
-exports.ignoreOnPinch = function (graph, instance, prevNode) {
-  graph.addNode('IgnoreOnPinch', 'gestures/DetectPinch');
-  graph.addEdge(prevNode[0], prevNode[1], 'IgnoreOnPinch', 'in');
-  graph.addEdge('IgnoreOnPinch', 'pass', 'Failed', 'in');
-  return ['IgnoreOnPinch', 'fail'];
-};
-
 exports.prepareDrag = function (graph, instance, prevNode) {
-  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
-
   var minDistance = 20;
   if (instance.mindistance) {
     minDistance = parseInt(instance.mindistance);
@@ -191,8 +238,6 @@ exports.prepareDrag = function (graph, instance, prevNode) {
 };
 
 exports.prepareSwipe = function (graph, instance, prevNode) {
-  prevNode = exports.ignoreOnPinch(graph, instance, prevNode);
-
   var minDistance = 50;
   if (instance.mindistance) {
     minDistance = parseInt(instance.mindistance);

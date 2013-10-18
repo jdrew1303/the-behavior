@@ -4,7 +4,7 @@
     <title>The Behavior</title>
     <meta charset="utf-8">
     <script src="../bower_components/polymer/polymer.min.js"></script>
-    <link rel="import" href="the-behavior.html">
+    <link rel="import" href="the-behaviors/the-behaviors.html">
     <style>
       body {
         min-height: 600px;
@@ -23,15 +23,20 @@
     </style>
   </head>
   <body>
-    <the-behavior type="drag" direction="north south" action="move" accept="tagName=DIV" mindistance="20"></the-behavior>
-    <the-behavior type="swipe" direction="north" action="remove" accept="tagName=DIV"></the-behavior>
-    <the-behavior type="drag" action="attribute" accept="tagName=BODY" mindistance="20"></the-behavior>
-    <the-behavior type="pinch" on-gesture="foo" accept="tagName=BODY" mindistance="20"></the-behavior>
+    <the-behaviors>
+      <the-behavior type="pinch" accept="tagName=BODY" mindistance="20"></the-behavior>
+      <the-behavior type="drag" action="attribute" accept="tagName=BODY" mindistance="20"></the-behavior>
+      <the-behavior type="swipe" direction="north" action="remove" accept="tagName=DIV"></the-behavior>
+      <the-behavior type="drag" direction="north south" action="move" accept="tagName=DIV" mindistance="20"></the-behavior>
+    </the-behaviors>
     <div class="node">Hello</div>
     <div class="node">World</div>
     <script>
       document.querySelector('the-behavior[type="pinch"]').addEventListener('gesture', function (e) {
         console.log('pinch-zoom', e.detail.scale, e.detail.center);
+      });
+      document.querySelector('the-behavior[type="pinch"]').addEventListener('gestureend', function (e) {
+        console.log('end pinch-zoom', e.detail.scale, e.detail.center);
       });
     </script>
   </body>
