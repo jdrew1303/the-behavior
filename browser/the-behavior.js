@@ -1,3 +1,4 @@
+;(function(){
 
 /**
  * Require the given path.
@@ -256,7 +257,8 @@ function mixin(obj) {
  * @api public
  */
 
-Emitter.prototype.on = function(event, fn){
+Emitter.prototype.on =
+Emitter.prototype.addEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
@@ -299,7 +301,8 @@ Emitter.prototype.once = function(event, fn){
 
 Emitter.prototype.off =
 Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners = function(event, fn){
+Emitter.prototype.removeAllListeners =
+Emitter.prototype.removeEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
 
   // all
@@ -3886,11 +3889,9 @@ exports.LoggingComponent = (function(_super) {
 
 });
 require.register("noflo-noflo/src/lib/ComponentLoader.js", function(exports, require, module){
-var ComponentLoader, graph, internalSocket;
+var ComponentLoader, internalSocket;
 
 internalSocket = require('./InternalSocket');
-
-graph = require('./Graph');
 
 ComponentLoader = (function() {
   function ComponentLoader(baseDir) {
@@ -4025,7 +4026,7 @@ ComponentLoader = (function() {
   };
 
   ComponentLoader.prototype.loadGraph = function(name, component, callback) {
-    var graphImplementation, graphSocket;
+    var graph, graphImplementation, graphSocket;
     graphImplementation = require(this.components['Graph']);
     graphSocket = internalSocket.createSocket();
     graph = graphImplementation.getComponent();
@@ -12695,7 +12696,7 @@ Kick = (function(_super) {
     this.inPorts["in"].on('begingroup', function(group) {
       return _this.groups.push(group);
     });
-    this.inPorts["in"].on('data', function(data) {
+    this.inPorts["in"].on('data', function() {
       return _this.data.group = _this.groups.slice(0);
     });
     this.inPorts["in"].on('endgroup', function(group) {
@@ -14221,4 +14222,10 @@ require.alias("noflo-fbp/lib/fbp.js", "noflo-fbp/index.js");
 require.alias("noflo-noflo/src/lib/NoFlo.js", "noflo-noflo/index.js");
 require.alias("component-underscore/index.js", "noflo-noflo-core/deps/underscore/index.js");
 
-require.alias("the-behavior/index.js", "the-behavior/index.js");
+require.alias("the-behavior/index.js", "the-behavior/index.js");if (typeof exports == "object") {
+  module.exports = require("the-behavior");
+} else if (typeof define == "function" && define.amd) {
+  define(function(){ return require("the-behavior"); });
+} else {
+  this["the-behavior"] = require("the-behavior");
+}})();

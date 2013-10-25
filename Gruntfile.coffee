@@ -23,7 +23,7 @@ module.exports = ->
       main_install:
         command: './node_modules/.bin/component install'
       main_build:
-        command: './node_modules/.bin/component build -u component-json,component-coffee -o browser -n the-behavior -c'
+        command: './node_modules/.bin/component build -u component-json,component-coffee -o browser -n the-behavior -c --standalone the-behavior'
 
     # Automated recompilation and testing when developing
     watch:
