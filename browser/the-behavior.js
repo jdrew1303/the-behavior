@@ -13299,6 +13299,9 @@ exports.prepareDetectionGraph = function (instance) {
   prevNode = ['DoAction', 'out'];
 
   // Handle action
+  if (instance.action && instance.action.indexOf('/')) {
+    instance.action = instance.action.split('/').pop();
+  }
   switch (instance.action) {
     case 'move':
       exports.prepareMove(graph, instance, prevNode);
