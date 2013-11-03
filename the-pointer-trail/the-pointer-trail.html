@@ -3,6 +3,7 @@
     Polymer('the-pointer-position', {
       position: '0 0',
       opacity: 1,
+      size: 20,
       enteredView: function () {
         this.style.display = 'none';
         this.started = new Date();
@@ -20,11 +21,16 @@
         var now = new Date();
         var elapsed = (now.getTime() - this.started.getTime()) / 1000;
         this.opacity -= 0.10 * elapsed;
+        this.size -= 20 * elapsed * 0.1;
+        if (this.size < 1) {
+          this.size = 1;
+        }
         if (this.opacity <= 0) {
           this.parentNode.removeChild(this);
           return;
         }
         this.style.opacity = this.opacity;
+        this.style.boxShadow = '0px 0px 1px ' + this.size + 'px #0188e5';
         requestAnimationFrame(function () {
           this.fade();
         }.bind(this));
@@ -40,7 +46,6 @@
       opacity: 1;
       z-index: 100;
       background-color: transparent;
-      box-shadow: 0px 0px 1px 20px #0188e5;
       width: 2px;
       height: 2px;
       border-radius: 5px;
