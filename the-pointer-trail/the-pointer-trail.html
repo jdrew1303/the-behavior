@@ -40,10 +40,10 @@
       opacity: 1;
       z-index: 100;
       background-color: transparent;
-      box-shadow: 0px 0px 1px 20px #c0c0c0;
-      width: 5px;
-      height: 5px;
-      border-radius: 15px;
+      box-shadow: 0px 0px 1px 20px #0188e5;
+      width: 2px;
+      height: 2px;
+      border-radius: 5px;
     }
     the-pointer-position.fading {
       opacity: 0;
@@ -56,6 +56,9 @@
       enteredView: function () {
         this.onStart = function (event) {
           this.inGesture = true;
+          var pos = document.createElement('the-pointer-position');
+          pos.position = event.clientX + ' ' + event.clientY;
+          this.appendChild(pos);
         }.bind(this);
         this.onMove = function (event) {
           if (!this.inGesture) {
