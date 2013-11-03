@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <script src="../bower_components/polymer/polymer.min.js"></script>
     <link rel="import" href="the-behaviors/the-behaviors.html">
+    <link rel="import" href="the-pointer-trail/the-pointer-trail.html">
     <style>
       body {
         min-height: 600px;
@@ -23,6 +24,7 @@
     </style>
   </head>
   <body>
+    <the-pointer-trail></the-pointer-trail>
     <the-behaviors listento="html">
       <the-behavior type="pinch" accept="tagName=BODY" mindistance="20"></the-behavior>
       <the-behavior type="scratch" accept="tagName=BODY" mindistance="30" minspeed="1"></the-behavior>

@@ -1,0 +1,103 @@
+<polymer-element name="the-pointer-position" attributes="position">
+  <script>
+    Polymer('the-pointer-position', {
+      position: '0 0',
+      opacity: 1,
+      enteredView: function () {
+        this.style.display = 'none';
+        this.started = new Date();
+      },
+      positionChanged: function () {
+        var pos = this.position.split(' ');
+        this.style.left = pos[0] + 'px';
+        this.style.top = pos[1] + 'px';
+        this.style.display = 'block';
+        this.fade();
+      },
+      steps: 0,
+      fade: function () {
+        this.steps++;
+        var now = new Date();
+        var elapsed = (now.getTime() - this.started.getTime()) / 1000;
+        this.opacity -= 0.05 * elapsed;
+        if (this.opacity <= 0) {
+          this.parentNode.removeChild(this);
+          return;
+        }
+        this.style.opacity = this.opacity;
+        requestAnimationFrame(function () {
+          this.fade();
+        }.bind(this));
+      }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="the-pointer-trail" attributes="listento">
+  <style>
+    the-pointer-position {
+      position: absolute;
+      opacity: 1;
+      background-color: transparent;
+      box-shadow: 0px 0px 1px 6px #c0c0c0;
+      width: 5px;
+      height: 5px;
+      border-radius: 15px;
+    }
+    the-pointer-position.fading {
+      opacity: 0;
+    }
+  </style>
+  <script>
+    Polymer('the-pointer-trail', {
+      inGesture: false,
+      listento: 'html',
+      enteredView: function () {
+        this.onStart = function (event) {
+          this.inGesture = true;
+        }.bind(this);
+        this.onMove = function (event) {
+          if (!this.inGesture) {
+            return;
+          }
+          var pos = document.createElement('the-pointer-position');
+          pos.position = event.screenX + ' ' + event.screenY;
+          this.appendChild(pos);
+        }.bind(this);
+        this.onEnd = function (event) {
+          this.inGesture = false;
+        }.bind(this);
+        this.subscribe();
+      },
+      leftView: function () {
+        this.unsubscribe();
+      },
+      getEventSource: function () {
+        switch (this.listento) {
+          case 'html':
+            return document.getElementsByTagName('html')[0];
+          case 'document':
+            return document;
+          case 'container':
+            return this.parentElement; 
+        }
+      },
+      subscribe: function () {
+        var source = this.getEventSource();
+        source.addEventListener('pointerdown', this.onStart, false);
+        source.addEventListener('pointermove', this.onMove, false);
+        source.addEventListener('pointerup', this.onEnd, false);
+        source.addEventListener('pointercancel', this.onEnd, false);
+        source.addEventListener('pointerleave', this.onEnd, false);
+      },
+      unsubscribe: function () {
+        var source = this.getEventSource();
+        source.removeEventListener('pointerdown', this.onStart, false);
+        source.removeEventListener('pointermove', this.onMove, false);
+        source.removeEventListener('pointerup', this.onEnd, false);
+        source.removeEventListener('pointercancel', this.onEnd, false);
+        source.removeEventListener('pointerleave', this.onEnd, false);
+      }
+    });
+  </script>
+</polymer-element>
