@@ -13495,6 +13495,9 @@ exports.prepareListener = function (graph, instance) {
   graph.addNode('Listen', 'gestures/GestureToObject');
 
   switch (instance.listento) {
+    case 'html':
+      graph.addInitial(document.getElementsByTagName('html')[0], 'Listen', 'element');
+      break;
     case 'document':
       graph.addInitial(document, 'Listen', 'element');
       break;
