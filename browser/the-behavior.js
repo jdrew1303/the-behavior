@@ -2777,10 +2777,11 @@ Graph = (function(_super) {
     this.exports = [];
   }
 
-  Graph.prototype.addExport = function(privatePort, publicPort) {
+  Graph.prototype.addExport = function(privatePort, publicPort, metadata) {
     return this.exports.push({
       "private": privatePort.toLowerCase(),
-      "public": publicPort.toLowerCase()
+      "public": publicPort.toLowerCase(),
+      metadata: metadata
     });
   };
 
@@ -3029,7 +3030,7 @@ Graph = (function(_super) {
   };
 
   Graph.prototype.toJSON = function() {
-    var connection, edge, exported, initializer, json, node, property, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _ref4;
+    var connection, edge, exported, exportedData, initializer, json, node, property, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _ref4;
     json = {
       properties: {},
       exports: [],
@@ -3047,10 +3048,14 @@ Graph = (function(_super) {
     _ref1 = this.exports;
     for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
       exported = _ref1[_i];
-      json.exports.push({
+      exportedData = {
         "private": exported["private"],
         "public": exported["public"]
-      });
+      };
+      if (exported.metadata) {
+        exportedData.metadata = exported.metadata;
+      }
+      json.exports.push(exportedData);
     }
     _ref2 = this.nodes;
     for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
@@ -3157,7 +3162,7 @@ exports.loadJSON = function(definition, success) {
     _ref3 = definition.exports;
     for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
       exported = _ref3[_j];
-      graph.addExport(exported["private"], exported["public"]);
+      graph.addExport(exported["private"], exported["public"], exported.metadata);
     }
   }
   return success(graph);
@@ -3913,7 +3918,7 @@ ComponentLoader = (function() {
   };
 
   ComponentLoader.prototype.getModuleComponents = function(moduleName) {
-    var cPath, definition, dependency, e, name, prefix, _ref, _ref1, _results;
+    var cPath, definition, dependency, e, loader, name, prefix, _ref, _ref1, _results;
     if (this.checked.indexOf(moduleName) !== -1) {
       return;
     }
@@ -3939,6 +3944,10 @@ ComponentLoader = (function() {
     }
     if (moduleName[0] === '/') {
       moduleName = moduleName.substr(1);
+    }
+    if (definition.noflo.loader) {
+      loader = require(definition.noflo.loader);
+      loader(this);
     }
     if (definition.noflo.components) {
       _ref = definition.noflo.components;
@@ -8986,11 +8995,11 @@ DetectScratch = (function(_super) {
       return;
     }
     turn = Math.abs(this.angleChange(this.prevAngle, angle));
+    this.prevPoint = touch.movepoint;
+    this.prevAngle = angle;
     if (!(turn > 130)) {
       return;
     }
-    this.prevPoint = touch.movepoint;
-    this.prevAngle = angle;
     this.prevTime = time;
     this.turns++;
     if (this.turns >= this.minturns) {
@@ -11806,7 +11815,7 @@ WriteHtml = (function(_super) {
     });
     this.inPorts.container.on('data', function(data) {
       _this.container = data;
-      if (_this.html) {
+      if (_this.html !== null) {
         return _this.writeHtml();
       }
     });
