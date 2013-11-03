@@ -19,7 +19,7 @@
         this.steps++;
         var now = new Date();
         var elapsed = (now.getTime() - this.started.getTime()) / 1000;
-        this.opacity -= 0.05 * elapsed;
+        this.opacity -= 0.10 * elapsed;
         if (this.opacity <= 0) {
           this.parentNode.removeChild(this);
           return;
@@ -36,10 +36,11 @@
 <polymer-element name="the-pointer-trail" attributes="listento">
   <style>
     the-pointer-position {
-      position: absolute;
+      position: fixed;
       opacity: 1;
+      z-index: 100;
       background-color: transparent;
-      box-shadow: 0px 0px 1px 6px #c0c0c0;
+      box-shadow: 0px 0px 1px 20px #c0c0c0;
       width: 5px;
       height: 5px;
       border-radius: 15px;
@@ -61,7 +62,7 @@
             return;
           }
           var pos = document.createElement('the-pointer-position');
-          pos.position = event.screenX + ' ' + event.screenY;
+          pos.position = event.clientX + ' ' + event.clientY;
           this.appendChild(pos);
         }.bind(this);
         this.onEnd = function (event) {
