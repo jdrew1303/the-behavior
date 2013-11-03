@@ -25,6 +25,7 @@
   <body>
     <the-behaviors>
       <the-behavior type="pinch" accept="tagName=BODY" mindistance="20"></the-behavior>
+      <the-behavior type="scratch" accept="tagName=BODY" mindistance="30" minspeed="1"></the-behavior>
       <the-behavior type="drag" action="attribute" accept="tagName=BODY" mindistance="20"></the-behavior>
       <the-behavior type="swipe" direction="north" action="remove" accept="tagName=DIV"></the-behavior>
       <the-behavior type="drag" direction="north south" action="move" accept="tagName=DIV" mindistance="20"></the-behavior>
@@ -37,6 +38,9 @@
       });
       document.querySelector('the-behavior[type="pinch"]').addEventListener('gestureend', function (e) {
         console.log('end pinch-zoom', e.detail.scale, e.detail.center);
+      });
+      document.querySelector('the-behavior[type="scratch"]').addEventListener('gestureend', function (e) {
+        console.log('scratched', e.detail[Object.keys(e.detail)[0]].elements);
       });
     </script>
   </body>

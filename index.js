@@ -101,6 +101,9 @@ exports.prepareDetectionGraph = function (instance) {
     case 'drag':
       prevNode = exports.prepareDrag(graph, instance, prevNode);
       break;
+    case 'scratch':
+      prevNode = exports.prepareScratch(graph, instance, prevNode);
+      break;
     case 'swipe':
       prevNode = exports.prepareSwipe(graph, instance, prevNode);
       break;
@@ -238,6 +241,23 @@ exports.prepareDrag = function (graph, instance, prevNode) {
     graph.addEdge('DetectDrag', 'fail', 'Failed', 'in');
   }
   return ['DetectDrag', 'pass'];
+};
+
+exports.prepareScratch = function (graph, instance, prevNode) {
+  var minDistance = 20;
+  if (instance.mindistance) {
+    minDistance = parseInt(instance.mindistance);
+  }
+  var minSpeed = 1;
+  if (instance.minspeed) {
+    minSpeed = parseFloat(instance.minspeed);
+  }
+  graph.addNode('DetectScratch', 'gestures/DetectScratch');
+  graph.addEdge(prevNode[0], prevNode[1], 'DetectScratch', 'in');
+  graph.addInitial(minDistance, 'DetectScratch', 'distance');
+  graph.addInitial(minSpeed, 'DetectScratch', 'speed');
+  graph.addEdge('DetectScratch', 'fail', 'Failed', 'in');
+  return ['DetectScratch', 'pass'];
 };
 
 exports.prepareSwipe = function (graph, instance, prevNode) {
